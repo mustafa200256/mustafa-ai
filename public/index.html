@@ -1,0 +1,1009 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#800020">
+  <meta name="description" content="مساعد مصطفى حسين الذكي — اكتب، تعلّم، ابتكر، واطلب المساعدة باللهجة العراقية.">
+  <title>مصطفى حسين — ذكاء يساعدك تنجز</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --wine: #800020;
+      --wine-dark: #620019;
+      --wine-soft: #f8ebee;
+      --paper: #faf9f7;
+      --surface: #fff;
+      --surface-soft: #f5f2ef;
+      --ink: #282323;
+      --muted: #756d6a;
+      --line: #eae5e1;
+      --green: #33865a;
+      --shadow: 0 18px 55px rgba(72, 37, 42, .08);
+      --radius-lg: 24px;
+    }
+
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --wine: #d4778f;
+      --wine-dark: #ea9caf;
+      --wine-soft: #38232a;
+      --paper: #171516;
+      --surface: #211e1f;
+      --surface-soft: #2a2527;
+      --ink: #f4eeee;
+      --muted: #b4a9aa;
+      --line: #393234;
+      --green: #76c99a;
+      --shadow: 0 18px 55px rgba(0, 0, 0, .22);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 86px; }
+    body {
+      min-width: 320px;
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 88% 0%, rgba(128, 0, 32, .055), transparent 34rem),
+        var(--paper);
+      color: var(--ink);
+      font-family: "Noto Sans Arabic", "IBM Plex Sans Arabic", Tahoma, "Segoe UI", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.75;
+      transition: background .25s, color .25s;
+    }
+
+    button, textarea { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+    [hidden] { display: none !important; }
+
+    .site-header {
+      position: sticky;
+      z-index: 10;
+      top: 0;
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--paper) 90%, transparent);
+      backdrop-filter: blur(18px);
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: min(1160px, calc(100% - 40px));
+      min-height: 74px;
+      margin: auto;
+      gap: 24px;
+    }
+    .brand { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 11px; }
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 15px;
+      background: var(--wine);
+      box-shadow: 0 7px 19px rgba(128, 0, 32, .18);
+      color: #fff;
+      font-size: 20px;
+      font-weight: 800;
+    }
+    .brand-name { font-size: 16px; font-weight: 800; letter-spacing: -.2px; line-height: 1.35; }
+    .brand-caption { margin-top: 3px; color: var(--muted); font-size: 11px; line-height: 1.4; }
+    .main-nav { display: flex; align-items: center; gap: 5px; }
+    .main-nav a {
+      padding: 9px 12px;
+      border-radius: 11px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+      transition: color .18s, background .18s;
+    }
+    .main-nav a:hover { background: var(--wine-soft); color: var(--wine); }
+    .header-actions { display: flex; align-items: center; gap: 9px; }
+    .theme-toggle, .mobile-menu {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 18px;
+      transition: border-color .2s, transform .2s;
+    }
+    .theme-toggle:hover, .mobile-menu:hover { transform: translateY(-1px); border-color: var(--wine); }
+    .mobile-menu { display: none; }
+
+    .page { width: min(1060px, calc(100% - 40px)); margin: 0 auto; }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(390px, 1.1fr);
+      align-items: center;
+      gap: clamp(28px, 6vw, 78px);
+      padding: 72px 0 60px;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border: 1px solid color-mix(in srgb, var(--wine) 17%, var(--line));
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--wine);
+      font-size: 12px;
+      font-weight: 750;
+    }
+    .eyebrow-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px color-mix(in srgb, var(--green) 14%, transparent); }
+    h1, h2, h3, p { margin-top: 0; }
+    .hero h1 {
+      max-width: 560px;
+      margin: 20px 0 15px;
+      font-size: clamp(36px, 5.1vw, 61px);
+      font-weight: 850;
+      letter-spacing: -1.7px;
+      line-height: 1.28;
+    }
+    .hero h1 span { color: var(--wine); }
+    .hero-copy > p { max-width: 490px; margin: 0; color: var(--muted); font-size: clamp(15px, 1.6vw, 17px); line-height: 2; }
+    .hero-points { display: flex; flex-wrap: wrap; gap: 9px 18px; margin-top: 23px; color: var(--muted); font-size: 12px; }
+    .hero-points span { display: inline-flex; align-items: center; gap: 7px; }
+    .hero-points b { color: var(--green); font-size: 15px; }
+
+    .chat-card {
+      position: relative;
+      padding: 19px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .chat-card.dragging { border-color: var(--wine); box-shadow: 0 0 0 4px color-mix(in srgb, var(--wine) 15%, transparent), var(--shadow); }
+    .chat-card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 2px 2px 15px; }
+    .chat-heading { display: flex; align-items: center; gap: 10px; }
+    .assistant-mark {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 13px;
+      background: var(--wine-soft);
+      color: var(--wine);
+      font-size: 20px;
+    }
+    .chat-heading strong { display: block; font-size: 14px; font-weight: 800; }
+    .chat-heading small { display: block; margin-top: 2px; color: var(--muted); font-size: 11px; }
+    .status { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font-size: 11px; white-space: nowrap; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #b7a9a8; }
+    .status-dot.ready { background: var(--green); box-shadow: 0 0 0 4px color-mix(in srgb, var(--green) 14%, transparent); }
+    .chat-scroll { max-height: 350px; min-height: 185px; overflow-y: auto; padding: 0 2px; scroll-behavior: smooth; }
+    .welcome {
+      display: flex;
+      min-height: 185px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 10px 24px;
+      text-align: center;
+      animation: rise .45s both;
+    }
+    .welcome-icon { margin-bottom: 8px; color: var(--wine); font-size: 28px; }
+    .welcome h2 { margin: 0 0 5px; font-size: 19px; font-weight: 800; }
+    .welcome p { max-width: 365px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.9; }
+    .messages { padding: 12px 0; }
+    .message { display: flex; align-items: flex-start; gap: 9px; margin: 14px 0; animation: rise .22s both; }
+    .message.user { flex-direction: row-reverse; }
+    .message-bubble {
+      max-width: min(83%, 620px);
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 16px 5px 16px 16px;
+      background: var(--surface-soft);
+      font-size: 14px;
+      line-height: 1.9;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+    .message.user .message-bubble { border-color: var(--wine); border-radius: 5px 16px 16px 16px; background: var(--wine); color: #fff; }
+    .message-avatar { display: grid; flex: 0 0 29px; place-items: center; width: 29px; height: 29px; border-radius: 10px; background: var(--wine-soft); color: var(--wine); font-size: 12px; font-weight: 800; }
+    .message.user .message-avatar { background: var(--surface-soft); color: var(--muted); }
+    .typing { color: var(--muted); }
+    .typing::after { display: inline-block; width: 18px; content: "…"; animation: pulse 1s infinite; }
+    .message-image { display: block; max-width: min(100%, 420px); max-height: 320px; margin-top: 10px; border-radius: 12px; background: #161616; object-fit: contain; }
+    .image-result { margin-top: 11px; padding: 8px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+    .image-result img { display: block; width: 100%; max-height: 440px; border-radius: 9px; background: #171516; object-fit: contain; }
+    .image-download { display: inline-flex; align-items: center; gap: 7px; margin-top: 9px; padding: 7px 11px; border-radius: 10px; background: var(--wine); color: #fff; font-size: 12px; font-weight: 750; }
+    .image-download:hover { background: var(--wine-dark); }
+    .quick-label { margin: 2px 4px 9px; color: var(--muted); font-size: 11px; font-weight: 700; }
+    .quick-prompts { display: flex; flex-wrap: wrap; gap: 7px; padding: 0 2px 13px; }
+    .quick-prompt {
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 11px;
+      transition: color .18s, border-color .18s, background .18s;
+    }
+    .quick-prompt:hover { border-color: var(--wine); background: var(--wine-soft); color: var(--wine); }
+    .composer-shell { border: 1px solid var(--line); border-radius: 17px; background: var(--surface); transition: border-color .2s, box-shadow .2s; }
+    .composer-shell:focus-within { border-color: color-mix(in srgb, var(--wine) 55%, var(--line)); box-shadow: 0 0 0 3px color-mix(in srgb, var(--wine) 10%, transparent); }
+    .composer { display: flex; align-items: flex-end; gap: 9px; padding: 10px 10px 8px; }
+    .composer textarea {
+      width: 100%;
+      min-height: 48px;
+      max-height: 145px;
+      resize: none;
+      padding: 8px 7px;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    .composer textarea::placeholder { color: #a59c99; }
+    .send-button {
+      display: grid;
+      flex: 0 0 42px;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 14px;
+      background: var(--wine);
+      color: #fff;
+      font-size: 21px;
+      transition: background .18s, transform .18s;
+    }
+    .send-button:hover { transform: translateY(-1px); background: var(--wine-dark); }
+    .send-button:disabled { cursor: wait; opacity: .58; }
+    .composer-tools { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 0 12px 10px; }
+    .attach-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 36px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 700;
+      transition: border-color .18s, color .18s;
+    }
+    .attach-button:hover { border-color: var(--wine); color: var(--wine); }
+    .composer-note { color: var(--muted); font-size: 10px; }
+    .attachment-preview { display: flex; align-items: center; gap: 11px; margin: 0 10px 10px; padding: 8px; border: 1px solid var(--line); border-radius: 13px; background: var(--surface-soft); }
+    .attachment-preview img, .attachment-preview video { display: block; width: 62px; height: 54px; flex: 0 0 62px; border-radius: 9px; background: #151515; object-fit: cover; }
+    .attachment-info { min-width: 0; flex: 1; }
+    .attachment-name { overflow: hidden; color: var(--ink); font-size: 11px; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
+    .attachment-size, .attachment-notice { margin-top: 2px; color: var(--muted); font-size: 10px; line-height: 1.6; }
+    .attachment-notice { color: var(--wine); }
+    .remove-attachment { width: 32px; height: 32px; border: 0; border-radius: 9px; background: transparent; color: var(--muted); font-size: 20px; }
+    .remove-attachment:hover { background: var(--wine-soft); color: var(--wine); }
+    .composer-hint { margin: 9px 0 0; color: var(--muted); text-align: center; font-size: 10px; }
+
+    .section { padding: 55px 0; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 22px; margin-bottom: 23px; }
+    .section-kicker { display: block; margin-bottom: 6px; color: var(--wine); font-size: 12px; font-weight: 800; }
+    .section-head h2 { margin: 0; font-size: clamp(25px, 3.2vw, 34px); font-weight: 850; letter-spacing: -.6px; line-height: 1.4; }
+    .section-head p { max-width: 470px; margin: 5px 0 0; color: var(--muted); font-size: 14px; line-height: 1.9; }
+    .template-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
+    .template-card, .tool-card {
+      display: flex;
+      min-width: 0;
+      align-items: flex-start;
+      gap: 13px;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--surface);
+      color: var(--ink);
+      text-align: right;
+      transition: border-color .2s, box-shadow .2s, transform .2s;
+    }
+    .template-card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--wine) 35%, var(--line)); box-shadow: 0 12px 28px rgba(72, 37, 42, .07); }
+    .template-icon, .tool-icon {
+      display: grid;
+      flex: 0 0 42px;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: var(--wine-soft);
+      color: var(--wine);
+      font-size: 20px;
+    }
+    .template-card strong, .tool-card strong { display: block; margin-top: 1px; font-size: 14px; font-weight: 800; }
+    .template-card small, .tool-card p { display: block; margin: 5px 0 0; color: var(--muted); font-size: 12px; line-height: 1.8; }
+    .template-arrow { display: inline-block; margin-top: 8px; color: var(--wine); font-size: 11px; font-weight: 750; }
+    .tools-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
+    .tool-card { position: relative; }
+    .tool-card p { margin-bottom: 0; }
+    .coming-soon { display: inline-flex; margin-top: 9px; padding: 3px 8px; border-radius: 999px; background: var(--surface-soft); color: var(--muted); font-size: 10px; font-weight: 700; }
+    .specialties {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 11px;
+      padding: 23px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--surface);
+    }
+    .specialty {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      padding: 11px;
+      border-radius: 13px;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 700;
+      transition: background .18s, color .18s;
+    }
+    .specialty:hover { background: var(--wine-soft); color: var(--wine); }
+    .specialty span { font-size: 19px; }
+    .about-card { display: flex; align-items: center; gap: 19px; padding: 25px; border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(120deg, var(--surface), var(--wine-soft)); }
+    .about-logo { display: grid; flex: 0 0 58px; place-items: center; width: 58px; height: 58px; border-radius: 19px; background: var(--wine); color: white; font-size: 24px; font-weight: 800; }
+    .about-card h2 { margin: 0 0 3px; font-size: 19px; font-weight: 850; }
+    .about-card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.9; }
+    .site-footer { margin-top: 36px; border-top: 1px solid var(--line); }
+    .footer-inner { display: flex; min-height: 78px; align-items: center; justify-content: space-between; gap: 15px; color: var(--muted); font-size: 12px; }
+    .footer-credit { color: var(--ink); font-weight: 750; }
+    .footer-credit strong { color: var(--wine); }
+
+    .toast {
+      position: fixed;
+      z-index: 30;
+      right: 50%;
+      bottom: 24px;
+      width: max-content;
+      max-width: calc(100% - 32px);
+      padding: 12px 17px;
+      transform: translate(50%, 14px);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 13px;
+      background: #30292b;
+      box-shadow: 0 12px 30px rgba(0,0,0,.2);
+      color: #fff;
+      font-size: 13px;
+      line-height: 1.7;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s, transform .2s;
+    }
+    .toast.show { transform: translate(50%, 0); opacity: 1; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    @keyframes rise { from { transform: translateY(7px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes pulse { 50% { opacity: .35; } }
+
+    @media (max-width: 900px) {
+      .header-inner { width: min(100% - 32px, 760px); min-height: 66px; }
+      .main-nav { gap: 0; }
+      .main-nav a { padding: 8px; font-size: 12px; }
+      .hero { grid-template-columns: minmax(0, .82fr) minmax(360px, 1.18fr); gap: 25px; padding-top: 55px; }
+      .hero h1 { font-size: clamp(34px, 5vw, 48px); }
+      .page { width: min(100% - 32px, 760px); }
+      .template-grid, .tools-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .specialties { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 680px) {
+      html { scroll-padding-top: 70px; }
+      .header-inner { position: relative; width: calc(100% - 28px); min-height: 64px; gap: 8px; }
+      .brand-mark { width: 39px; height: 39px; border-radius: 14px; font-size: 18px; }
+      .brand-name { font-size: 14px; }
+      .brand-caption { font-size: 10px; }
+      .header-actions { margin-inline-start: auto; }
+      .theme-toggle, .mobile-menu { width: 39px; height: 39px; }
+      .mobile-menu { display: grid; }
+      .main-nav {
+        position: absolute;
+        top: calc(100% - 2px);
+        right: 0;
+        left: 0;
+        display: none;
+        align-items: stretch;
+        padding: 9px;
+        border: 1px solid var(--line);
+        border-radius: 0 0 16px 16px;
+        background: var(--surface);
+        box-shadow: var(--shadow);
+      }
+      .main-nav.open { display: grid; grid-template-columns: repeat(2, 1fr); }
+      .main-nav a { padding: 10px; font-size: 13px; }
+      .page { width: calc(100% - 28px); }
+      .hero { grid-template-columns: 1fr; gap: 24px; padding: 42px 0 30px; }
+      .hero-copy { text-align: center; }
+      .hero h1 { max-width: none; margin: 15px auto 10px; font-size: clamp(34px, 10vw, 48px); letter-spacing: -1px; }
+      .hero-copy > p { margin-inline: auto; font-size: 15px; }
+      .hero-points { justify-content: center; margin-top: 15px; }
+      .chat-card { padding: 13px; border-radius: 20px; }
+      .chat-scroll { min-height: 162px; max-height: 320px; }
+      .welcome { min-height: 162px; }
+      .welcome h2 { font-size: 17px; }
+      .composer textarea { min-height: 46px; font-size: 15px; }
+      .section { padding: 38px 0; }
+      .section-head { align-items: flex-start; flex-direction: column; gap: 4px; margin-bottom: 18px; }
+      .section-head h2 { font-size: 27px; }
+      .section-head p { font-size: 13px; }
+      .template-grid, .tools-grid { grid-template-columns: 1fr; gap: 9px; }
+      .template-card, .tool-card { padding: 14px; border-radius: 16px; }
+      .template-card strong, .tool-card strong { font-size: 14px; }
+      .template-card small, .tool-card p { font-size: 12px; }
+      .specialties { grid-template-columns: 1fr 1fr; gap: 4px; padding: 12px; }
+      .specialty { gap: 7px; padding: 9px 6px; font-size: 12px; }
+      .about-card { align-items: flex-start; padding: 18px; }
+      .about-logo { flex-basis: 47px; width: 47px; height: 47px; border-radius: 15px; }
+      .about-card h2 { font-size: 17px; }
+      .about-card p { font-size: 12px; }
+      .footer-inner { min-height: 72px; flex-direction: column; justify-content: center; gap: 2px; padding: 12px 0; text-align: center; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#home" aria-label="مصطفى حسين — الرئيسية">
+        <span class="brand-mark" aria-hidden="true">م</span>
+        <span>
+          <span class="brand-name">مصطفى حسين</span>
+          <span class="brand-caption">ذكاء يساعدك تنجز</span>
+        </span>
+      </a>
+      <nav class="main-nav" id="mainNav" aria-label="التنقل الرئيسي">
+        <a href="#home">الرئيسية</a>
+        <a href="#assistant">الذكاء الاصطناعي</a>
+        <a href="#templates">القوالب</a>
+        <a href="#tools">الأدوات</a>
+        <a href="#about">حول الموقع</a>
+      </nav>
+      <div class="header-actions">
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="تفعيل الوضع الداكن" title="تغيير المظهر">☾</button>
+        <button class="mobile-menu" id="mobileMenu" type="button" aria-label="فتح قائمة التنقل" aria-expanded="false">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="hero" id="home" aria-labelledby="heroTitle">
+      <div class="hero-copy">
+        <span class="eyebrow"><span class="eyebrow-dot"></span> مساعدك الذكي باللغة العربية</span>
+        <h1 id="heroTitle">فكرتك تستاهل <span>تنطلق.</span></h1>
+        <p>من أول فكرة لحد آخر تفصيلة — اسأل، اكتب، تعلّم وبرمج ويا مساعد يفهمك ويحچي لغتك.</p>
+        <div class="hero-points">
+          <span><b>✓</b> سريع وسهل</span>
+          <span><b>✓</b> عربي ولهجة عراقية</span>
+          <span><b>✓</b> للكتابة والبرمجة</span>
+        </div>
+      </div>
+
+      <section class="chat-card" id="assistant" aria-label="محادثة الذكاء الاصطناعي">
+        <div class="chat-card-head">
+          <div class="chat-heading">
+            <span class="assistant-mark" aria-hidden="true">✳</span>
+            <span>
+              <strong>مساعد مصطفى الذكي</strong>
+              <small>اسألني أي شي، ونبدأ سوا</small>
+            </span>
+          </div>
+          <span class="status"><span class="status-dot" id="statusDot"></span><span id="statusText">جاري التحقق</span></span>
+        </div>
+
+        <div class="chat-scroll" id="chatScroll" aria-live="polite" aria-relevant="additions text">
+          <div class="welcome" id="welcome">
+            <span class="welcome-icon" aria-hidden="true">✧</span>
+            <h2>هلا بيك، شلون أگدر أساعدك؟</h2>
+            <p>اكتب سؤالك أو اختار قالب جاهز من جوّه، وأنا أساعدك خطوة بخطوة.</p>
+          </div>
+          <div class="messages" id="messages" hidden></div>
+        </div>
+
+        <div class="quick-label">جرّب تسأل عن</div>
+        <div class="quick-prompts" aria-label="اقتراحات سريعة">
+          <button class="quick-prompt" type="button" data-prompt="اقترح لي فكرة مشروع ويب بسيطة ومفيدة">فكرة مشروع</button>
+          <button class="quick-prompt" type="button" data-prompt="اشرح لي الذكاء الاصطناعي بطريقة بسيطة">شرح مبسّط</button>
+          <button class="quick-prompt" type="button" data-prompt="ساعدني أكتب خطة لتعلّم البرمجة">تعلّم البرمجة</button>
+        </div>
+
+        <form class="composer-shell" id="chatForm">
+          <div class="composer" id="dropZone">
+            <label class="sr-only" for="prompt">اكتب رسالتك</label>
+            <textarea id="prompt" rows="1" maxlength="12000" placeholder="اكتب رسالتك هنا..."></textarea>
+            <button class="send-button" id="send" type="submit" aria-label="إرسال الرسالة">↑</button>
+          </div>
+          <div class="attachment-preview" id="attachmentPreview" hidden></div>
+          <div class="composer-tools">
+            <div>
+              <button class="attach-button" id="attachButton" type="button" aria-label="إضافة صورة أو فيديو">
+                <span aria-hidden="true">＋</span> إضافة صورة أو فيديو
+              </button>
+              <input class="sr-only" id="fileInput" type="file" accept="image/*,video/*" tabindex="-1">
+            </div>
+            <span class="composer-note">Enter للإرسال · Shift + Enter لسطر جديد</span>
+          </div>
+        </form>
+        <p class="composer-hint">قد يخطئ المساعد أحياناً، فتحقّق من المعلومات المهمة.</p>
+      </section>
+    </section>
+
+    <section class="section" id="templates" aria-labelledby="templatesTitle">
+      <div class="section-head">
+        <div>
+          <span class="section-kicker">ابدأ بخطوة</span>
+          <h2 id="templatesTitle">قوالب جاهزة توفر وقتك</h2>
+        </div>
+        <p>اختار قالب، عدّل الطلب على راحتك، وخلي المساعد يتولى الباقي.</p>
+      </div>
+      <div class="template-grid" id="templateGrid"></div>
+    </section>
+
+    <section class="section" id="tools" aria-labelledby="toolsTitle">
+      <div class="section-head">
+        <div>
+          <span class="section-kicker">مساحة تكبر وياك</span>
+          <h2 id="toolsTitle">أدواتك، كلها بمكان واحد</h2>
+        </div>
+        <p>نرتّب الأدوات لتكون جاهزة للتوسع وإضافة تجارب جديدة بالمستقبل.</p>
+      </div>
+      <div class="tools-grid" id="toolsGrid"></div>
+    </section>
+
+    <section class="section" id="specialties" aria-labelledby="specialtiesTitle">
+      <div class="section-head">
+        <div>
+          <span class="section-kicker">تخصصات المساعد</span>
+          <h2 id="specialtiesTitle">من الفكرة إلى التنفيذ</h2>
+        </div>
+      </div>
+      <div class="specialties">
+        <a class="specialty" href="#assistant" data-category-link="games"><span>🎮</span> برمجة الألعاب</a>
+        <a class="specialty" href="#assistant" data-category-link="web"><span>⌘</span> برمجة المواقع</a>
+        <a class="specialty" href="#assistant" data-category-link="media"><span>✦</span> تعديل الصور والفيديوهات</a>
+        <a class="specialty" href="#assistant" data-category-link="templates"><span>▧</span> قوالب الصور والفيديو</a>
+      </div>
+    </section>
+
+    <section class="section" id="about" aria-labelledby="aboutTitle">
+      <div class="about-card">
+        <span class="about-logo" aria-hidden="true">م</span>
+        <div>
+          <h2 id="aboutTitle">مصنوع حتى يسهّل عليك البداية</h2>
+          <p>مساعد عربي من المبرمج العراقي مصطفى حسين، يجمع الكتابة والتعلّم والبرمجة بتجربة بسيطة وواضحة.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner page">
+      <span>© 2026 جميع الحقوق محفوظة</span>
+      <span class="footer-credit">صنع بواسطة <strong>المبرمج العراقي مصطفى حسين</strong></span>
+    </div>
+  </footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const form = document.querySelector('#chatForm');
+    const promptInput = document.querySelector('#prompt');
+    const sendButton = document.querySelector('#send');
+    const welcome = document.querySelector('#welcome');
+    const messagesElement = document.querySelector('#messages');
+    const chatScroll = document.querySelector('#chatScroll');
+    const toast = document.querySelector('#toast');
+    const fileInput = document.querySelector('#fileInput');
+    const attachmentPreview = document.querySelector('#attachmentPreview');
+    const chatCard = document.querySelector('.chat-card');
+    const categories = new Set(['general', 'games', 'web', 'media', 'templates']);
+    const categoryNames = {
+      general: 'محادثة عامة',
+      games: 'برمجة الألعاب',
+      web: 'برمجة المواقع',
+      media: 'تعديل الصور والفيديوهات',
+      templates: 'قوالب الصور والفيديو'
+    };
+    const templates = [
+      { icon: '✍️', title: 'كتابة المحتوى', description: 'اكتب محتوى واضح وجذاب عن أي موضوع.', prompt: 'اكتب لي محتوى احترافياً عن [الموضوع] موجهاً إلى [الجمهور]. اجعله واضحاً وجذاباً، وبنبرة [النبرة].' },
+      { icon: '📱', title: 'منشور للسوشيال ميديا', description: 'منشور مرتب يناسب منصتك وجمهورك.', prompt: 'اكتب منشوراً لمنصة [اسم المنصة] عن [الموضوع]، بنبرة [النبرة]، مع دعوة مناسبة للتفاعل.' },
+      { icon: '📣', title: 'كتابة إعلان', description: 'حوّل ميزات منتجك إلى إعلان مقنع.', prompt: 'اكتب إعلاناً جذاباً عن [المنتج أو الخدمة] للجمهور [الجمهور]، وركّز على [أهم ميزة] مع دعوة واضحة لاتخاذ إجراء.' },
+      { icon: '📝', title: 'تلخيص النصوص', description: 'استخرج الفكرة والنقاط الأساسية بسرعة.', prompt: 'لخّص النص التالي بوضوح، ثم اذكر أهم النقاط والنتيجة: [ألصق النص هنا]' },
+      { icon: '🌐', title: 'الترجمة', description: 'ترجمة طبيعية تحافظ على معنى النص.', prompt: 'ترجم النص التالي من [اللغة الأصلية] إلى [اللغة المطلوبة] بصياغة طبيعية، وحافظ على المعنى والسياق: [ألصق النص هنا]' },
+      { icon: '✉️', title: 'كتابة الإيميلات', description: 'رسائل بريد رسمية أو ودّية جاهزة.', prompt: 'اكتب إيميلاً [رسمياً أو ودّياً] إلى [المستلم] بخصوص [الموضوع]. الغرض من الرسالة هو [الغرض]، والنبرة المطلوبة [النبرة].' },
+      { icon: '💡', title: 'أفكار للمشاريع', description: 'اكتشف أفكاراً عملية قابلة للتطوير.', prompt: 'اقترح 5 أفكار مشاريع في مجال [المجال] تناسب [الميزانية أو مستوى الخبرة]. وضّح لكل فكرة المشكلة التي تحلها وخطوة البداية.' },
+      { icon: '💻', title: 'المساعدة بالبرمجة', description: 'خطط للحل أو اكتب كوداً مع شرح.', prompt: 'ساعدني في برمجة [وصف المهمة] باستخدام [لغة البرمجة أو التقنية]. اشرح خطوات الحل وقدّم مثالاً واضحاً للكود.' },
+      { icon: '✨', title: 'تحسين النصوص', description: 'صحّح النص وطوّر أسلوبه مع الحفاظ على فكرته.', prompt: 'راجع النص التالي، وصحّح الأخطاء وحسّن الوضوح والأسلوب من دون تغيير المعنى أو المعلومات: [ألصق النص هنا]' }
+    ];
+    const tools = [
+      { icon: '🖼️', title: 'تحليل صورة', description: 'فهم محتوى الصورة والإجابة عن الأسئلة حولها.' },
+      { icon: '🔎', title: 'قراءة النص من صورة', description: 'استخراج النصوص والمعلومات من الصور.' },
+      { icon: '📄', title: 'تلخيص ملف', description: 'تلخيص الملفات الطويلة إلى نقاط واضحة.' },
+      { icon: '📚', title: 'تحليل مستند', description: 'استخراج الأفكار والبيانات من المستندات.' },
+      { icon: '✍️', title: 'إنشاء محتوى', description: 'كتابة محتوى مناسب لأفكارك واحتياجاتك.' },
+      { icon: '⌘', title: 'مساعدة بالبرمجة', description: 'شرح الأكواد، حل المشاكل، وبناء أفكار جديدة.' }
+    ];
+    let history = [];
+    let category = 'general';
+    let busy = false;
+    let toastTimer;
+    let selectedFile = null;
+
+    document.querySelector('#templateGrid').innerHTML = templates.map((template, index) => `
+      <button class="template-card" type="button" data-template="${index}">
+        <span class="template-icon" aria-hidden="true">${template.icon}</span>
+        <span>
+          <strong>${template.title}</strong>
+          <small>${template.description}</small>
+          <span class="template-arrow">استخدم القالب ←</span>
+        </span>
+      </button>
+    `).join('');
+
+    document.querySelector('#toolsGrid').innerHTML = tools.map((tool) => `
+      <article class="tool-card">
+        <span class="tool-icon" aria-hidden="true">${tool.icon}</span>
+        <span>
+          <strong>${tool.title}</strong>
+          <p>${tool.description}</p>
+          <span class="coming-soon">قريباً</span>
+        </span>
+      </article>
+    `).join('');
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 4800);
+    }
+
+    function selectCategory(value) {
+      if (!categories.has(value)) return;
+      category = value;
+      promptInput.focus();
+    }
+
+    function addMessage(role, text, isTyping = false) {
+      const row = document.createElement('div');
+      row.className = `message ${role === 'user' ? 'user' : 'assistant'}`;
+      const avatar = document.createElement('div');
+      avatar.className = 'message-avatar';
+      avatar.textContent = role === 'user' ? 'أنت' : 'م';
+      const bubble = document.createElement('div');
+      bubble.className = `message-bubble${isTyping ? ' typing' : ''}`;
+      bubble.textContent = text;
+      row.append(avatar, bubble);
+      messagesElement.append(row);
+      chatScroll.scrollTop = chatScroll.scrollHeight;
+      return row;
+    }
+
+    function resizeInput() {
+      promptInput.style.height = 'auto';
+      promptInput.style.height = `${Math.min(promptInput.scrollHeight, 145)}px`;
+    }
+
+    function formatFileSize(size) {
+      return size < 1024 * 1024
+        ? `${Math.max(1, Math.round(size / 1024))} كيلوبايت`
+        : `${(size / (1024 * 1024)).toFixed(1)} ميغابايت`;
+    }
+
+    function clearAttachment() {
+      if (selectedFile?.url) URL.revokeObjectURL(selectedFile.url);
+      selectedFile = null;
+      fileInput.value = '';
+      attachmentPreview.replaceChildren();
+      attachmentPreview.hidden = true;
+    }
+
+    function showAttachment(file) {
+      if (!file || (!file.type.startsWith('image/') && !file.type.startsWith('video/'))) {
+        showToast('اختار صورة أو فيديو بصيغة مدعومة.');
+        return;
+      }
+      const isImage = file.type.startsWith('image/');
+      if (isImage && !['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+        showToast('يدعم تحرير الصور حالياً صيغ PNG وJPEG وWebP.');
+        return;
+      }
+      if (file.size > (isImage ? 8 : 25) * 1024 * 1024) {
+        showToast(isImage
+          ? 'حجم الصورة أكبر من 8 ميغابايت. اختار صورة أصغر.'
+          : 'حجم الفيديو أكبر من 25 ميغابايت. اختار فيديو أصغر.');
+        return;
+      }
+
+      clearAttachment();
+      const url = URL.createObjectURL(file);
+      selectedFile = { file, url };
+      const preview = document.createElement(file.type.startsWith('image/') ? 'img' : 'video');
+      preview.src = url;
+      preview.alt = file.type.startsWith('image/') ? 'معاينة الصورة المختارة' : '';
+      if (preview instanceof HTMLVideoElement) {
+        preview.muted = true;
+        preview.playsInline = true;
+        preview.preload = 'metadata';
+      }
+
+      const info = document.createElement('div');
+      info.className = 'attachment-info';
+      const name = document.createElement('div');
+      name.className = 'attachment-name';
+      name.textContent = file.name;
+      const size = document.createElement('div');
+      size.className = 'attachment-size';
+      size.textContent = formatFileSize(file.size);
+      const notice = document.createElement('div');
+      notice.className = 'attachment-notice';
+      notice.textContent = isImage
+        ? 'جاهزة للإرسال إلى نموذج تعديل الصور.'
+        : 'يمكن معاينة الفيديو، لكن تحرير الفيديو غير مدعوم حالياً.';
+      info.append(name, size, notice);
+
+      const remove = document.createElement('button');
+      remove.className = 'remove-attachment';
+      remove.type = 'button';
+      remove.setAttribute('aria-label', 'إزالة الملف');
+      remove.textContent = '×';
+      remove.addEventListener('click', clearAttachment);
+
+      attachmentPreview.append(preview, info, remove);
+      attachmentPreview.hidden = false;
+    }
+
+    function addImageToMessage(row, src, alt) {
+      const image = document.createElement('img');
+      image.className = 'message-image';
+      image.src = src;
+      image.alt = alt;
+      row.querySelector('.message-bubble').append(image);
+      return image;
+    }
+
+    function addEditedImage(row, image) {
+      const result = document.createElement('div');
+      result.className = 'image-result';
+
+      const preview = document.createElement('img');
+      preview.src = `data:${image.mimeType};base64,${image.data}`;
+      preview.alt = 'الصورة بعد التعديل';
+
+      const download = document.createElement('a');
+      download.className = 'image-download';
+      download.href = preview.src;
+      download.download = `mustafa-hussein-edited.${image.mimeType === 'image/jpeg' ? 'jpg' : image.mimeType.split('/')[1]}`;
+      download.textContent = '↓ حفظ الصورة المعدّلة';
+
+      result.append(preview, download);
+      row.querySelector('.message-bubble').append(result);
+    }
+
+    function readFileAsDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.addEventListener('load', () => {
+          if (typeof reader.result !== 'string') {
+            reject(new Error('تعذّرت قراءة الصورة المختارة.'));
+            return;
+          }
+          resolve(reader.result);
+        }, { once: true });
+        reader.addEventListener('error', () => reject(new Error('تعذّرت قراءة الصورة المختارة.')), { once: true });
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function startConversation() {
+      if (busy) return;
+      history = [];
+      messagesElement.replaceChildren();
+      messagesElement.hidden = true;
+      welcome.hidden = false;
+      promptInput.value = '';
+      clearAttachment();
+      resizeInput();
+      promptInput.focus();
+    }
+
+    document.querySelectorAll('[data-template]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const template = templates[Number(button.dataset.template)];
+        if (!template) return;
+        promptInput.value = template.prompt;
+        resizeInput();
+        document.querySelector('#assistant').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        promptInput.focus({ preventScroll: true });
+      });
+    });
+
+    document.querySelectorAll('[data-prompt]').forEach((button) => {
+      button.addEventListener('click', () => {
+        promptInput.value = button.dataset.prompt;
+        resizeInput();
+        promptInput.focus();
+      });
+    });
+
+    document.querySelectorAll('[data-category-link]').forEach((link) => {
+      link.addEventListener('click', () => selectCategory(link.dataset.categoryLink));
+    });
+
+    document.querySelector('#attachButton').addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => showAttachment(fileInput.files?.[0]));
+    promptInput.addEventListener('input', resizeInput);
+    promptInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        form.requestSubmit();
+      }
+    });
+
+    ['dragenter', 'dragover'].forEach((eventName) => {
+      chatCard.addEventListener(eventName, (event) => {
+        if (!event.dataTransfer?.types.includes('Files')) return;
+        event.preventDefault();
+        chatCard.classList.add('dragging');
+      });
+    });
+    ['dragleave', 'drop'].forEach((eventName) => {
+      chatCard.addEventListener(eventName, (event) => {
+        if (eventName === 'drop' && event.dataTransfer?.files.length) {
+          event.preventDefault();
+          showAttachment(event.dataTransfer.files[0]);
+        }
+        chatCard.classList.remove('dragging');
+      });
+    });
+    document.addEventListener('dragover', (event) => {
+      if (event.dataTransfer?.types.includes('Files')) event.preventDefault();
+    });
+    document.addEventListener('drop', (event) => {
+      if (event.dataTransfer?.types.includes('Files')) event.preventDefault();
+    });
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const text = promptInput.value.trim();
+      if (busy) return;
+      const imageFile = selectedFile?.file.type.startsWith('image/') ? selectedFile.file : null;
+      if (selectedFile && !imageFile) {
+        showToast('تحرير الفيديو غير مدعوم حالياً. أزل الفيديو لإرسال رسالة نصية أو اختار صورة.');
+        return;
+      }
+      if (!text) {
+        if (imageFile) showToast('اكتب وصف التعديل المطلوب للصورة أولاً.');
+        promptInput.focus();
+        return;
+      }
+
+      welcome.hidden = true;
+      messagesElement.hidden = false;
+      const userMessage = addMessage('user', text);
+      if (imageFile) addImageToMessage(userMessage, selectedFile.url, 'الصورة الأصلية المطلوب تعديلها');
+      history.push({ role: 'user', text });
+      if (history.length > 20) history = history.slice(-20);
+      promptInput.value = '';
+      resizeInput();
+      busy = true;
+      sendButton.disabled = true;
+      const loading = addMessage('model', 'دا أفكر بجوابك...', true);
+
+      try {
+        let requestBody;
+        let endpoint;
+        let originalImageDataUrl;
+
+        if (imageFile) {
+          originalImageDataUrl = await readFileAsDataUrl(imageFile);
+          userMessage.querySelector('.message-image').src = originalImageDataUrl;
+          endpoint = '/api/image-edit';
+          requestBody = {
+            prompt: text,
+            mimeType: imageFile.type,
+            imageBase64: originalImageDataUrl.slice(originalImageDataUrl.indexOf(',') + 1)
+          };
+        } else {
+          endpoint = '/api/chat';
+          requestBody = {
+            message: text,
+            history: history.slice(0, -1),
+            category
+          };
+        }
+
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestBody)
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || 'تعذّر إرسال الطلب إلى المساعد.');
+        if (typeof data.reply !== 'string' || !data.reply.trim() || (imageFile && !data.image)) {
+          throw new Error('وصل رد غير صالح من السيرفر. حاول مرة ثانية.');
+        }
+
+        const bubble = loading.querySelector('.message-bubble');
+        bubble.classList.remove('typing');
+        bubble.textContent = data.reply;
+        if (imageFile) {
+          addEditedImage(loading, data.image);
+          clearAttachment();
+        }
+        history.push({ role: 'model', text: data.reply });
+      } catch (error) {
+        loading.remove();
+        history.pop();
+        showToast(error.message || 'صار خطأ بالاتصال. تأكد من اتصالك وحاول مرة ثانية.');
+      } finally {
+        busy = false;
+        sendButton.disabled = false;
+        promptInput.focus();
+        chatScroll.scrollTop = chatScroll.scrollHeight;
+      }
+    });
+
+    const themeToggle = document.querySelector('#themeToggle');
+    const root = document.documentElement;
+    let savedTheme = 'light';
+    try {
+      savedTheme = localStorage.getItem('mustafa-ai-theme') || 'light';
+    } catch (error) {
+      console.warn('Theme preference could not be loaded:', error);
+    }
+    root.dataset.theme = savedTheme === 'dark' ? 'dark' : 'light';
+
+    function updateThemeButton() {
+      const dark = root.dataset.theme === 'dark';
+      themeToggle.textContent = dark ? '☀' : '☾';
+      themeToggle.setAttribute('aria-label', dark ? 'تفعيل الوضع الفاتح' : 'تفعيل الوضع الداكن');
+    }
+    updateThemeButton();
+    themeToggle.addEventListener('click', () => {
+      root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      updateThemeButton();
+      try {
+        localStorage.setItem('mustafa-ai-theme', root.dataset.theme);
+      } catch (error) {
+        console.warn('Theme preference could not be saved:', error);
+      }
+    });
+
+    const mobileMenu = document.querySelector('#mobileMenu');
+    const mainNav = document.querySelector('#mainNav');
+    mobileMenu.addEventListener('click', () => {
+      const open = mainNav.classList.toggle('open');
+      mobileMenu.setAttribute('aria-expanded', String(open));
+      mobileMenu.setAttribute('aria-label', open ? 'إغلاق قائمة التنقل' : 'فتح قائمة التنقل');
+    });
+    mainNav.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        mainNav.classList.remove('open');
+        mobileMenu.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    fetch('/api/health')
+      .then(async (response) => {
+        if (!response.ok) throw new Error(`Health check failed: HTTP ${response.status}`);
+        return response.json();
+      })
+      .then((data) => {
+        document.querySelector('#statusDot').classList.toggle('ready', Boolean(data.configured));
+        document.querySelector('#statusText').textContent = data.configured ? 'المساعد جاهز' : 'المساعد غير مهيّأ';
+      })
+      .catch((error) => {
+        console.error('Could not check assistant status:', error);
+        document.querySelector('#statusText').textContent = 'تعذّر الاتصال بالخادم';
+      });
+  </script>
+</body>
+</html>

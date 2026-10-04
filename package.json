@@ -1,0 +1,14 @@
+{
+  "name": "mustafa-hussein-ai-chat",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Arabic-first AI chat application by Mustafa Hussein",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  }
+}
