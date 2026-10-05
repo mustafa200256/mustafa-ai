@@ -653,6 +653,94 @@
     .section-head h2 { font-size: clamp(23px, 3vw, 30px); }
     .template-card, .tool-card, .about-card { border-radius: 16px; }
     .site-footer { margin-top: 18px; }
+    .image-editor-card {
+      padding: clamp(17px, 3vw, 28px);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+    .image-editor-intro { max-width: 760px; margin-bottom: 20px; }
+    .image-editor-intro h3 { margin: 0 0 6px; font-size: 17px; }
+    .image-editor-intro p, .image-provider-notice { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.9; }
+    .image-provider-notice {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border: 1px solid color-mix(in srgb, #e0ad55 38%, var(--line));
+      border-radius: 11px;
+      background: color-mix(in srgb, #e0ad55 8%, var(--surface));
+      color: var(--ink);
+    }
+    .image-editor-controls { display: grid; gap: 13px; }
+    .image-upload-label { display: block; margin-bottom: 7px; font-size: 12px; font-weight: 750; }
+    .image-editor-prompt {
+      display: block;
+      width: 100%;
+      min-height: 90px;
+      padding: 12px 14px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      outline: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font: inherit;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+    .image-editor-prompt:focus { border-color: var(--wine); box-shadow: 0 0 0 3px color-mix(in srgb, var(--wine) 12%, transparent); }
+    .image-editor-prompt::placeholder { color: var(--muted); }
+    .image-editor-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; }
+    .image-editor-upload, .image-editor-submit, .image-editor-again, .image-editor-remove {
+      display: inline-flex;
+      min-height: 40px;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 8px 13px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--surface-soft);
+      color: var(--ink);
+      font: inherit;
+      font-size: 12px;
+      font-weight: 750;
+      transition: transform .18s, border-color .18s, background .18s;
+    }
+    .image-editor-upload:hover, .image-editor-again:hover, .image-editor-remove:hover { transform: translateY(-1px); border-color: var(--wine); }
+    .image-editor-submit { border-color: transparent; background: linear-gradient(145deg, #a994ff, #806be0); color: #fff; }
+    .image-editor-submit:hover { transform: translateY(-1px); }
+    .image-editor-submit:disabled { cursor: wait; opacity: .62; transform: none; }
+    .image-editor-remove { min-height: 34px; padding: 6px 10px; color: var(--muted); }
+    .image-editor-suggestions { display: flex; flex-wrap: wrap; gap: 7px; }
+    .image-editor-suggestions button {
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 11px;
+      transition: color .18s, border-color .18s, background .18s;
+    }
+    .image-editor-suggestions button:hover { border-color: var(--wine); background: var(--wine-soft); color: var(--wine); }
+    .image-editor-preview {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 20px;
+    }
+    .image-editor-preview figure { min-width: 0; margin: 0; padding: 10px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); }
+    .image-editor-preview figcaption { margin: 0 0 8px; color: var(--muted); font-size: 12px; font-weight: 750; }
+    .image-editor-preview img { display: block; width: 100%; max-height: 440px; border-radius: 9px; background: var(--surface-soft); object-fit: contain; }
+    .image-editor-result-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .image-editor-result-actions a { text-decoration: none; }
+    .image-editor-status { min-height: 22px; margin: 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
+    .image-editor-status.error { color: #ef858b; }
+    .image-editor-status.success { color: var(--green); }
+    .image-editor-loading { display: inline-flex; align-items: center; gap: 9px; }
+    .image-editor-spinner { width: 15px; height: 15px; border: 2px solid var(--line); border-top-color: var(--wine); border-radius: 50%; animation: image-spin .75s linear infinite; }
+    @keyframes image-spin { to { transform: rotate(360deg); } }
 
     @media (max-width: 900px) {
       .header-inner, .page { width: min(100% - 32px, 760px); }
@@ -689,6 +777,10 @@
       .composer-note { align-self: auto; }
       .composer-hint { font-size: 9px; }
       .section { padding: 32px 0; }
+      .image-editor-card { padding: 14px; border-radius: 16px; }
+      .image-editor-preview { grid-template-columns: minmax(0, 1fr); }
+      .image-editor-preview img { max-height: 360px; }
+      .image-editor-actions > button { flex: 1; }
     }
     @media (max-width: 380px) {
       .brand-caption { display: none; }
@@ -711,6 +803,7 @@
       <nav class="main-nav" id="mainNav" aria-label="التنقل الرئيسي">
         <a href="#home">الرئيسية</a>
         <a href="#assistant">الذكاء الاصطناعي</a>
+        <a href="#image-edit">تعديل الصور</a>
         <a href="#templates">القوالب</a>
         <a href="#tools">الأدوات</a>
         <a href="#about">حول الموقع</a>
@@ -798,6 +891,65 @@
       </section>
     </section>
 
+    <section class="section" id="image-edit" aria-labelledby="imageEditTitle">
+      <div class="section-head">
+        <div>
+          <span class="section-kicker">أداة مستقلة عن المحادثة</span>
+          <h2 id="imageEditTitle">🖼️ تعديل الصور</h2>
+        </div>
+        <p>ارفع صورة، اكتب التعديل الذي تريده، ثم واصل تحسين النتيجة بتعليمات إضافية.</p>
+      </div>
+      <div class="image-editor-card">
+        <div class="image-editor-intro">
+          <h3>تعديل الصور بالذكاء الاصطناعي</h3>
+          <p>تُرسل الصورة إلى Hugging Face من الخادم فقط. حدّثنا الأداة لتستخدم FLUX.1-Kontext-dev عبر مزوّد hf-inference دون التحويل التلقائي إلى مزوّد قد يفرض رسوماً.</p>
+          <p class="image-provider-notice" id="imageProviderNotice">
+            تنبيه التوفّر: لا يظهر حالياً مزوّد hf-inference لهذا النموذج؛ المزوّدون الظاهرون حالياً هم Fal AI وReplicate وWaveSpeed. ولم يظهر نموذج image-to-image متاح عبر hf-inference المجاني في فهرس النماذج حالياً. لذلك قد لا يعمل التعديل حتى يتوفر نموذج مناسب؛ لا يوجد تحويل إلى خدمة مدفوعة.
+          </p>
+        </div>
+        <form class="image-editor-controls" id="imageEditorForm">
+          <div>
+            <span class="image-upload-label">الصورة الأصلية (PNG أو JPEG أو WebP، حتى 8 ميغابايت)</span>
+            <div class="image-editor-actions">
+              <button class="image-editor-upload" id="imageUploadButton" type="button">＋ رفع صورة</button>
+              <input class="sr-only" id="imageEditorFile" type="file" accept="image/png,image/jpeg,image/webp" tabindex="-1">
+              <span class="attachment-name" id="imageEditorFileName">لم يتم اختيار صورة</span>
+              <button class="image-editor-remove" id="imageEditorRemove" type="button" hidden>إزالة الصورة</button>
+            </div>
+          </div>
+          <div>
+            <label class="image-upload-label" for="imageEditPrompt">شنو تريد أعدل بالصورة؟</label>
+            <textarea class="image-editor-prompt" id="imageEditPrompt" maxlength="2000" placeholder="مثال: غيّر الخلفية إلى مدينة بغداد في الليل مع الحفاظ على الشخص وملامحه كما هي"></textarea>
+          </div>
+          <div class="image-editor-suggestions" aria-label="أمثلة على التعديلات">
+            <button type="button" data-image-prompt="غيّر الخلفية">غيّر الخلفية</button>
+            <button type="button" data-image-prompt="احذف شخص من الخلفية">احذف شخص من الخلفية</button>
+            <button type="button" data-image-prompt="حسّن جودة الصورة">حسّن جودة الصورة</button>
+            <button type="button" data-image-prompt="غيّر الملابس">غيّر الملابس</button>
+            <button type="button" data-image-prompt="حوّل الصورة إلى أسلوب سينمائي">حوّل الصورة إلى أسلوب سينمائي</button>
+          </div>
+          <div class="image-editor-actions">
+            <button class="image-editor-submit" id="imageEditSubmit" type="submit">✨ تعديل الصورة</button>
+            <button class="image-editor-again" id="imageEditAgain" type="button" hidden>تعديل مرة أخرى</button>
+          </div>
+          <p class="image-editor-status" id="imageEditorStatus" role="status" aria-live="polite"></p>
+        </form>
+        <div class="image-editor-preview" id="imageEditorPreview" hidden>
+          <figure>
+            <figcaption>الصورة الأصلية</figcaption>
+            <img id="imageEditorOriginal" alt="معاينة الصورة الأصلية">
+          </figure>
+          <figure id="imageEditorResultFigure" hidden>
+            <figcaption id="imageEditorResultCaption">النتيجة</figcaption>
+            <img id="imageEditorResult" alt="نتيجة تعديل الصورة">
+            <div class="image-editor-result-actions">
+              <a class="image-editor-upload" id="imageEditorDownload" download="mustafa-ai-image-edited.png">↓ تحميل الصورة</a>
+            </div>
+          </figure>
+        </div>
+      </div>
+    </section>
+
     <section class="section" id="templates" aria-labelledby="templatesTitle">
       <div class="section-head">
         <div>
@@ -867,6 +1019,24 @@
     const chatCard = document.querySelector('.chat-card');
     const maxContextCharacters = 24000;
     const stopButton = document.querySelector('#stopButton');
+    const imageEditorForm = document.querySelector('#imageEditorForm');
+    const imageEditorFile = document.querySelector('#imageEditorFile');
+    const imageEditorPrompt = document.querySelector('#imageEditPrompt');
+    const imageEditorSubmit = document.querySelector('#imageEditSubmit');
+    const imageEditorStatus = document.querySelector('#imageEditorStatus');
+    const imageEditorPreview = document.querySelector('#imageEditorPreview');
+    const imageEditorOriginal = document.querySelector('#imageEditorOriginal');
+    const imageEditorResultFigure = document.querySelector('#imageEditorResultFigure');
+    const imageEditorResult = document.querySelector('#imageEditorResult');
+    const imageEditorDownload = document.querySelector('#imageEditorDownload');
+    const imageEditorRemove = document.querySelector('#imageEditorRemove');
+    const imageEditorAgain = document.querySelector('#imageEditAgain');
+    const imageEditorFileName = document.querySelector('#imageEditorFileName');
+    let imageEditorOriginalFile = null;
+    let imageEditorOriginalUrl = null;
+    let imageEditorCurrentDataUrl = null;
+    let imageEditorHistory = [];
+    let imageEditorBusy = false;
     const conversationList = document.querySelector('#conversationList');
     const conversationSidebar = document.querySelector('#conversationSidebar');
     const historyToggle = document.querySelector('#historyToggle');
@@ -893,7 +1063,7 @@
       { icon: '✨', title: 'تحسين النصوص', description: 'صحّح النص وطوّر أسلوبه مع الحفاظ على فكرته.', prompt: 'راجع النص التالي، وصحّح الأخطاء وحسّن الوضوح والأسلوب من دون تغيير المعنى أو المعلومات: [ألصق النص هنا]' }
     ];
     const tools = [
-      { icon: '🖼️', title: 'تعديل الصور', description: 'ارفع صورة واطلب تعديلها عبر نموذج Gemini للصور.', active: true },
+      { icon: '🖼️', title: 'تعديل الصور', description: 'ارفع صورة واطلب تعديلها عبر Hugging Face Inference.', active: true },
       { icon: '🔎', title: 'تحليل صورة', description: 'الإجابة عن الأسئلة حول محتوى الصور.' },
       { icon: '🔎', title: 'قراءة النص من صورة', description: 'استخراج النصوص والمعلومات من الصور.' },
       { icon: '📄', title: 'تلخيص ملف', description: 'تلخيص الملفات الطويلة إلى نقاط واضحة.' },
@@ -956,6 +1126,44 @@
       toast.classList.add('show');
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => toast.classList.remove('show'), 4800);
+    }
+
+    function setImageEditorStatus(message, type = '') {
+      imageEditorStatus.textContent = message;
+      imageEditorStatus.className = `image-editor-status${type ? ` ${type}` : ''}`;
+    }
+
+    function clearImageEditorImage() {
+      if (imageEditorOriginalUrl) URL.revokeObjectURL(imageEditorOriginalUrl);
+      imageEditorOriginalFile = null;
+      imageEditorOriginalUrl = null;
+      imageEditorCurrentDataUrl = null;
+      imageEditorHistory = [];
+      imageEditorFile.value = '';
+      imageEditorFileName.textContent = 'لم يتم اختيار صورة';
+      imageEditorOriginal.removeAttribute('src');
+      imageEditorResult.removeAttribute('src');
+      imageEditorDownload.removeAttribute('href');
+      imageEditorPreview.hidden = true;
+      imageEditorResultFigure.hidden = true;
+      imageEditorRemove.hidden = true;
+      imageEditorAgain.hidden = true;
+      setImageEditorStatus('');
+    }
+
+    function readImageAsDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.addEventListener('load', () => {
+          if (typeof reader.result !== 'string') {
+            reject(new Error('تعذّرت قراءة الصورة المختارة.'));
+            return;
+          }
+          resolve(reader.result);
+        }, { once: true });
+        reader.addEventListener('error', () => reject(new Error('تعذّرت قراءة الصورة المختارة.')), { once: true });
+        reader.readAsDataURL(file);
+      });
     }
 
     function selectCategory(value) {
@@ -1151,6 +1359,7 @@
               showToast('تعذّر نسخ الكود من المتصفح.');
             }
           });
+
           const pre = document.createElement('pre');
           const code = document.createElement('code');
           code.textContent = codeLines.join('\n');
@@ -1501,6 +1710,114 @@
       if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
         form.requestSubmit();
+      }
+    });
+
+    document.querySelector('#imageUploadButton').addEventListener('click', () => imageEditorFile.click());
+    imageEditorFile.addEventListener('change', () => {
+      const file = imageEditorFile.files?.[0];
+      if (!file) return;
+      if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+        imageEditorFile.value = '';
+        setImageEditorStatus('نوع الصورة غير مدعوم. اختار صورة PNG أو JPEG أو WebP.', 'error');
+        showToast('نوع الصورة غير مدعوم. اختار PNG أو JPEG أو WebP.');
+        return;
+      }
+      if (file.size === 0 || file.size > 8 * 1024 * 1024) {
+        imageEditorFile.value = '';
+        setImageEditorStatus('حجم الصورة يجب أن يكون أكبر من صفر وألا يتجاوز 8 ميغابايت.', 'error');
+        showToast('حجم الصورة يجب ألا يتجاوز 8 ميغابايت.');
+        return;
+      }
+
+      clearImageEditorImage();
+      imageEditorOriginalFile = file;
+      imageEditorOriginalUrl = URL.createObjectURL(file);
+      imageEditorOriginal.src = imageEditorOriginalUrl;
+      imageEditorFileName.textContent = file.name;
+      imageEditorPreview.hidden = false;
+      imageEditorResultFigure.hidden = true;
+      imageEditorRemove.hidden = false;
+      setImageEditorStatus('تم تجهيز الصورة. اكتب وصف التعديل للبدء.');
+    });
+    imageEditorRemove.addEventListener('click', clearImageEditorImage);
+    imageEditorAgain.addEventListener('click', () => {
+      imageEditorPrompt.focus({ preventScroll: true });
+      imageEditorPrompt.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+    document.querySelectorAll('[data-image-prompt]').forEach((button) => {
+      button.addEventListener('click', () => {
+        imageEditorPrompt.value = button.dataset.imagePrompt;
+        imageEditorPrompt.focus();
+      });
+    });
+
+    imageEditorForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (imageEditorBusy) return;
+      if (!imageEditorOriginalFile) {
+        setImageEditorStatus('ارفع صورة أولاً قبل إرسال طلب التعديل.', 'error');
+        showToast('ارفع صورة أولاً قبل إرسال طلب التعديل.');
+        imageEditorFile.focus();
+        return;
+      }
+
+      const prompt = imageEditorPrompt.value.trim();
+      if (!prompt) {
+        setImageEditorStatus('اكتب وصف التعديل المطلوب أولاً.', 'error');
+        imageEditorPrompt.focus();
+        return;
+      }
+
+      imageEditorBusy = true;
+      imageEditorSubmit.disabled = true;
+      imageEditorRemove.disabled = true;
+      imageEditorFile.disabled = true;
+      imageEditorSubmit.innerHTML = '<span class="image-editor-spinner" aria-hidden="true"></span> جارٍ تعديل الصورة...';
+      setImageEditorStatus('قد يستغرق تجهيز الصورة بعض الوقت. حافظنا على صورتك الأصلية دون تغيير.');
+      const previousInstructions = imageEditorHistory.slice(-3);
+      const requestPrompt = [
+        ...previousInstructions.map((instruction) => `Previous edit instruction: ${instruction}`),
+        `New edit instruction: ${prompt}`
+      ].join('\n').slice(-2000);
+
+      try {
+        const image = imageEditorCurrentDataUrl || await readImageAsDataUrl(imageEditorOriginalFile);
+        if (!imageEditorCurrentDataUrl) imageEditorCurrentDataUrl = image;
+        const response = await fetch('/api/edit-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image, prompt: requestPrompt })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || 'تعذّر تعديل الصورة عبر Hugging Face.');
+        if (
+          typeof data.image !== 'string' ||
+          !/^data:image\/(?:jpeg|png|webp);base64,/.test(data.image)
+        ) {
+          throw new Error('أعاد Hugging Face نتيجة صورة غير صالحة.');
+        }
+
+        imageEditorCurrentDataUrl = data.image;
+        imageEditorResult.src = data.image;
+        imageEditorDownload.href = data.image;
+        imageEditorDownload.download = `mustafa-ai-edited.${data.mimeType === 'image/jpeg' ? 'jpg' : data.mimeType?.split('/')[1] || 'png'}`;
+        imageEditorResultFigure.hidden = false;
+        imageEditorAgain.hidden = false;
+        imageEditorHistory.push(prompt);
+        imageEditorHistory = imageEditorHistory.slice(-5);
+        imageEditorPrompt.value = '';
+        setImageEditorStatus('اكتمل تعديل الصورة. يمكنك كتابة تعليمات جديدة لمواصلة التعديل على النتيجة.', 'success');
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'تعذّر تعديل الصورة حالياً.';
+        setImageEditorStatus(message, 'error');
+        showToast(message);
+      } finally {
+        imageEditorBusy = false;
+        imageEditorSubmit.disabled = false;
+        imageEditorRemove.disabled = false;
+        imageEditorFile.disabled = false;
+        imageEditorSubmit.textContent = '✨ تعديل الصورة';
       }
     });
 

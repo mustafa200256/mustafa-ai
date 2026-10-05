@@ -3,6 +3,10 @@ import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { editImage, ImageServiceError } from './services/imageService.mjs';
+import {
+  editImageWithHuggingFace,
+  HuggingFaceImageError
+} from './services/huggingFaceImageService.mjs';
 
 const app = express();
 const port = Number(process.env.PORT) || 3000;
@@ -179,6 +183,26 @@ app.get('/api/health', (_request, response) => {
       process.env.GEMINI_API_KEY?.trim() || process.env.GROQ_API_KEY?.trim()
     )
   });
+});
+
+app.post('/api/edit-image', express.json({ limit: '12mb' }), async (request, response) => {
+  const { image, prompt } = request.body ?? {};
+  try {
+    const result = await editImageWithHuggingFace({
+      apiKey: process.env.HUGGINGFACE_API_KEY?.trim(),
+      image,
+      prompt
+    });
+    return response.json(result);
+  } catch (error) {
+    if (error instanceof HuggingFaceImageError) {
+      return response.status(error.status).json({ error: error.message });
+    }
+    console.error('Hugging Face image-edit service failed unexpectedly.');
+    return response.status(502).json({
+      error: 'تعذّر تعديل الصورة حالياً. حاول مرة أخرى.'
+    });
+  }
 });
 
 app.post('/api/image-edit', express.json({ limit: '12mb' }), async (request, response) => {
