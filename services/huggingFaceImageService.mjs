@@ -1,5 +1,13 @@
-const modelId = 'black-forest-labs/FLUX.1-Kontext-dev';
-const modelEndpoint = `https://router.huggingface.co/hf-inference/models/${modelId}`;
+import {
+  InferenceClient,
+  InferenceClientHubApiError,
+  InferenceClientInputError,
+  InferenceClientProviderApiError,
+  InferenceClientRoutingError
+} from '@huggingface/inference';
+
+const modelId = 'Qwen/Qwen-Image-Edit';
+const provider = 'fal-ai';
 const supportedImageTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
 const maxImageBytes = 8 * 1024 * 1024;
 const maxOutputBytes = 16 * 1024 * 1024;
@@ -54,68 +62,77 @@ function parseImageDataUrl(image) {
   return { mimeType, imageBuffer };
 }
 
-function providerErrorMessage(status, providerMessage) {
-  if (status === 401 || status === 403) {
-    return 'رفض Hugging Face الطلب. تحقّق من صلاحية HUGGINGFACE_API_KEY وتفعيل إذن Inference Providers.';
-  }
-  if (status === 402) {
-    return 'لا تتوفر أرصدة Hugging Face لهذا الطلب. لم يتم اختيار مزوّد مدفوع بديل.';
-  }
-  if (status === 429) {
-    return 'وصلت إلى حد الطلبات في Hugging Face. انتظر قليلاً ثم حاول مرة أخرى.';
-  }
+function getProviderErrorDetails(error) {
   if (
-    /no inference provider|not supported by any provider|provider.*not available|model.*not available|not deployed/i.test(providerMessage) ||
-    status === 404 ||
-    status === 410
+    error instanceof InferenceClientProviderApiError ||
+    error instanceof InferenceClientHubApiError
   ) {
-    return 'نموذج FLUX.1-Kontext-dev غير متاح حالياً عبر مزوّد hf-inference. يظهر حالياً عبر مزوّدين آخرين فقط؛ لم نوجّه الطلب إلى مزوّد قد يفرض رسوماً.';
+    const body = error.httpResponse.body;
+    const message = typeof body === 'string'
+      ? body
+      : typeof body === 'object' && body !== null
+        ? [body.error, body.message, body.detail].find((value) => typeof value === 'string') ?? ''
+        : '';
+    return { status: error.httpResponse.status, message };
   }
-  if (status === 503) {
-    return 'خدمة Hugging Face أو النموذج غير متاح مؤقتاً. لم يتم التحويل إلى مزوّد مدفوع.';
-  }
+  return { status: 0, message: error instanceof Error ? error.message : '' };
+}
 
-  const safeMessage = providerMessage
+function providerErrorMessage(error, apiKey) {
+  const { status, message } = getProviderErrorDetails(error);
+  const detail = message
+    .replaceAll(apiKey, '[مفتاح مخفي]')
     .replace(/hf_[A-Za-z0-9]+/g, '[مفتاح مخفي]')
     .replace(/Bearer\s+\S+/gi, 'Bearer [مفتاح مخفي]')
     .replace(/\s+/g, ' ')
     .trim()
     .slice(0, 280);
-  return safeMessage
-    ? `رفض Hugging Face طلب تعديل الصورة (HTTP ${status}): ${safeMessage}`
-    : `فشل تعديل الصورة عبر Hugging Face (HTTP ${status}). حاول مرة أخرى.`;
-}
 
-async function readProviderError(response) {
-  try {
-    const data = await response.json();
-    return typeof data.error === 'string' ? data.error : '';
-  } catch {
-    return '';
+  if (status === 401 || status === 403) {
+    return 'رفض Hugging Face الطلب. تحقّق من صلاحية HUGGINGFACE_API_KEY وإذن Inference Providers وإتاحة Fal لحسابك.';
   }
+  if (status === 402 || /insufficient.*(credit|balance)|payment required/i.test(detail)) {
+    return 'رفض Hugging Face الطلب بسبب الرصيد أو إعداد مزوّد Fal. لم يتم تفعيل فوترة أو اختيار مزوّد آخر.';
+  }
+  if (status === 429) {
+    return 'وصل طلب تعديل الصورة إلى حد الاستخدام لدى Hugging Face أو Fal. حاول لاحقاً أو تحقق من حدود حسابك.';
+  }
+  if (/permission|not authorized|access denied|enable.*provider|provider.*not enabled/i.test(detail)) {
+    return `تعذّر استخدام Fal لهذا النموذج بسبب صلاحية أو إعداد مطلوب في حساب Hugging Face.${detail ? ` التفاصيل: ${detail}` : ''}`;
+  }
+  if (
+    /no inference provider|not supported by any provider|provider.*not available|model.*not available|not deployed|not supported for task/i.test(detail) ||
+    error instanceof InferenceClientInputError ||
+    error instanceof InferenceClientRoutingError ||
+    status === 404 ||
+    status === 410
+  ) {
+    return 'تعذّر توجيه Qwen/Qwen-Image-Edit إلى مزوّد fal-ai. تحقّق من إتاحة النموذج ومزوّد Fal في Hugging Face.';
+  }
+  if (status >= 500 || error instanceof InferenceClientHubApiError) {
+    return `خدمة Hugging Face أو مزوّد Fal غير متاحة مؤقتاً.${detail ? ` التفاصيل: ${detail}` : ''}`;
+  }
+  if (detail) return `رفض مزوّد Fal تعديل الصورة: ${detail}`;
+  return 'تعذّر تعديل الصورة عبر مزوّد Fal. تحقق من إعداد Inference Providers ثم حاول مرة أخرى.';
 }
 
 export async function editImageWithHuggingFace({ apiKey, image, prompt }) {
   if (typeof prompt !== 'string' || !prompt.trim() || prompt.trim().length > 2000) {
     throw new HuggingFaceImageError(400, 'اكتب وصف التعديل، وبحد أقصى 2000 حرف.');
   }
-  const { imageBuffer } = parseImageDataUrl(image);
+  const { mimeType, imageBuffer } = parseImageDataUrl(image);
   if (!apiKey) {
     throw new HuggingFaceImageError(503, 'أضف HUGGINGFACE_API_KEY إلى ملف .env لتفعيل تعديل الصور.');
   }
 
-  let providerResponse;
+  const client = new InferenceClient(apiKey);
+  let editedImage;
   try {
-    providerResponse = await fetch(modelEndpoint, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        Accept: 'image/*'
-      },
-      signal: AbortSignal.timeout(120000),
-      body: JSON.stringify({
-        inputs: imageBuffer.toString('base64'),
+    editedImage = await client.imageToImage(
+      {
+        provider,
+        model: modelId,
+        inputs: new Blob([imageBuffer], { type: mimeType }),
         parameters: {
           prompt: [
             'Edit the provided image according to the user instruction.',
@@ -123,61 +140,42 @@ export async function editImageWithHuggingFace({ apiKey, image, prompt }) {
             `User instruction: ${prompt.trim()}`
           ].join(' ')
         }
-      })
-    });
-  } catch {
-    throw new HuggingFaceImageError(502, 'تعذّر الاتصال بخدمة Hugging Face. تحقّق من الاتصال وحاول مجدداً.');
-  }
-
-  if (!providerResponse.ok) {
-    const providerMessage = await readProviderError(providerResponse);
-    console.error('Hugging Face image request failed. HTTP status:', providerResponse.status);
-    const modelUnavailable =
-      /no inference provider|not supported by any provider|provider.*not available|model.*not available|not deployed/i.test(providerMessage) ||
-      providerResponse.status === 404 ||
-      providerResponse.status === 410;
-    const responseStatus = modelUnavailable
-      ? 503
-      : providerResponse.status === 401 || providerResponse.status === 403 ||
-        providerResponse.status === 402 || providerResponse.status === 429
-        ? providerResponse.status
-        : 502;
-    throw new HuggingFaceImageError(
-      responseStatus,
-      providerErrorMessage(providerResponse.status, providerMessage)
+      },
+      { retry_on_error: false, signal: AbortSignal.timeout(120000) }
     );
+  } catch (error) {
+    const status = error instanceof InferenceClientProviderApiError ||
+      error instanceof InferenceClientHubApiError
+      ? error.httpResponse.status
+      : 0;
+    console.error('Hugging Face Fal image request failed. HTTP status:', status || 'unavailable');
+    const responseStatus = status === 401 || status === 402 || status === 403 || status === 429
+      ? status
+      : status >= 500 || error instanceof InferenceClientHubApiError ||
+        error instanceof InferenceClientInputError ||
+        error instanceof InferenceClientRoutingError
+        ? 503
+        : 502;
+    throw new HuggingFaceImageError(responseStatus, providerErrorMessage(error, apiKey));
   }
 
-  const outputMimeType = providerResponse.headers.get('content-type')?.split(';')[0].trim().toLowerCase();
+  const outputMimeType = editedImage.type?.split(';')[0].trim().toLowerCase();
   if (!supportedImageTypes.has(outputMimeType)) {
-    throw new HuggingFaceImageError(502, 'أعاد Hugging Face استجابة ليست صورة PNG أو JPEG أو WebP.');
+    throw new HuggingFaceImageError(502, 'أعاد مزوّد Fal استجابة ليست صورة PNG أو JPEG أو WebP.');
   }
-
-  const outputLength = Number(providerResponse.headers.get('content-length'));
-  if (Number.isFinite(outputLength) && outputLength > maxOutputBytes) {
+  if (editedImage.size > maxOutputBytes) {
     throw new HuggingFaceImageError(502, 'حجم الصورة الناتجة من Hugging Face أكبر من الحد المسموح.');
   }
 
-  const outputChunks = [];
-  let outputSize = 0;
-  for await (const chunk of providerResponse.body) {
-    outputSize += chunk.length;
-    if (outputSize > maxOutputBytes) {
-      throw new HuggingFaceImageError(502, 'حجم الصورة الناتجة من Hugging Face أكبر من الحد المسموح.');
-    }
-    outputChunks.push(chunk);
-  }
-  const output = Buffer.concat(outputChunks);
-  if (
-    output.length === 0 ||
-    !matchesImageSignature(output, outputMimeType)
-  ) {
-    throw new HuggingFaceImageError(502, 'تعذّر التحقق من الصورة الناتجة من Hugging Face.');
+  const output = Buffer.from(await editedImage.arrayBuffer());
+  if (output.length === 0 || !matchesImageSignature(output, outputMimeType)) {
+    throw new HuggingFaceImageError(502, 'تعذّر التحقق من الصورة الناتجة من مزوّد Fal.');
   }
 
   return {
     image: `data:${outputMimeType};base64,${output.toString('base64')}`,
     mimeType: outputMimeType,
-    model: modelId
+    model: modelId,
+    provider
   };
 }

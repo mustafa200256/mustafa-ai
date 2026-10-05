@@ -902,9 +902,9 @@
       <div class="image-editor-card">
         <div class="image-editor-intro">
           <h3>تعديل الصور بالذكاء الاصطناعي</h3>
-          <p>تُرسل الصورة إلى Hugging Face من الخادم فقط. حدّثنا الأداة لتستخدم FLUX.1-Kontext-dev عبر مزوّد hf-inference دون التحويل التلقائي إلى مزوّد قد يفرض رسوماً.</p>
+          <p>تُرسل الصورة إلى Hugging Face من الخادم فقط باستخدام Qwen/Qwen-Image-Edit عبر مزوّد fal-ai المحدد صراحةً؛ لا يتم اختيار مزوّد بديل تلقائياً.</p>
           <p class="image-provider-notice" id="imageProviderNotice">
-            تنبيه التوفّر: لا يظهر حالياً مزوّد hf-inference لهذا النموذج؛ المزوّدون الظاهرون حالياً هم Fal AI وReplicate وWaveSpeed. ولم يظهر نموذج image-to-image متاح عبر hf-inference المجاني في فهرس النماذج حالياً. لذلك قد لا يعمل التعديل حتى يتوفر نموذج مناسب؛ لا يوجد تحويل إلى خدمة مدفوعة.
+            يتطلب الاستخدام صلاحية Inference Providers وإتاحة Fal لحساب Hugging Face. إذا رفض الحساب الطلب بسبب الصلاحيات أو الرصيد، ستظهر رسالة توضح السبب؛ لا تُفعّل فوترة ولا يُستخدم مزوّد آخر تلقائياً.
           </p>
         </div>
         <form class="image-editor-controls" id="imageEditorForm">
