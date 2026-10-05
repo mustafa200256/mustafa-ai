@@ -3,11 +3,27 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#800020">
+  <meta name="theme-color" content="#111318">
   <meta name="description" content="مساعد مصطفى حسين الذكي — اكتب، تعلّم، ابتكر، واطلب المساعدة باللهجة العراقية.">
-  <title>مصطفى حسين — ذكاء يساعدك تنجز</title>
+  <title>مصطفى حسين AI</title>
   <style>
     :root {
+      color-scheme: dark;
+      --wine: #a994ff;
+      --wine-dark: #c2b4ff;
+      --wine-soft: #29263b;
+      --paper: #111318;
+      --surface: #191b22;
+      --surface-soft: #20232c;
+      --ink: #ececf2;
+      --muted: #a1a3b3;
+      --line: #2c2f3a;
+      --green: #67d7ae;
+      --shadow: 0 18px 55px rgba(0, 0, 0, .24);
+      --radius-lg: 24px;
+    }
+
+    :root[data-theme="light"] {
       color-scheme: light;
       --wine: #800020;
       --wine-dark: #620019;
@@ -20,22 +36,6 @@
       --line: #eae5e1;
       --green: #33865a;
       --shadow: 0 18px 55px rgba(72, 37, 42, .08);
-      --radius-lg: 24px;
-    }
-
-    :root[data-theme="dark"] {
-      color-scheme: dark;
-      --wine: #d4778f;
-      --wine-dark: #ea9caf;
-      --wine-soft: #38232a;
-      --paper: #171516;
-      --surface: #211e1f;
-      --surface-soft: #2a2527;
-      --ink: #f4eeee;
-      --muted: #b4a9aa;
-      --line: #393234;
-      --green: #76c99a;
-      --shadow: 0 18px 55px rgba(0, 0, 0, .22);
     }
 
     * { box-sizing: border-box; }
@@ -531,16 +531,181 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
+
+    body {
+      background:
+        radial-gradient(ellipse at 78% 0%, rgba(169, 148, 255, .09), transparent 34rem),
+        var(--paper);
+    }
+    .site-header { background: color-mix(in srgb, var(--paper) 88%, transparent); }
+    .header-inner { width: min(1200px, calc(100% - 48px)); min-height: 68px; }
+    .brand-mark { background: linear-gradient(145deg, #a994ff, #7461d1); box-shadow: 0 7px 20px rgba(120, 97, 209, .2); }
+    .brand-name { font-size: 15px; }
+    .page { width: min(1160px, calc(100% - 48px)); }
+    .hero { display: block; padding: 22px 0 20px; }
+    .hero-copy { margin: 0 auto 16px; text-align: center; }
+    .hero .eyebrow, .hero-points { display: none; }
+    .hero h1 { max-width: 760px; margin: 0 auto 6px; font-size: clamp(28px, 3.5vw, 38px); letter-spacing: -.5px; }
+    .hero-copy > p { margin-inline: auto; font-size: 13px; }
+    .eyebrow { background: var(--surface); }
+    .chat-card {
+      padding: 18px;
+      border-radius: 22px;
+      background: color-mix(in srgb, var(--surface) 94%, transparent);
+      box-shadow: 0 24px 75px rgba(0, 0, 0, .2);
+    }
+    .chat-card-head { padding-bottom: 16px; }
+    .assistant-mark { background: linear-gradient(145deg, var(--wine-soft), color-mix(in srgb, var(--wine) 16%, var(--surface))); }
+    .chat-workspace { grid-template-columns: 210px minmax(0, 1fr); gap: 20px; }
+    .conversation-sidebar { padding: 5px 14px 5px 0; }
+    .conversation-sidebar h3 { padding-inline: 3px; }
+    .conversation-list { gap: 4px; max-height: min(54vh, 560px); }
+    .conversation-entry { display: flex; align-items: center; gap: 3px; min-width: 0; }
+    .conversation-item { min-width: 0; flex: 1; padding: 9px 10px; font-size: 12px; }
+    .delete-conversation {
+      display: grid;
+      flex: 0 0 30px;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border: 0;
+      border-radius: 9px;
+      background: transparent;
+      color: var(--muted);
+      opacity: .65;
+      transition: color .18s, background .18s, opacity .18s;
+    }
+    .conversation-entry:hover .delete-conversation,
+    .delete-conversation:focus-visible { opacity: 1; }
+    .delete-conversation:hover { background: color-mix(in srgb, #df6f78 14%, var(--surface)); color: #ef858b; }
+    .chat-main { display: flex; flex-direction: column; }
+    .chat-scroll {
+      height: min(38vh, 420px);
+      min-height: 270px;
+      max-height: none;
+      padding: 0 8px;
+      border-radius: 15px;
+      background: color-mix(in srgb, var(--paper) 43%, var(--surface));
+    }
+    .welcome { min-height: 340px; padding: 32px 16px; }
+    .welcome-icon {
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 52px;
+      margin-bottom: 15px;
+      border: 1px solid color-mix(in srgb, var(--wine) 26%, var(--line));
+      border-radius: 18px;
+      background: var(--wine-soft);
+      font-size: 25px;
+    }
+    .welcome h2 { margin-bottom: 8px; font-size: clamp(20px, 2.5vw, 25px); }
+    .welcome p { font-size: 14px; }
+    .messages { max-width: 820px; margin: 0 auto; padding: 19px 4px; }
+    .message { gap: 11px; margin: 18px 0; }
+    .message-bubble {
+      max-width: min(88%, 720px);
+      padding: 11px 15px;
+      border-radius: 14px;
+      background: var(--surface);
+      font-size: 14px;
+      line-height: 1.95;
+    }
+    .message.user .message-bubble {
+      border-color: color-mix(in srgb, var(--wine) 28%, var(--line));
+      border-radius: 14px;
+      background: color-mix(in srgb, var(--wine) 13%, var(--surface));
+      color: var(--ink);
+    }
+    .message-avatar { border-radius: 11px; }
+    .message-content { min-width: 0; max-width: calc(100% - 40px); }
+    .message-content .message-bubble { max-width: 100%; }
+    .message-actions { display: flex; gap: 6px; margin: 6px 2px 0; }
+    .copy-response {
+      padding: 4px 8px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 11px;
+    }
+    .copy-response:hover { border-color: var(--line); background: var(--surface); color: var(--ink); }
+    .quick-label { margin: 15px 4px 8px; font-size: 12px; }
+    .quick-prompts { gap: 8px; padding-bottom: 14px; }
+    .quick-prompt { padding: 8px 12px; border-radius: 12px; font-size: 12px; }
+    .composer-shell { position: relative; bottom: auto; border-radius: 17px; box-shadow: 0 8px 28px rgba(0, 0, 0, .12); }
+    .composer { padding: 10px 11px 7px; }
+    .composer textarea { min-height: 48px; max-height: 180px; padding: 8px 9px; }
+    .send-button { background: linear-gradient(145deg, #a994ff, #806be0); }
+    .attach-button, .new-chat-button, .stop-button { border-radius: 10px; }
+    .attachment-preview { margin: 0 12px 10px; }
+    .code-block { border-color: #343744; border-radius: 13px; background: #12141a; }
+    .code-block pre { padding-top: 39px; }
+    .markdown-content h1, .markdown-content h2, .markdown-content h3 { line-height: 1.6; }
+    .markdown-table-wrap { max-width: 100%; margin: 10px 0; overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
+    .markdown-table { width: 100%; border-collapse: collapse; text-align: right; }
+    .markdown-table th, .markdown-table td { min-width: 90px; padding: 8px 11px; border-bottom: 1px solid var(--line); }
+    .markdown-table th { background: var(--surface-soft); font-weight: 750; }
+    .markdown-table tr:last-child td { border-bottom: 0; }
+    .markdown-content ol { margin: 4px 0 10px; padding-inline-start: 24px; }
+    .composer-hint { margin-top: 8px; }
+    .section { padding: 42px 0; }
+    .section-head h2 { font-size: clamp(23px, 3vw, 30px); }
+    .template-card, .tool-card, .about-card { border-radius: 16px; }
+    .site-footer { margin-top: 18px; }
+
+    @media (max-width: 900px) {
+      .header-inner, .page { width: min(100% - 32px, 760px); }
+      .hero { padding-top: 27px; }
+      .chat-workspace { grid-template-columns: 190px minmax(0, 1fr); gap: 14px; }
+      .chat-card { padding: 14px; }
+      .chat-scroll { height: min(40vh, 380px); min-height: 260px; }
+    }
+    @media (max-width: 680px) {
+      .header-inner, .page { width: calc(100% - 28px); }
+      .header-inner { min-height: 62px; }
+      .brand-name { font-size: 14px; }
+      .hero { padding: 24px 0 18px; }
+      .hero-copy { margin-bottom: 18px; }
+      .hero h1 { margin-top: 12px; font-size: clamp(28px, 8vw, 38px); line-height: 1.4; }
+      .hero-copy > p { font-size: 13px; }
+      .hero-points { gap: 5px 11px; font-size: 10px; }
+      .chat-card { padding: 12px; border-radius: 17px; }
+      .chat-card-head { align-items: flex-start; padding-bottom: 12px; }
+      .chat-head-actions { width: auto; justify-content: flex-end; }
+      .chat-workspace { grid-template-columns: minmax(0, 1fr); gap: 9px; }
+      .conversation-sidebar { display: none; padding: 9px; border: 1px solid var(--line); border-radius: 12px; }
+      .conversation-sidebar.open { display: block; }
+      .conversation-list { max-height: 190px; }
+      .chat-scroll { height: 40vh; min-height: 260px; max-height: 400px; padding: 0 4px; }
+      .welcome { min-height: 260px; padding: 25px 12px; }
+      .messages { padding: 12px 1px; }
+      .message-bubble { max-width: calc(100% - 40px); padding: 9px 11px; font-size: 13px; }
+      .message-content { max-width: calc(100% - 39px); }
+      .message-content .message-bubble { max-width: 100%; }
+      .quick-prompts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+      .quick-prompt { min-height: 40px; padding: 7px 8px; border-radius: 11px; font-size: 11px; }
+      .composer-tools { flex-direction: row; align-items: center; }
+      .composer-note { align-self: auto; }
+      .composer-hint { font-size: 9px; }
+      .section { padding: 32px 0; }
+    }
+    @media (max-width: 380px) {
+      .brand-caption { display: none; }
+      .chat-head-actions { flex-wrap: wrap; }
+      .status { display: none; }
+      .composer-note { font-size: 9px; }
+    }
   </style>
 </head>
 <body>
   <header class="site-header">
     <div class="header-inner">
-      <a class="brand" href="#home" aria-label="مصطفى حسين — الرئيسية">
+      <a class="brand" href="#home" aria-label="مصطفى حسين AI — الرئيسية">
         <span class="brand-mark" aria-hidden="true">م</span>
         <span>
-          <span class="brand-name">مصطفى حسين</span>
-          <span class="brand-caption">ذكاء يساعدك تنجز</span>
+          <span class="brand-name">مصطفى حسين AI</span>
+          <span class="brand-caption">مساعدك الذكي</span>
         </span>
       </a>
       <nav class="main-nav" id="mainNav" aria-label="التنقل الرئيسي">
@@ -561,8 +726,8 @@
     <section class="hero" id="home" aria-labelledby="heroTitle">
       <div class="hero-copy">
         <span class="eyebrow"><span class="eyebrow-dot"></span> مساعدك الذكي باللغة العربية</span>
-        <h1 id="heroTitle">فكرتك تستاهل <span>تنطلق.</span></h1>
-        <p>من أول فكرة لحد آخر تفصيلة — اسأل، اكتب، تعلّم وبرمج ويا مساعد يفهمك ويحچي لغتك.</p>
+        <h1 id="heroTitle">مرحباً بك في <span>مصطفى حسين AI</span></h1>
+        <p>مساحة هادئة تساعدك على الكتابة والتعلّم والبرمجة — اسأل بطريقتك وابدأ من هنا.</p>
         <div class="hero-points">
           <span><b>✓</b> سريع وسهل</span>
           <span><b>✓</b> عربي ولهجة عراقية</span>
@@ -575,7 +740,7 @@
           <div class="chat-heading">
             <span class="assistant-mark" aria-hidden="true">✳</span>
             <span>
-              <strong>مساعد مصطفى الذكي</strong>
+              <strong>مصطفى حسين AI</strong>
               <small>اسألني أي شي، ونبدأ سوا</small>
             </span>
           </div>
@@ -595,20 +760,18 @@
         <div class="chat-scroll" id="chatScroll" aria-live="polite" aria-relevant="additions text">
           <div class="welcome" id="welcome">
             <span class="welcome-icon" aria-hidden="true">✧</span>
-            <h2>هلا بيك، شلون أگدر أساعدك؟</h2>
-            <p>احچي، اسأل، تعلّم أو شارك فكرتك — أساعدك بمواضيع مختلفة وبالطريقة اللي تناسبك.</p>
+            <h2>كيف يمكنني مساعدتك اليوم؟</h2>
+            <p>ابدأ بسؤال أو اختر أحد الاقتراحات، وسنكمل المحادثة خطوة بخطوة.</p>
           </div>
           <div class="messages" id="messages" hidden></div>
         </div>
 
         <div class="quick-label">جرّب تسأل عن</div>
         <div class="quick-prompts" aria-label="اقتراحات سريعة">
-          <button class="quick-prompt" type="button" data-prompt="شنو تعرف عن العراق؟">معلومات عامة</button>
-          <button class="quick-prompt" type="button" data-prompt="اشرح لي الذكاء الاصطناعي بطريقة بسيطة">شرح مبسّط</button>
-          <button class="quick-prompt" type="button" data-prompt="ساعدني أكتب رسالة ودّية لصديقي">مساعدة بالكتابة</button>
-          <button class="quick-prompt" type="button" data-prompt="اكتب لي برنامجًا بسيطًا واشرح طريقة عمله">اكتب لي برنامجًا</button>
-          <button class="quick-prompt" type="button" data-prompt="اشرح لي هذا الموضوع خطوة بخطوة: ">اشرح لي</button>
-          <button class="quick-prompt" type="button" data-prompt="حل هذه المسألة مع شرح الخطوات: ">حل مسألة</button>
+          <button class="quick-prompt" type="button" data-prompt="اكتب لي فكرة مشروع">اكتب لي فكرة مشروع</button>
+          <button class="quick-prompt" type="button" data-prompt="اشرح لي هذا الكود">اشرح لي هذا الكود</button>
+          <button class="quick-prompt" type="button" data-prompt="ساعدني في حل مشكلة">ساعدني في حل مشكلة</button>
+          <button class="quick-prompt" type="button" data-prompt="اكتب لي نصاً احترافياً">اكتب لي نصاً احترافياً</button>
         </div>
 
         <form class="composer-shell" id="chatForm">
@@ -707,6 +870,8 @@
     const conversationList = document.querySelector('#conversationList');
     const conversationSidebar = document.querySelector('#conversationSidebar');
     const historyToggle = document.querySelector('#historyToggle');
+    const quickPrompts = document.querySelector('.quick-prompts');
+    const quickLabel = document.querySelector('.quick-label');
     const sessionStorageKey = 'mustafa-ai-conversations';
     const categories = new Set(['general', 'games', 'web', 'media', 'templates']);
     const categoryNames = {
@@ -802,14 +967,46 @@
     function renderConversations() {
       conversationList.replaceChildren();
       conversations.forEach((conversation) => {
+        const entry = document.createElement('div');
+        entry.className = 'conversation-entry';
         const item = document.createElement('button');
         item.className = `conversation-item${conversation.id === activeConversationId ? ' active' : ''}`;
         item.type = 'button';
         item.textContent = conversation.title;
         item.title = conversation.title;
         item.addEventListener('click', () => openConversation(conversation.id));
-        conversationList.append(item);
+        const remove = document.createElement('button');
+        remove.className = 'delete-conversation';
+        remove.type = 'button';
+        remove.textContent = '×';
+        remove.setAttribute('aria-label', `حذف المحادثة: ${conversation.title}`);
+        remove.title = 'حذف المحادثة';
+        remove.addEventListener('click', () => deleteConversation(conversation.id));
+        entry.append(item, remove);
+        conversationList.append(entry);
       });
+    }
+
+    function deleteConversation(id) {
+      if (busy) return;
+      conversations = conversations.filter((conversation) => conversation.id !== id);
+      let saved = true;
+      try {
+        localStorage.setItem(sessionStorageKey, JSON.stringify(conversations));
+      } catch {
+        saved = false;
+      }
+      if (activeConversationId === id) {
+        activeConversationId = null;
+        history = [];
+        messagesElement.replaceChildren();
+        messagesElement.hidden = true;
+        welcome.hidden = false;
+        quickPrompts.hidden = false;
+        quickLabel.hidden = false;
+      }
+      renderConversations();
+      showToast(saved ? 'تم حذف المحادثة.' : 'حُذفت المحادثة من العرض، لكن تعذّر تحديث السجل المحفوظ.');
     }
 
     function persistConversation() {
@@ -863,6 +1060,8 @@
       history = conversation.history.map((item) => ({ ...item }));
       welcome.hidden = true;
       messagesElement.hidden = false;
+      quickPrompts.hidden = true;
+      quickLabel.hidden = true;
       messagesElement.replaceChildren();
       history.forEach((item) => addMessage(item.role, item.text));
       renderConversations();
@@ -921,6 +1120,10 @@
       const content = document.createElement('div');
       content.className = 'markdown-content';
       const lines = text.split(/\r?\n/);
+      const parseTableRow = (line) =>
+        line.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map((cell) => cell.trim());
+      const isTableDivider = (line) =>
+        /^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$/.test(line);
       let index = 0;
       while (index < lines.length) {
         if (/^\s*```/.test(lines[index])) {
@@ -957,6 +1160,39 @@
           continue;
         }
 
+        if (index + 1 < lines.length && lines[index].includes('|') && isTableDivider(lines[index + 1])) {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'markdown-table-wrap';
+          const table = document.createElement('table');
+          table.className = 'markdown-table';
+          table.dir = 'auto';
+          const head = document.createElement('thead');
+          const headerRow = document.createElement('tr');
+          parseTableRow(lines[index]).forEach((cellText) => {
+            const cell = document.createElement('th');
+            appendInlineMarkdown(cell, cellText);
+            headerRow.append(cell);
+          });
+          head.append(headerRow);
+          table.append(head);
+          index += 2;
+          const body = document.createElement('tbody');
+          while (index < lines.length && lines[index].includes('|') && lines[index].trim()) {
+            const row = document.createElement('tr');
+            parseTableRow(lines[index]).forEach((cellText) => {
+              const cell = document.createElement('td');
+              appendInlineMarkdown(cell, cellText);
+              row.append(cell);
+            });
+            body.append(row);
+            index += 1;
+          }
+          table.append(body);
+          wrapper.append(table);
+          content.append(wrapper);
+          continue;
+        }
+
         const heading = lines[index].match(/^(#{1,3})\s+(.+)$/);
         if (heading) {
           const element = document.createElement(`h${heading[1].length}`);
@@ -978,11 +1214,25 @@
           continue;
         }
 
+        if (/^\s*\d+[.)]\s+/.test(lines[index])) {
+          const list = document.createElement('ol');
+          while (index < lines.length && /^\s*\d+[.)]\s+/.test(lines[index])) {
+            const item = document.createElement('li');
+            appendInlineMarkdown(item, lines[index].replace(/^\s*\d+[.)]\s+/, ''));
+            list.append(item);
+            index += 1;
+          }
+          content.append(list);
+          continue;
+        }
+
         const paragraphLines = [];
         while (index < lines.length && lines[index].trim() &&
           !/^\s*```/.test(lines[index]) &&
           !/^#{1,3}\s+/.test(lines[index]) &&
-          !/^\s*[-*]\s+/.test(lines[index])) {
+          !/^\s*[-*]\s+/.test(lines[index]) &&
+          !/^\s*\d+[.)]\s+/.test(lines[index]) &&
+          !(index + 1 < lines.length && lines[index].includes('|') && isTableDivider(lines[index + 1]))) {
           paragraphLines.push(lines[index]);
           index += 1;
         }
@@ -1010,10 +1260,34 @@
       bubble.className = `message-bubble${isTyping ? ' typing' : ''}`;
       if (role === 'model' && !isTyping) renderMarkdown(bubble, text);
       else bubble.textContent = text;
-      row.append(avatar, bubble);
+      const content = document.createElement('div');
+      content.className = 'message-content';
+      content.append(bubble);
+      row.append(avatar, content);
+      if (role === 'model' && !isTyping) addResponseActions(row, text);
       messagesElement.append(row);
       chatScroll.scrollTop = chatScroll.scrollHeight;
       return row;
+    }
+
+    function addResponseActions(row, text) {
+      const actions = document.createElement('div');
+      actions.className = 'message-actions';
+      const copy = document.createElement('button');
+      copy.className = 'copy-response';
+      copy.type = 'button';
+      copy.textContent = 'نسخ الرد';
+      copy.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(text);
+          copy.textContent = 'تم النسخ';
+          setTimeout(() => { copy.textContent = 'نسخ الرد'; }, 1600);
+        } catch {
+          showToast('تعذّر نسخ الرد من المتصفح.');
+        }
+      });
+      actions.append(copy);
+      row.querySelector('.message-content').append(actions);
     }
 
     function resizeInput() {
@@ -1180,6 +1454,8 @@
       messagesElement.replaceChildren();
       messagesElement.hidden = true;
       welcome.hidden = false;
+      quickPrompts.hidden = false;
+      quickLabel.hidden = false;
       promptInput.value = '';
       clearAttachment();
       renderConversations();
@@ -1268,6 +1544,8 @@
 
       welcome.hidden = true;
       messagesElement.hidden = false;
+      quickPrompts.hidden = true;
+      quickLabel.hidden = true;
       const userMessage = addMessage('user', text);
       if (imageFile) addImageToMessage(userMessage, selectedFile.url, 'الصورة الأصلية المطلوب تعديلها');
       history.push({ role: 'user', text });
@@ -1324,6 +1602,7 @@
         const bubble = loading.querySelector('.message-bubble');
         bubble.classList.remove('typing');
         renderMarkdown(bubble, data.reply);
+        addResponseActions(loading, data.reply);
         if (imageFile) {
           addEditedImage(loading, data.image);
           clearAttachment();
@@ -1348,9 +1627,9 @@
 
     const themeToggle = document.querySelector('#themeToggle');
     const root = document.documentElement;
-    let savedTheme = 'light';
+    let savedTheme = 'dark';
     try {
-      savedTheme = localStorage.getItem('mustafa-ai-theme') || 'light';
+      savedTheme = localStorage.getItem('mustafa-ai-theme') || 'dark';
     } catch (error) {
       console.warn('Theme preference could not be loaded:', error);
     }
