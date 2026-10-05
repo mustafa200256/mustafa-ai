@@ -9,6 +9,7 @@ const port = Number(process.env.PORT) || 3000;
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 const maxHistory = 20;
 const maxMessageLength = 12000;
+const maxContextCharacters = 24000;
 const categories = new Set(['general', 'games', 'web', 'media', 'templates']);
 const groqModel = 'openai/gpt-oss-120b';
 
@@ -33,6 +34,30 @@ function shouldFallbackFromGemini(status, error) {
     status === 429 ||
     status >= 500 ||
     /\b(quota|rate.?limit|resource[_\s-]+exhausted|temporar(?:y|ily) unavailable|overload(?:ed)?|unavailable|deadline exceeded)\b/.test(errorDetails);
+}
+
+function limitConversationContext(history) {
+  const context = [];
+  let characterCount = 0;
+
+  for (let index = history.length - 1; index >= 0; index -= 1) {
+    const item = history[index];
+    const remainingCharacters = maxContextCharacters - characterCount;
+    if (remainingCharacters <= 0) break;
+
+    if (item.text.length > remainingCharacters) {
+      if (context.length === 0) {
+        context.unshift({ ...item, text: item.text.slice(-remainingCharacters) });
+      }
+      break;
+    }
+
+    context.unshift(item);
+    characterCount += item.text.length;
+  }
+
+  if (context[0]?.role === 'model') context.shift();
+  return context;
 }
 
 async function requestGemini(apiKey, systemPrompt, history, message) {
@@ -215,26 +240,33 @@ app.post('/api/chat', async (request, response) => {
   }
 
   const categoryGuidance = {
-    general: 'أجب عن سؤال المستخدم مباشرة وبأسلوب واضح.',
-    games: 'ركّز على برمجة الألعاب ومحركاتها وتصميم أسلوب اللعب.',
-    web: 'ركّز على برمجة المواقع وتطبيقات الويب وأفضل ممارساتها.',
-    media: 'ركّز على تعديل الصور والفيديوهات وأدوات الإنتاج الإبداعي.',
-    templates: 'ركّز على قوالب الصور والفيديو، واقترح أفكاراً وأدوات مناسبة.'
+    general: '',
+    games: 'إذا كان طلب المستخدم متعلقاً بالألعاب، فاستفد من هذا التخصص مع الإجابة عن أي موضوع آخر يطرحه أيضاً.',
+    web: 'إذا كان طلب المستخدم متعلقاً بالويب، فاستفد من هذا التخصص مع الإجابة عن أي موضوع آخر يطرحه أيضاً.',
+    media: 'إذا كان طلب المستخدم متعلقاً بالإعلام أو الصور أو الفيديو، فاستفد من هذا التخصص مع الإجابة عن أي موضوع آخر يطرحه أيضاً.',
+    templates: 'إذا كان طلب المستخدم متعلقاً بالقوالب أو المحتوى الإبداعي، فاستفد من هذا التخصص مع الإجابة عن أي موضوع آخر يطرحه أيضاً.'
   };
 
   const systemPrompt = [
-    'أنت مساعد ذكي ومبرمج محترف، تمت برمجتك بواسطة "المبرمج العراقي مصطفى حسين".',
-    'تحدث باللهجة العراقية الأصيلة واللطيفة عندما تلائم السؤال، وأجب بوضوح ودقة.',
-    'أتقن البرمجة والمواضيع التقنية، وقدّم أمثلة برمجية واضحة ونظيفة عند الحاجة.',
+    'أنت مساعد ذكاء اصطناعي عام ومتعدد المجالات، صنعه المبرمج العراقي مصطفى حسين. هدفك مساعدة المستخدم في أكبر عدد ممكن من المجالات بطريقة مفيدة وطبيعية.',
+    'افهم سياق السؤال ونوعه قبل الإجابة، ولا تفترض أن المستخدم يريد مساعدة برمجية إلا إذا كان سؤاله برمجياً. تعامل مع المحادثات اليومية والتحية والأسئلة الاجتماعية بودّ وطبيعية.',
+    'أجب مباشرة عن السؤال. اجعل الإجابة البسيطة موجزة، واشرح المسائل المعقدة خطوة بخطوة، واسأل سؤالاً توضيحياً واحداً عند الحاجة. نوّع أسلوبك ولا تكرر افتتاحية أو عبارة محفوظة.',
+    'ساعد في المعرفة العامة والتاريخ والجغرافية والعلوم والتعليم والرياضيات والسفر والكتابة والترجمة والتلخيص والأفكار والتقنية والصحة والقانون والمال والبرمجة وغيرها. أجب بلغة المستخدم، وافهم العربية الفصحى واللهجات ومنها العراقية والإنجليزية واللغات الأخرى، واستخدم اللهجة العراقية بلطف عندما تناسب المستخدم.',
+    'في الصحة والطب، قدم معلومات عامة مفهومة ولا تدّع التشخيص أو صفة الطبيب. لا تخترع جرعات أو توصيات دوائية؛ وضّح متى يلزم الطبيب أو الرعاية العاجلة، واذكر علامات الخطر المهمة عند الاقتضاء.',
+    'في القانون والمال، قدم معلومات عامة لا استشارة مهنية ملزمة، ووضّح أن التفاصيل تعتمد على البلد والظروف وأن المختص هو المرجع عند الحاجة.',
+    'كن صريحاً بشأن عدم اليقين وحدود معرفتك. لا تدّع معرفة أخبار أو أسعار أو أحداث حديثة أو إجراء بحث على الإنترنت؛ إن لم تتوفر لك معلومات موثوقة وحديثة فقل ذلك بوضوح.',
+    'لا تدّع رؤية صورة أو تحليلها أو تعديلها ما لم تُرسل فعلياً إلى خدمة تدعم المهمة وتُرجع نتيجتها.',
     categoryGuidance[category]
-  ].join(' ');
+  ].filter(Boolean).join(' ');
+
+  const conversationContext = limitConversationContext(history);
 
   const geminiApiKey = process.env.GEMINI_API_KEY?.trim();
   let geminiFailure;
 
   if (geminiApiKey) {
     try {
-      const reply = await requestGemini(geminiApiKey, systemPrompt, history, message);
+      const reply = await requestGemini(geminiApiKey, systemPrompt, conversationContext, message);
       return response.json({ reply });
     } catch (error) {
       geminiFailure = error;
@@ -262,7 +294,7 @@ app.post('/api/chat', async (request, response) => {
   }
 
   try {
-    const reply = await requestGroq(groqApiKey, systemPrompt, history, message);
+    const reply = await requestGroq(groqApiKey, systemPrompt, conversationContext, message);
     return response.json({ reply });
   } catch (error) {
     console.error(

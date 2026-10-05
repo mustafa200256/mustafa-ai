@@ -566,7 +566,7 @@
         <div class="hero-points">
           <span><b>✓</b> سريع وسهل</span>
           <span><b>✓</b> عربي ولهجة عراقية</span>
-          <span><b>✓</b> للكتابة والبرمجة</span>
+          <span><b>✓</b> للحياة والدراسة والعمل</span>
         </div>
       </div>
 
@@ -596,16 +596,16 @@
           <div class="welcome" id="welcome">
             <span class="welcome-icon" aria-hidden="true">✧</span>
             <h2>هلا بيك، شلون أگدر أساعدك؟</h2>
-            <p>اكتب سؤالك أو اختار قالب جاهز من جوّه، وأنا أساعدك خطوة بخطوة.</p>
+            <p>احچي، اسأل، تعلّم أو شارك فكرتك — أساعدك بمواضيع مختلفة وبالطريقة اللي تناسبك.</p>
           </div>
           <div class="messages" id="messages" hidden></div>
         </div>
 
         <div class="quick-label">جرّب تسأل عن</div>
         <div class="quick-prompts" aria-label="اقتراحات سريعة">
-          <button class="quick-prompt" type="button" data-prompt="اقترح لي فكرة مشروع ويب بسيطة ومفيدة">فكرة مشروع</button>
+          <button class="quick-prompt" type="button" data-prompt="شنو تعرف عن العراق؟">معلومات عامة</button>
           <button class="quick-prompt" type="button" data-prompt="اشرح لي الذكاء الاصطناعي بطريقة بسيطة">شرح مبسّط</button>
-          <button class="quick-prompt" type="button" data-prompt="ساعدني أكتب خطة لتعلّم البرمجة">تعلّم البرمجة</button>
+          <button class="quick-prompt" type="button" data-prompt="ساعدني أكتب رسالة ودّية لصديقي">مساعدة بالكتابة</button>
           <button class="quick-prompt" type="button" data-prompt="اكتب لي برنامجًا بسيطًا واشرح طريقة عمله">اكتب لي برنامجًا</button>
           <button class="quick-prompt" type="button" data-prompt="اشرح لي هذا الموضوع خطوة بخطوة: ">اشرح لي</button>
           <button class="quick-prompt" type="button" data-prompt="حل هذه المسألة مع شرح الخطوات: ">حل مسألة</button>
@@ -702,6 +702,7 @@
     const fileInput = document.querySelector('#fileInput');
     const attachmentPreview = document.querySelector('#attachmentPreview');
     const chatCard = document.querySelector('.chat-card');
+    const maxContextCharacters = 24000;
     const stopButton = document.querySelector('#stopButton');
     const conversationList = document.querySelector('#conversationList');
     const conversationSidebar = document.querySelector('#conversationSidebar');
@@ -832,6 +833,26 @@
         showToast('تعذّر حفظ سجل المحادثات على هذا الجهاز.');
       }
       renderConversations();
+    }
+
+    function limitHistoryForRequest(items) {
+      const context = [];
+      let characterCount = 0;
+      for (let index = items.length - 1; index >= 0; index -= 1) {
+        const item = items[index];
+        const remainingCharacters = maxContextCharacters - characterCount;
+        if (remainingCharacters <= 0) break;
+        if (item.text.length > remainingCharacters) {
+          if (context.length === 0) {
+            context.unshift({ ...item, text: item.text.slice(-remainingCharacters) });
+          }
+          break;
+        }
+        context.unshift(item);
+        characterCount += item.text.length;
+      }
+      if (context[0]?.role === 'model') context.shift();
+      return context;
     }
 
     function openConversation(id) {
@@ -1283,7 +1304,7 @@
           endpoint = '/api/chat';
           requestBody = {
             message: text,
-            history: history.slice(0, -1),
+            history: limitHistoryForRequest(history.slice(0, -1)),
             category
           };
         }
