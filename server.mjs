@@ -9,6 +9,139 @@ const dirname = path.dirname(fileURLToPath(import.meta.url));
 const maxHistory = 20;
 const maxMessageLength = 12000;
 const categories = new Set(['general', 'games', 'web', 'media', 'templates']);
+const groqModel = 'openai/gpt-oss-120b';
+
+class ProviderRequestError extends Error {
+  constructor(provider, status, fallbackAllowed = false) {
+    super(`${provider} request failed`);
+    this.name = 'ProviderRequestError';
+    this.provider = provider;
+    this.status = status;
+    this.fallbackAllowed = fallbackAllowed;
+  }
+}
+
+function shouldFallbackFromGemini(status, error) {
+  const errorDetails = [
+    error?.status,
+    error?.message
+  ].filter((value) => typeof value === 'string').join(' ').toLowerCase();
+
+  return status === 408 ||
+    status === 425 ||
+    status === 429 ||
+    status >= 500 ||
+    /\b(quota|rate.?limit|resource[_\s-]+exhausted|temporar(?:y|ily) unavailable|overload(?:ed)?|unavailable|deadline exceeded)\b/.test(errorDetails);
+}
+
+async function requestGemini(apiKey, systemPrompt, history, message) {
+  const endpoint =
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent';
+
+  let apiResponse;
+  try {
+    apiResponse = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': apiKey
+      },
+      signal: AbortSignal.timeout(60000),
+      body: JSON.stringify({
+        system_instruction: {
+          parts: [{ text: systemPrompt }]
+        },
+        contents: [
+          ...history.map(({ role, text }) => ({
+            role,
+            parts: [{ text: text.trim() }]
+          })),
+          { role: 'user', parts: [{ text: message.trim() }] }
+        ]
+      })
+    });
+  } catch {
+    throw new ProviderRequestError('Gemini', 0, true);
+  }
+
+  let data;
+  try {
+    data = await apiResponse.json();
+  } catch {
+    throw new ProviderRequestError('Gemini', apiResponse.status, true);
+  }
+
+  if (!apiResponse.ok) {
+    throw new ProviderRequestError(
+      'Gemini',
+      apiResponse.status,
+      shouldFallbackFromGemini(apiResponse.status, data.error)
+    );
+  }
+
+  const candidate = data.candidates?.[0];
+  const finishReason = candidate?.finishReason ?? candidate?.finish_reason;
+  if (['SAFETY', 'BLOCKLIST', 'PROHIBITED_CONTENT', 'SPII', 'RECITATION'].includes(finishReason)) {
+    throw new ProviderRequestError('Gemini', apiResponse.status);
+  }
+
+  const reply = candidate?.content?.parts
+    ?.map((part) => part.text)
+    .filter((text) => typeof text === 'string')
+    .join('')
+    .trim();
+
+  if (!reply) {
+    throw new ProviderRequestError('Gemini', apiResponse.status, true);
+  }
+
+  return reply;
+}
+
+async function requestGroq(apiKey, systemPrompt, history, message) {
+  let apiResponse;
+  try {
+    apiResponse = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`
+      },
+      signal: AbortSignal.timeout(60000),
+      body: JSON.stringify({
+        model: groqModel,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          ...history.map(({ role, text }) => ({
+            role: role === 'model' ? 'assistant' : 'user',
+            content: text.trim()
+          })),
+          { role: 'user', content: message.trim() }
+        ]
+      })
+    });
+  } catch {
+    throw new ProviderRequestError('Groq', 0);
+  }
+
+  let data;
+  try {
+    data = await apiResponse.json();
+  } catch {
+    throw new ProviderRequestError('Groq', apiResponse.status);
+  }
+
+  if (!apiResponse.ok) {
+    throw new ProviderRequestError('Groq', apiResponse.status);
+  }
+
+  const reply = data.choices?.[0]?.message?.content?.trim();
+  if (typeof reply !== 'string' || !reply) {
+    throw new ProviderRequestError('Groq', apiResponse.status);
+  }
+
+  return reply;
+}
 
 app.disable('x-powered-by');
 app.use(express.static(path.join(dirname, 'public')));
@@ -16,7 +149,9 @@ app.use(express.static(path.join(dirname, 'public')));
 app.get('/api/health', (_request, response) => {
   response.json({
     status: 'ok',
-    configured: Boolean(process.env.GEMINI_API_KEY?.trim())
+    configured: Boolean(
+      process.env.GEMINI_API_KEY?.trim() || process.env.GROQ_API_KEY?.trim()
+    )
   });
 });
 
@@ -185,13 +320,6 @@ app.post('/api/chat', async (request, response) => {
     return response.status(400).json({ error: 'سياق المحادثة يحتوي على رسالة غير صالحة.' });
   }
 
-  const apiKey = process.env.GEMINI_API_KEY?.trim();
-  if (!apiKey) {
-    return response.status(503).json({
-      error: 'خدمة الذكاء الاصطناعي غير مهيّأة. أضف GEMINI_API_KEY إلى ملف .env ثم أعد تشغيل السيرفر.'
-    });
-  }
-
   const categoryGuidance = {
     general: 'أجب عن سؤال المستخدم مباشرة وبأسلوب واضح.',
     games: 'ركّز على برمجة الألعاب ومحركاتها وتصميم أسلوب اللعب.',
@@ -207,61 +335,50 @@ app.post('/api/chat', async (request, response) => {
     categoryGuidance[category]
   ].join(' ');
 
-  const endpoint =
-    'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent';
+  const geminiApiKey = process.env.GEMINI_API_KEY?.trim();
+  let geminiFailure;
+
+  if (geminiApiKey) {
+    try {
+      const reply = await requestGemini(geminiApiKey, systemPrompt, history, message);
+      return response.json({ reply });
+    } catch (error) {
+      geminiFailure = error;
+      console.error(
+        'Gemini chat request failed. HTTP status:',
+        error.status || 'network error'
+      );
+
+      if (!error.fallbackAllowed) {
+        return response.status(502).json({
+          error: 'فشل طلب Gemini. تحقّق من إعدادات الخدمة وحاول مرة ثانية.'
+        });
+      }
+    }
+  } else {
+    geminiFailure = new ProviderRequestError('Gemini', 0, true);
+  }
+
+  const groqApiKey = process.env.GROQ_API_KEY?.trim();
+  if (!groqApiKey) {
+    const geminiUnavailable = geminiApiKey
+      ? 'تعذّر الرد من Gemini، وخدمة Groq الاحتياطية غير مهيّأة. أضف GROQ_API_KEY إلى ملف .env.'
+      : 'خدمة الذكاء الاصطناعي غير مهيّأة. أضف GEMINI_API_KEY أو GROQ_API_KEY إلى ملف .env.';
+    return response.status(503).json({ error: geminiUnavailable });
+  }
 
   try {
-    const apiResponse = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-goog-api-key': apiKey
-      },
-      signal: AbortSignal.timeout(60000),
-      body: JSON.stringify({
-        system_instruction: {
-          parts: [{ text: systemPrompt }]
-        },
-        contents: [
-          ...history.map(({ role, text }) => ({
-            role,
-            parts: [{ text: text.trim() }]
-          })),
-          { role: 'user', parts: [{ text: message.trim() }] }
-        ]
-      })
-    });
-
-    const data = await apiResponse.json();
-    if (!apiResponse.ok) {
-      console.error(
-        'Gemini API returned HTTP',
-        apiResponse.status,
-        data.error?.message ?? 'No error details returned.'
-      );
-      return response.status(502).json({
-        error: 'فشل طلب الذكاء الاصطناعي. تحقّق من صلاحية مفتاح Gemini وإعداداته، ثم حاول مرة ثانية.'
-      });
-    }
-
-    const reply = data.candidates?.[0]?.content?.parts
-      ?.map((part) => part.text)
-      .filter((text) => typeof text === 'string')
-      .join('')
-      .trim();
-
-    if (!reply) {
-      console.error('Gemini API response did not contain a text reply.');
-      return response.status(502).json({
-        error: 'وصل رد فارغ أو غير صالح من الذكاء الاصطناعي. حاول مرة ثانية.'
-      });
-    }
-
+    const reply = await requestGroq(groqApiKey, systemPrompt, history, message);
     return response.json({ reply });
   } catch (error) {
-    console.error('Gemini request failed:', error);
+    console.error(
+      'Groq fallback request failed. HTTP status:',
+      error.status || 'network error',
+      'Gemini HTTP status:',
+      geminiFailure.status || 'not configured'
+    );
     return response.status(502).json({
-      error: 'تعذّر الاتصال بخدمة الذكاء الاصطناعي. تحقّق من اتصال الإنترنت وحاول مرة ثانية.'
+      error: 'تعذّر الحصول على رد من Gemini أو Groq. حاول مرة ثانية بعد قليل.'
     });
   }
 });
