@@ -11,7 +11,7 @@ export class ImageServiceError extends Error {
   }
 }
 
-export async function editImage({ apiKey, prompt, imageBase64, mimeType }) {
+export async function editImage({ apiKey, prompt, imageBase64, mimeType, signal }) {
   if (typeof prompt !== 'string' || prompt.trim().length === 0 || prompt.length > 4000) {
     throw new ImageServiceError(400, 'اكتب وصفاً للتعديل المطلوب، وبحد أقصى 4000 حرف.');
   }
@@ -37,13 +37,14 @@ export async function editImage({ apiKey, prompt, imageBase64, mimeType }) {
 
   let apiResponse;
   try {
+    const timeoutSignal = AbortSignal.timeout(120000);
     apiResponse = await fetch(imageModelEndpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'x-goog-api-key': apiKey
       },
-      signal: AbortSignal.timeout(120000),
+      signal: signal ? AbortSignal.any([timeoutSignal, signal]) : timeoutSignal,
       body: JSON.stringify({
         contents: [{
           role: 'user',
@@ -69,6 +70,7 @@ export async function editImage({ apiKey, prompt, imageBase64, mimeType }) {
       })
     });
   } catch {
+    if (signal?.aborted) throw signal.reason ?? new Error('تم إيقاف المهمة.');
     throw new ImageServiceError(502, 'تعذّر الاتصال بنموذج تعديل الصور. تحقّق من الاتصال وحاول مرة ثانية.');
   }
 

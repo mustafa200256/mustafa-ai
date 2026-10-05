@@ -116,7 +116,7 @@ function providerErrorMessage(error, apiKey) {
   return 'تعذّر تعديل الصورة عبر مزوّد Fal. تحقق من إعداد Inference Providers ثم حاول مرة أخرى.';
 }
 
-export async function editImageWithHuggingFace({ apiKey, image, prompt }) {
+export async function editImageWithHuggingFace({ apiKey, image, prompt, signal }) {
   if (typeof prompt !== 'string' || !prompt.trim() || prompt.trim().length > 2000) {
     throw new HuggingFaceImageError(400, 'اكتب وصف التعديل، وبحد أقصى 2000 حرف.');
   }
@@ -141,9 +141,15 @@ export async function editImageWithHuggingFace({ apiKey, image, prompt }) {
           ].join(' ')
         }
       },
-      { retry_on_error: false, signal: AbortSignal.timeout(120000) }
+      {
+        retry_on_error: false,
+        signal: signal
+          ? AbortSignal.any([AbortSignal.timeout(120000), signal])
+          : AbortSignal.timeout(120000)
+      }
     );
   } catch (error) {
+    if (signal?.aborted) throw signal.reason ?? new Error('تم إيقاف المهمة.');
     const status = error instanceof InferenceClientProviderApiError ||
       error instanceof InferenceClientHubApiError
       ? error.httpResponse.status

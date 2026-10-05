@@ -234,7 +234,9 @@
     .composer-shell:focus-within { border-color: color-mix(in srgb, var(--wine) 55%, var(--line)); box-shadow: 0 0 0 3px color-mix(in srgb, var(--wine) 10%, transparent); }
     .composer { display: flex; align-items: flex-end; gap: 9px; padding: 10px 10px 8px; }
     .composer textarea {
+      flex: 1 1 auto;
       width: 100%;
+      min-width: 0;
       min-height: 48px;
       max-height: 145px;
       resize: none;
@@ -247,6 +249,26 @@
       line-height: 1.8;
     }
     .composer textarea::placeholder { color: #a59c99; }
+    .voice-input-button {
+      display: grid;
+      flex: 0 0 40px;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 17px;
+      transition: border-color .18s, background .18s, color .18s, transform .18s;
+    }
+    .voice-input-button:hover { transform: translateY(-1px); border-color: var(--wine); color: var(--wine); }
+    .voice-input-button.recording { animation: voice-pulse 1.25s ease-in-out infinite; border-color: #db5b68; background: color-mix(in srgb, #db5b68 16%, var(--surface)); color: #ff6978; }
+    @keyframes voice-pulse { 50% { box-shadow: 0 0 0 5px color-mix(in srgb, #db5b68 17%, transparent); } }
+    .voice-cancel-button { min-height: 30px; padding: 4px 9px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); color: var(--muted); font-size: 11px; }
+    .voice-cancel-button:hover { border-color: #db5b68; color: #db5b68; }
+    .voice-status { display: inline-flex; align-items: center; gap: 6px; color: #db5b68; font-size: 11px; font-weight: 700; }
+    .voice-status::before { width: 7px; height: 7px; border-radius: 50%; background: currentColor; content: ""; animation: pulse 1s infinite; }
     .send-button {
       display: grid;
       flex: 0 0 42px;
@@ -262,6 +284,8 @@
     }
     .send-button:hover { transform: translateY(-1px); background: var(--wine-dark); }
     .send-button:disabled { cursor: wait; opacity: .58; }
+    .send-button.is-stopping { background: #a83e49; color: #fff; cursor: pointer; opacity: 1; }
+    .send-button.is-stopping:hover { background: #bd4d58; }
     .composer-tools { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 0 12px 10px; }
     .attach-button {
       display: inline-flex;
@@ -278,15 +302,43 @@
       transition: border-color .18s, color .18s;
     }
     .attach-button:hover { border-color: var(--wine); color: var(--wine); }
+    .web-search-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 36px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      transition: border-color .18s, color .18s, background .18s;
+    }
+    .web-search-toggle:hover { border-color: var(--wine); color: var(--wine); }
+    .web-search-toggle[aria-pressed="true"] { border-color: var(--wine); background: var(--wine-soft); color: var(--wine); }
     .composer-note { color: var(--muted); font-size: 10px; }
+    .web-sources { display: grid; gap: 7px; margin-top: 10px; padding: 10px; border: 1px solid var(--line); border-radius: 11px; background: var(--surface); }
+    .web-sources-title { color: var(--muted); font-size: 11px; font-weight: 750; }
+    .web-source { display: grid; gap: 2px; min-width: 0; padding: 7px 8px; border-radius: 8px; background: var(--surface-soft); }
+    .web-source a { overflow-wrap: anywhere; color: var(--wine); font-size: 12px; font-weight: 750; text-decoration: none; }
+    .web-source a:hover { text-decoration: underline; }
+    .web-source-name { color: var(--muted); font-size: 10px; }
+    .web-source-snippet { color: var(--ink); font-size: 11px; line-height: 1.7; }
     .attachment-preview { display: flex; align-items: center; gap: 11px; margin: 0 10px 10px; padding: 8px; border: 1px solid var(--line); border-radius: 13px; background: var(--surface-soft); }
     .attachment-preview img, .attachment-preview video { display: block; width: 62px; height: 54px; flex: 0 0 62px; border-radius: 9px; background: #151515; object-fit: cover; }
+    .attachment-file-icon { display: grid; width: 62px; height: 54px; flex: 0 0 62px; place-items: center; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); color: var(--wine); font-size: 11px; font-weight: 800; }
     .attachment-info { min-width: 0; flex: 1; }
     .attachment-name { overflow: hidden; color: var(--ink); font-size: 11px; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
     .attachment-size, .attachment-notice { margin-top: 2px; color: var(--muted); font-size: 10px; line-height: 1.6; }
     .attachment-notice { color: var(--wine); }
+    .attachment-examples { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+    .attachment-examples button { padding: 4px 7px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--muted); font-size: 9px; }
+    .attachment-examples button:hover { border-color: var(--wine); color: var(--wine); }
     .remove-attachment { width: 32px; height: 32px; border: 0; border-radius: 9px; background: transparent; color: var(--muted); font-size: 20px; }
     .remove-attachment:hover { background: var(--wine-soft); color: var(--wine); }
+    .message-file-attachment { width: fit-content; max-width: 100%; margin-top: 9px; padding: 6px 9px; overflow-wrap: anywhere; border: 1px solid color-mix(in srgb, currentColor 16%, transparent); border-radius: 9px; font-size: 11px; opacity: .9; }
     .composer-hint { margin: 9px 0 0; color: var(--muted); text-align: center; font-size: 10px; }
     .chat-head-actions { display: flex; align-items: center; gap: 7px; }
     .new-chat-button, .stop-button {
@@ -300,11 +352,73 @@
       font-weight: 750;
     }
     .new-chat-button:hover { border-color: var(--wine); color: var(--wine); }
+    .memory-button { border-color: color-mix(in srgb, var(--wine) 35%, var(--line)); color: var(--wine); }
     .stop-button { border-color: color-mix(in srgb, #bd4141 35%, var(--line)); color: #bd4141; }
+    .memory-dialog {
+      width: min(460px, calc(100% - 24px));
+      max-height: min(78vh, 680px);
+      padding: 0;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--surface);
+      color: var(--ink);
+      box-shadow: 0 24px 80px #0008;
+    }
+    .memory-dialog::backdrop { background: #050607aa; backdrop-filter: blur(4px); }
+    .memory-dialog-content { display: grid; gap: 12px; padding: 20px; }
+    .memory-dialog-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .memory-dialog-head h2 { margin: 0; font-size: 18px; }
+    .memory-dialog-head p, .auth-note { margin: 5px 0 0; color: var(--muted); font-size: 12px; line-height: 1.8; }
+    .memory-close { width: 34px; height: 34px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-soft); color: var(--ink); }
+    .auth-form { display: grid; gap: 11px; }
+    .auth-form label { display: grid; gap: 5px; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .auth-form input { width: 100%; min-height: 42px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; outline: none; background: var(--surface-soft); color: var(--ink); direction: ltr; text-align: left; }
+    .auth-form input:focus { border-color: var(--wine); }
+    .auth-submit, .memory-clear { min-height: 40px; padding: 8px 12px; border: 0; border-radius: 10px; background: var(--wine); color: white; font-weight: 750; }
+    .auth-submit:disabled { cursor: wait; opacity: .6; }
+    .auth-secondary { justify-self: start; padding: 4px 0; border: 0; background: transparent; color: var(--wine); font-size: 12px; }
+    .memory-list { display: grid; gap: 8px; max-height: 42vh; overflow-y: auto; }
+    .memory-empty { padding: 16px; border: 1px dashed var(--line); border-radius: 11px; color: var(--muted); text-align: center; font-size: 12px; }
+    .memory-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px; border: 1px solid var(--line); border-radius: 11px; background: var(--surface-soft); }
+    .memory-item-text { flex: 1; min-width: 0; overflow-wrap: anywhere; font-size: 13px; line-height: 1.8; }
+    .memory-delete { flex: 0 0 auto; padding: 5px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: #c75b64; font-size: 11px; }
+    .memory-clear { background: #8d3942; }
+    .personality-dialog { width: min(560px, calc(100% - 24px)); }
+    .personality-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 11px; }
+    .personality-form { display: grid; gap: 12px; }
+    .personality-form label { display: grid; gap: 5px; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .personality-form input, .personality-form select, .personality-form textarea {
+      width: 100%;
+      min-height: 40px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      outline: none;
+      background: var(--surface-soft);
+      color: var(--ink);
+    }
+    .personality-form textarea { min-height: 84px; resize: vertical; line-height: 1.8; }
+    .personality-form input:focus, .personality-form select:focus, .personality-form textarea:focus { border-color: var(--wine); }
+    .personality-checkbox { display: flex !important; align-items: center; gap: 8px !important; }
+    .personality-checkbox input { width: 18px; min-height: 18px; accent-color: var(--wine); }
+    .personality-preview { padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-soft); }
+    .personality-preview small { display: block; margin-bottom: 4px; color: var(--muted); font-size: 10px; }
+    .personality-preview strong { display: block; margin-bottom: 5px; font-size: 13px; }
+    .personality-preview p { margin: 0; color: var(--ink); font-size: 12px; line-height: 1.8; }
+    .personality-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .personality-actions .auth-submit { flex: 1; }
+    .personality-reset { min-height: 40px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); font-weight: 700; }
+    .personality-reset:hover { border-color: var(--wine); color: var(--wine); }
+    .personality-status { min-height: 18px; margin: 0; color: var(--muted); font-size: 11px; }
+    .personality-note { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.8; }
     .chat-workspace { display: grid; grid-template-columns: 174px minmax(0, 1fr); gap: 14px; min-width: 0; }
     .chat-main { min-width: 0; }
     .conversation-sidebar { min-width: 0; padding: 10px 0; border-inline-end: 1px solid var(--line); }
     .conversation-sidebar h3 { margin: 0 0 9px; color: var(--muted); font-size: 11px; }
+    .conversation-search { width: 100%; min-height: 36px; margin-bottom: 8px; padding: 7px 9px; border: 1px solid var(--line); border-radius: 10px; outline: none; background: var(--surface); color: var(--ink); font: inherit; font-size: 11px; }
+    .conversation-search:focus { border-color: var(--wine); }
+    .conversation-search-count { margin: -2px 2px 7px; color: var(--muted); font-size: 10px; }
     .conversation-list { display: grid; gap: 5px; max-height: 380px; overflow-y: auto; }
     .conversation-item {
       display: block;
@@ -494,7 +608,12 @@
       .conversation-list { max-height: 190px; }
       .chat-head-actions { gap: 4px; }
       .new-chat-button { min-height: 33px; padding: 5px 7px; font-size: 10px; }
-      .chat-scroll { min-height: 162px; max-height: 320px; }
+      .chat-scroll { min-height: 162px; max-height: min(44dvh, 360px); }
+      .chat-main { min-height: 0; }
+      .composer-tools > div { gap: 6px; }
+      .assistant-mode-control { gap: 4px; margin-inline-end: 2px; font-size: 10px; }
+      .assistant-mode-select { max-width: 136px; }
+      .agent-mode-badge { min-height: 23px; font-size: 9px; }
       .welcome { min-height: 162px; }
       .welcome h2 { font-size: 17px; }
       .composer textarea { min-height: 46px; font-size: 15px; }
@@ -578,6 +697,28 @@
     .conversation-entry:hover .delete-conversation,
     .delete-conversation:focus-visible { opacity: 1; }
     .delete-conversation:hover { background: color-mix(in srgb, #df6f78 14%, var(--surface)); color: #ef858b; }
+    .conversation-entry { display: flex; align-items: center; gap: 3px; min-width: 0; }
+    .conversation-item { min-width: 0; flex: 1; }
+    .conversation-pin { color: var(--wine); font-size: 11px; }
+    .conversation-action {
+      display: grid;
+      flex: 0 0 27px;
+      place-items: center;
+      width: 27px;
+      height: 29px;
+      padding: 0;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      opacity: .65;
+    }
+    .conversation-entry:hover .conversation-action, .conversation-action:focus-visible { opacity: 1; }
+    .conversation-action:hover { background: var(--surface-soft); color: var(--wine); }
+    .delete-conversation { flex-basis: 27px; width: 27px; height: 29px; }
+    .conversation-empty { padding: 11px 8px; color: var(--muted); text-align: center; font-size: 10px; }
+    .conversation-search-match .message-bubble { outline: 2px solid color-mix(in srgb, var(--wine) 65%, transparent); outline-offset: 3px; }
     .chat-main { display: flex; flex-direction: column; }
     .chat-scroll {
       height: min(38vh, 420px);
@@ -621,6 +762,53 @@
     .message-content { min-width: 0; max-width: calc(100% - 40px); }
     .message-content .message-bubble { max-width: 100%; }
     .message-actions { display: flex; gap: 6px; margin: 6px 2px 0; }
+    .user-message-actions { display: flex; gap: 6px; margin: 5px 2px 0; }
+    .message-edit-button, .message-retry-button {
+      padding: 4px 8px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 11px;
+    }
+    .message-edit-button:hover, .message-retry-button:hover { border-color: var(--line); background: var(--surface); color: var(--ink); }
+    .assistant-mode-control { display: inline-flex; align-items: center; gap: 7px; margin-inline-end: 8px; color: var(--muted); font-size: 11px; }
+    .agent-mode-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 25px;
+      padding: 4px 8px;
+      border: 1px solid color-mix(in srgb, var(--wine) 38%, var(--line));
+      border-radius: 999px;
+      background: var(--wine-soft);
+      color: var(--wine);
+      font-size: 10px;
+      font-weight: 750;
+    }
+    .assistant-mode-select {
+      min-height: 32px;
+      padding: 5px 9px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      outline: 0;
+      background: var(--surface);
+      color: var(--ink);
+      font: inherit;
+      font-size: 11px;
+    }
+    .assistant-mode-select:focus { border-color: var(--wine); }
+    .edit-message-notice {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+    }
+    .edit-message-notice button { padding: 3px 8px; border: 0; border-radius: 7px; background: var(--surface-soft); color: var(--ink); }
     .copy-response {
       padding: 4px 8px;
       border: 1px solid transparent;
@@ -630,6 +818,15 @@
       font-size: 11px;
     }
     .copy-response:hover { border-color: var(--line); background: var(--surface); color: var(--ink); }
+    .voice-response-button {
+      padding: 4px 8px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 11px;
+    }
+    .voice-response-button:hover, .voice-response-button[aria-pressed="true"] { border-color: var(--line); background: var(--surface); color: var(--ink); }
     .quick-label { margin: 15px 4px 8px; font-size: 12px; }
     .quick-prompts { gap: 8px; padding-bottom: 14px; }
     .quick-prompt { padding: 8px 12px; border-radius: 12px; font-size: 12px; }
@@ -741,6 +938,28 @@
     .image-editor-loading { display: inline-flex; align-items: center; gap: 9px; }
     .image-editor-spinner { width: 15px; height: 15px; border: 2px solid var(--line); border-top-color: var(--wine); border-radius: 50%; animation: image-spin .75s linear infinite; }
     @keyframes image-spin { to { transform: rotate(360deg); } }
+    .gallery-card { padding: 18px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); }
+    .gallery-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+    .gallery-empty { grid-column: 1 / -1; padding: 32px 14px; border: 1px dashed var(--line); border-radius: 14px; color: var(--muted); text-align: center; font-size: 13px; }
+    .gallery-item { min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 13px; background: var(--surface-soft); }
+    .gallery-open { display: block; width: 100%; padding: 0; border: 0; background: transparent; color: inherit; text-align: right; }
+    .gallery-open img { display: block; width: 100%; aspect-ratio: 1; background: var(--paper); object-fit: cover; }
+    .gallery-item-info { display: grid; gap: 3px; padding: 9px; }
+    .gallery-item-prompt { overflow: hidden; font-size: 11px; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
+    .gallery-item-date { color: var(--muted); font-size: 10px; }
+    .gallery-dialog { width: min(780px, calc(100% - 24px)); max-height: 90vh; }
+    .gallery-dialog-image { display: block; max-width: 100%; max-height: 62vh; margin: auto; border-radius: 12px; background: var(--paper); object-fit: contain; }
+    .gallery-dialog-info { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.8; overflow-wrap: anywhere; }
+    .gallery-dialog-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .gallery-dialog-actions > * { flex: 1 1 130px; justify-content: center; text-align: center; }
+    .gallery-delete { background: #8d3942; }
+    .conversation-rename-input { width: 100%; min-height: 42px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; outline: none; background: var(--surface-soft); color: var(--ink); }
+    .conversation-rename-input:focus { border-color: var(--wine); }
+    .confirmation-copy { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.9; overflow-wrap: anywhere; }
+    .confirmation-actions { display: flex; gap: 8px; }
+    .confirmation-actions > button { flex: 1; }
+    @media (max-width: 900px) { .gallery-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+    @media (max-width: 680px) { .gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
     @media (max-width: 900px) {
       .header-inner, .page { width: min(100% - 32px, 760px); }
@@ -775,18 +994,23 @@
       .quick-prompt { min-height: 40px; padding: 7px 8px; border-radius: 11px; font-size: 11px; }
       .composer-tools { flex-direction: row; align-items: center; }
       .composer-note { align-self: auto; }
+      .composer-shell { position: sticky; bottom: max(6px, env(safe-area-inset-bottom)); }
       .composer-hint { font-size: 9px; }
       .section { padding: 32px 0; }
       .image-editor-card { padding: 14px; border-radius: 16px; }
       .image-editor-preview { grid-template-columns: minmax(0, 1fr); }
       .image-editor-preview img { max-height: 360px; }
       .image-editor-actions > button { flex: 1; }
+      .gallery-card { padding: 12px; }
+      .composer-shell { position: sticky; bottom: max(6px, env(safe-area-inset-bottom)); }
     }
     @media (max-width: 380px) {
       .brand-caption { display: none; }
       .chat-head-actions { flex-wrap: wrap; }
       .status { display: none; }
       .composer-note { font-size: 9px; }
+      .personality-fields { grid-template-columns: minmax(0, 1fr); }
+      .gallery-grid { gap: 8px; }
     }
   </style>
 </head>
@@ -804,6 +1028,7 @@
         <a href="#home">الرئيسية</a>
         <a href="#assistant">الذكاء الاصطناعي</a>
         <a href="#image-edit">تعديل الصور</a>
+        <a href="#gallery">معرض الصور</a>
         <a href="#templates">القوالب</a>
         <a href="#tools">الأدوات</a>
         <a href="#about">حول الموقع</a>
@@ -833,13 +1058,16 @@
           <div class="chat-heading">
             <span class="assistant-mark" aria-hidden="true">✳</span>
             <span>
-              <strong>مصطفى حسين AI</strong>
+              <strong id="assistantNameDisplay">مصطفى حسين AI</strong>
               <small>اسألني أي شي، ونبدأ سوا</small>
             </span>
           </div>
           <div class="chat-head-actions">
             <button class="new-chat-button" id="historyToggle" type="button" aria-expanded="false">المحادثات</button>
             <button class="new-chat-button" id="newChatButton" type="button">＋ محادثة جديدة</button>
+            <button class="new-chat-button" id="accountButton" type="button">👤 تسجيل الدخول</button>
+            <button class="new-chat-button memory-button" id="assistantPreferencesButton" type="button">✨ تخصيص المساعد</button>
+            <button class="new-chat-button memory-button" id="memoryButton" type="button" hidden>🧠 الذاكرة</button>
             <span class="status"><span class="status-dot" id="statusDot"></span><span id="statusText">جاري التحقق</span></span>
           </div>
         </div>
@@ -847,6 +1075,9 @@
         <div class="chat-workspace">
           <aside class="conversation-sidebar" id="conversationSidebar" aria-label="سجل المحادثات">
             <h3>محادثاتك على هذا الجهاز</h3>
+            <label class="sr-only" for="conversationSearch">البحث في المحادثات</label>
+            <input class="conversation-search" id="conversationSearch" type="search" maxlength="120" placeholder="🔍 ابحث في المحادثات...">
+            <div class="conversation-search-count" id="conversationSearchCount" aria-live="polite"></div>
             <div class="conversation-list" id="conversationList"></div>
           </aside>
           <div class="chat-main">
@@ -868,18 +1099,47 @@
         </div>
 
         <form class="composer-shell" id="chatForm">
+          <div class="edit-message-notice" id="editMessageNotice" role="status" hidden>
+            <span>✏️ تعديل رسالة سابقة — سيتم إنشاء الرد من جديد</span>
+            <button id="cancelMessageEdit" type="button">إلغاء</button>
+          </div>
           <div class="composer" id="dropZone">
             <label class="sr-only" for="prompt">اكتب رسالتك</label>
             <textarea id="prompt" rows="1" maxlength="12000" placeholder="اكتب رسالتك هنا..."></textarea>
+            <button class="voice-input-button" id="voiceInputButton" type="button" aria-label="إملاء صوتي" aria-pressed="false" title="إملاء صوتي">🎤</button>
+            <button class="voice-cancel-button" id="voiceCancelButton" type="button" hidden>إلغاء التسجيل</button>
             <button class="send-button" id="send" type="submit" aria-label="إرسال الرسالة">↑</button>
           </div>
           <div class="attachment-preview" id="attachmentPreview" hidden></div>
           <div class="composer-tools">
             <div>
-              <button class="attach-button" id="attachButton" type="button" aria-label="إضافة صورة أو فيديو">
-                <span aria-hidden="true">📎</span> إرفاق صورة
+              <label class="assistant-mode-control" for="aiModeSelect">
+                <span>🧠 أسلوب الإجابة</span>
+                <select class="assistant-mode-select" id="aiModeSelect" aria-label="وضع المساعد">
+                  <option value="general">عام</option>
+                  <option value="coding">برمجة 💻</option>
+                  <option value="study">دراسة 📚</option>
+                  <option value="writing">كتابة ✍️</option>
+                  <option value="analysis">تحليل 🔎</option>
+                  <option value="creative">إبداع 🎨</option>
+                </select>
+              </label>
+              <label class="assistant-mode-control" for="agentModeSelect">
+                <span>وضع المحادثة</span>
+                <select class="assistant-mode-select" id="agentModeSelect" aria-label="وضع المحادثة">
+                  <option value="chat">💬 عادي</option>
+                  <option value="agent">🤖 وكيل المهام</option>
+                </select>
+              </label>
+              <span class="agent-mode-badge" id="agentModeBadge" hidden>🤖 وكيل المهام فعّال</span>
+              <button class="web-search-toggle" id="webSearchToggle" type="button" aria-label="تفعيل البحث على الإنترنت" aria-pressed="false" title="البحث غير مفعّل">
+                <span aria-hidden="true">🌐</span> البحث على الإنترنت
               </button>
-              <input class="sr-only" id="fileInput" type="file" accept="image/*,video/*" tabindex="-1">
+              <span class="voice-status" id="voiceStatus" role="status" hidden>جارٍ الاستماع… اضغط 🎤 لإنهاء الإملاء</span>
+              <button class="attach-button" id="attachButton" type="button" aria-label="إرفاق ملف أو صورة">
+                <span aria-hidden="true">📎</span> إرفاق ملف
+              </button>
+              <input class="sr-only" id="fileInput" type="file" accept="image/*,video/*,.pdf,.docx,.xlsx,.txt" tabindex="-1">
               <button class="stop-button" id="stopButton" type="button" hidden>إيقاف التوليد</button>
             </div>
             <span class="composer-note">Enter للإرسال · Shift + Enter لسطر جديد</span>
@@ -950,6 +1210,19 @@
       </div>
     </section>
 
+    <section class="section" id="gallery" aria-labelledby="galleryTitle">
+      <div class="section-head">
+        <div>
+          <span class="section-kicker">صورك الإبداعية في مكان واحد</span>
+          <h2 id="galleryTitle">🖼️ معرض الصور</h2>
+        </div>
+        <p id="galleryDescription">تظهر هنا الصور التي عدّلتها أو أنشأتها. صور الحساب محفوظة بأمان، وصور الزائر تبقى على هذا الجهاز.</p>
+      </div>
+      <div class="gallery-card">
+        <div class="gallery-grid" id="galleryGrid" aria-live="polite"></div>
+      </div>
+    </section>
+
     <section class="section" id="templates" aria-labelledby="templatesTitle">
       <div class="section-head">
         <div>
@@ -1004,6 +1277,155 @@
       <span class="footer-credit">صنع بواسطة <strong>المبرمج العراقي مصطفى حسين</strong></span>
     </div>
   </footer>
+  <dialog class="memory-dialog" id="accountDialog" aria-labelledby="accountDialogTitle">
+    <div class="memory-dialog-content">
+      <div class="memory-dialog-head">
+        <div>
+          <h2 id="accountDialogTitle">حسابك</h2>
+          <p id="accountDialogNote" class="auth-note">سجّل الدخول لمزامنة ذكرياتك بين المحادثات.</p>
+        </div>
+        <button class="memory-close" id="accountDialogClose" type="button" aria-label="إغلاق">×</button>
+      </div>
+      <div class="auth-note" id="accountDialogStatus" role="status" aria-live="polite"></div>
+      <form class="auth-form" id="accountForm">
+        <label for="accountEmail">البريد الإلكتروني
+          <input id="accountEmail" name="email" type="email" autocomplete="email" maxlength="254" required>
+        </label>
+        <label id="accountPasswordLabel" for="accountPassword">كلمة المرور
+          <input id="accountPassword" name="password" type="password" autocomplete="current-password" minlength="12" maxlength="128" required>
+        </label>
+        <button class="auth-submit" id="accountSubmit" type="submit">تسجيل الدخول</button>
+      </form>
+      <button class="memory-clear" id="accountLogoutButton" type="button" hidden>تسجيل الخروج</button>
+      <button class="auth-secondary" id="accountModeToggle" type="button">إنشاء حساب بالبريد</button>
+      <button class="auth-secondary" id="accountForgotButton" type="button">نسيت كلمة المرور؟</button>
+    </div>
+  </dialog>
+  <dialog class="memory-dialog" id="memoryDialog" aria-labelledby="memoryDialogTitle">
+    <div class="memory-dialog-content">
+      <div class="memory-dialog-head">
+        <div>
+          <h2 id="memoryDialogTitle">ذاكرتك</h2>
+          <p>تُستخدم المعلومات ذات الصلة فقط، ويمكنك حذف أي ذكرى متى شئت.</p>
+        </div>
+        <button class="memory-close" id="memoryDialogClose" type="button" aria-label="إغلاق">×</button>
+      </div>
+      <div class="memory-list" id="memoryList" aria-live="polite"></div>
+      <button class="memory-clear" id="memoryClearButton" type="button">حذف جميع الذكريات</button>
+    </div>
+  </dialog>
+  <dialog class="memory-dialog personality-dialog" id="assistantPreferencesDialog" aria-labelledby="assistantPreferencesTitle">
+    <div class="memory-dialog-content">
+      <div class="memory-dialog-head">
+        <div>
+          <h2 id="assistantPreferencesTitle">تخصيص المساعد</h2>
+          <p id="assistantPreferencesNote" class="auth-note">اختر طريقة الرد التي تناسبك. تبقى هذه الإعدادات للمحادثة الحالية ما لم تسجّل الدخول.</p>
+        </div>
+        <button class="memory-close" id="assistantPreferencesClose" type="button" aria-label="إغلاق">×</button>
+      </div>
+      <form class="personality-form" id="assistantPreferencesForm">
+        <div class="personality-fields">
+          <label for="assistantNameInput">اسم المساعد
+            <input id="assistantNameInput" maxlength="40" autocomplete="off" required>
+          </label>
+          <label for="assistantPersonalityInput">أسلوب الشخصية
+            <select id="assistantPersonalityInput">
+              <option value="friendly">ودود</option>
+              <option value="formal">رسمي</option>
+              <option value="iraqi">عراقي</option>
+              <option value="technical">خبير تقني</option>
+              <option value="teacher">معلّم</option>
+              <option value="concise">مختصر</option>
+              <option value="detailed">مفصل</option>
+            </select>
+          </label>
+          <label for="assistantLengthInput">طول الإجابة
+            <select id="assistantLengthInput">
+              <option value="short">مختصر</option>
+              <option value="medium">متوسط</option>
+              <option value="detailed">مفصل</option>
+            </select>
+          </label>
+          <label for="assistantLanguageInput">لغة الرد
+            <select id="assistantLanguageInput">
+              <option value="auto">تلقائي حسب لغة المستخدم</option>
+              <option value="ar">العربية</option>
+              <option value="ar-IQ">العربية العراقية</option>
+              <option value="en">English</option>
+            </select>
+          </label>
+        </div>
+        <label class="personality-checkbox" for="assistantEmojiInput">
+          <input id="assistantEmojiInput" type="checkbox">
+          استخدام الإيموجي باعتدال
+        </label>
+        <label for="assistantInstructionsInput">تعليمات خاصة
+          <textarea id="assistantInstructionsInput" maxlength="600" placeholder="مثال: جاوبني دائمًا باللهجة العراقية وبطريقة بسيطة."></textarea>
+        </label>
+        <p class="personality-note">تُطبّق التعليمات الخاصة على أسلوب الرد فقط، ولا يمكنها تغيير تعليمات الأمان أو النظام.</p>
+        <div class="personality-preview" aria-live="polite">
+          <small>معاينة لطريقة الرد</small>
+          <strong id="assistantPreviewName">مصطفى حسين AI</strong>
+          <p id="assistantPreviewText"></p>
+        </div>
+        <p class="personality-status" id="assistantPreferencesStatus" role="status" aria-live="polite"></p>
+        <div class="personality-actions">
+          <button class="auth-submit" id="assistantPreferencesSave" type="submit">حفظ الإعدادات</button>
+          <button class="personality-reset" id="assistantPreferencesReset" type="button">إعادة للوضع الافتراضي</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+  <dialog class="memory-dialog gallery-dialog" id="galleryImageDialog" aria-labelledby="galleryImageDialogTitle">
+    <div class="memory-dialog-content">
+      <div class="memory-dialog-head">
+        <div>
+          <h2 id="galleryImageDialogTitle">عرض الصورة</h2>
+          <p class="gallery-dialog-info" id="galleryImageDialogInfo"></p>
+        </div>
+        <button class="memory-close" id="galleryImageDialogClose" type="button" aria-label="إغلاق">×</button>
+      </div>
+      <img class="gallery-dialog-image" id="galleryImageDialogImage" alt="صورة من معرض الصور">
+      <p class="gallery-dialog-info" id="galleryImageDialogPrompt"></p>
+      <div class="gallery-dialog-actions">
+        <a class="image-editor-upload" id="galleryDownload" download>↓ تنزيل الصورة</a>
+        <button class="image-editor-again" id="galleryEdit" type="button">✨ فتح في محرر الصور</button>
+        <button class="memory-clear gallery-delete" id="galleryDelete" type="button">حذف الصورة</button>
+      </div>
+    </div>
+  </dialog>
+  <dialog class="memory-dialog" id="conversationRenameDialog" aria-labelledby="conversationRenameTitle">
+    <form class="memory-dialog-content" id="conversationRenameForm">
+      <div class="memory-dialog-head">
+        <div>
+          <h2 id="conversationRenameTitle">إعادة تسمية المحادثة</h2>
+          <p class="auth-note">اكتب اسماً واضحاً يسهل عليك العثور على المحادثة لاحقاً.</p>
+        </div>
+        <button class="memory-close" id="conversationRenameClose" type="button" aria-label="إغلاق">×</button>
+      </div>
+      <label class="auth-form" for="conversationRenameInput">اسم المحادثة
+        <input class="conversation-rename-input" id="conversationRenameInput" maxlength="80" required>
+      </label>
+      <p class="personality-status" id="conversationRenameStatus" role="status" aria-live="polite"></p>
+      <div class="confirmation-actions">
+        <button class="auth-submit" type="submit">حفظ الاسم</button>
+        <button class="personality-reset" id="conversationRenameCancel" type="button">إلغاء</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog class="memory-dialog" id="actionConfirmationDialog" aria-labelledby="actionConfirmationTitle">
+    <div class="memory-dialog-content">
+      <div class="memory-dialog-head">
+        <h2 id="actionConfirmationTitle">تأكيد العملية</h2>
+        <button class="memory-close" id="actionConfirmationClose" type="button" aria-label="إغلاق">×</button>
+      </div>
+      <p class="confirmation-copy" id="actionConfirmationMessage"></p>
+      <div class="confirmation-actions">
+        <button class="memory-clear" id="actionConfirmationAccept" type="button">تأكيد</button>
+        <button class="personality-reset" id="actionConfirmationCancel" type="button">إلغاء</button>
+      </div>
+    </div>
+  </dialog>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
@@ -1016,6 +1438,56 @@
     const toast = document.querySelector('#toast');
     const fileInput = document.querySelector('#fileInput');
     const attachmentPreview = document.querySelector('#attachmentPreview');
+    const voiceInputButton = document.querySelector('#voiceInputButton');
+    const voiceCancelButton = document.querySelector('#voiceCancelButton');
+    const voiceStatus = document.querySelector('#voiceStatus');
+    const webSearchToggle = document.querySelector('#webSearchToggle');
+    const aiModeSelect = document.querySelector('#aiModeSelect');
+    const agentModeSelect = document.querySelector('#agentModeSelect');
+    const agentModeBadge = document.querySelector('#agentModeBadge');
+    const editMessageNotice = document.querySelector('#editMessageNotice');
+    const cancelMessageEdit = document.querySelector('#cancelMessageEdit');
+    const accountButton = document.querySelector('#accountButton');
+    const memoryButton = document.querySelector('#memoryButton');
+    const accountDialog = document.querySelector('#accountDialog');
+    const accountDialogNote = document.querySelector('#accountDialogNote');
+    const accountDialogStatus = document.querySelector('#accountDialogStatus');
+    const accountForm = document.querySelector('#accountForm');
+    const accountEmailInput = document.querySelector('#accountEmail');
+    const accountPasswordInput = document.querySelector('#accountPassword');
+    const accountPasswordLabel = document.querySelector('#accountPasswordLabel');
+    const accountSubmit = document.querySelector('#accountSubmit');
+    const accountModeToggle = document.querySelector('#accountModeToggle');
+    const accountForgotButton = document.querySelector('#accountForgotButton');
+    const accountLogoutButton = document.querySelector('#accountLogoutButton');
+    const memoryDialog = document.querySelector('#memoryDialog');
+    const memoryList = document.querySelector('#memoryList');
+    const memoryClearButton = document.querySelector('#memoryClearButton');
+    const assistantPreferencesButton = document.querySelector('#assistantPreferencesButton');
+    const assistantPreferencesDialog = document.querySelector('#assistantPreferencesDialog');
+    const assistantPreferencesForm = document.querySelector('#assistantPreferencesForm');
+    const assistantPreferencesNote = document.querySelector('#assistantPreferencesNote');
+    const assistantPreferencesStatus = document.querySelector('#assistantPreferencesStatus');
+    const assistantPreferencesSave = document.querySelector('#assistantPreferencesSave');
+    const assistantPreferencesReset = document.querySelector('#assistantPreferencesReset');
+    const assistantNameInput = document.querySelector('#assistantNameInput');
+    const assistantPersonalityInput = document.querySelector('#assistantPersonalityInput');
+    const assistantLengthInput = document.querySelector('#assistantLengthInput');
+    const assistantLanguageInput = document.querySelector('#assistantLanguageInput');
+    const assistantEmojiInput = document.querySelector('#assistantEmojiInput');
+    const assistantInstructionsInput = document.querySelector('#assistantInstructionsInput');
+    const assistantPreviewName = document.querySelector('#assistantPreviewName');
+    const assistantPreviewText = document.querySelector('#assistantPreviewText');
+    const assistantNameDisplay = document.querySelector('#assistantNameDisplay');
+    const defaultAssistantPreferences = Object.freeze({
+      assistantName: 'مصطفى حسين AI',
+      personality: 'friendly',
+      responseLength: 'medium',
+      language: 'auto',
+      emojis: true,
+      customInstructions: ''
+    });
+    const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
     const chatCard = document.querySelector('.chat-card');
     const maxContextCharacters = 24000;
     const stopButton = document.querySelector('#stopButton');
@@ -1038,12 +1510,39 @@
     let imageEditorHistory = [];
     let imageEditorBusy = false;
     const conversationList = document.querySelector('#conversationList');
+    const conversationSearch = document.querySelector('#conversationSearch');
+    const conversationSearchCount = document.querySelector('#conversationSearchCount');
     const conversationSidebar = document.querySelector('#conversationSidebar');
     const historyToggle = document.querySelector('#historyToggle');
     const quickPrompts = document.querySelector('.quick-prompts');
     const quickLabel = document.querySelector('.quick-label');
     const sessionStorageKey = 'mustafa-ai-conversations';
+    let conversationStorageKey = sessionStorageKey;
+    const galleryGrid = document.querySelector('#galleryGrid');
+    const galleryImageDialog = document.querySelector('#galleryImageDialog');
+    const galleryImageDialogImage = document.querySelector('#galleryImageDialogImage');
+    const galleryImageDialogInfo = document.querySelector('#galleryImageDialogInfo');
+    const galleryImageDialogPrompt = document.querySelector('#galleryImageDialogPrompt');
+    const galleryDownload = document.querySelector('#galleryDownload');
+    const galleryEdit = document.querySelector('#galleryEdit');
+    const galleryDelete = document.querySelector('#galleryDelete');
+    const galleryDescription = document.querySelector('#galleryDescription');
+    const conversationRenameDialog = document.querySelector('#conversationRenameDialog');
+    const conversationRenameForm = document.querySelector('#conversationRenameForm');
+    const conversationRenameInput = document.querySelector('#conversationRenameInput');
+    const conversationRenameStatus = document.querySelector('#conversationRenameStatus');
+    const actionConfirmationDialog = document.querySelector('#actionConfirmationDialog');
+    const actionConfirmationTitle = document.querySelector('#actionConfirmationTitle');
+    const actionConfirmationMessage = document.querySelector('#actionConfirmationMessage');
+    const actionConfirmationAccept = document.querySelector('#actionConfirmationAccept');
+    let galleryDatabasePromise;
+    let galleryImages = [];
+    let activeGalleryImage = null;
+    let pendingConversationRename = null;
+    let pendingConfirmedAction = null;
     const categories = new Set(['general', 'games', 'web', 'media', 'templates']);
+    const aiModes = new Set(['general', 'coding', 'study', 'writing', 'analysis', 'creative']);
+    const conversationAttachmentCache = new Map();
     const categoryNames = {
       general: 'محادثة عامة',
       games: 'برمجة الألعاب',
@@ -1074,11 +1573,38 @@
     let history = [];
     let conversations = [];
     let activeConversationId = null;
+    let messageAttachments = [];
     let category = 'general';
+    let aiMode = 'general';
+    let agentModeEnabled = false;
+    let editingMessageIndex = null;
     let busy = false;
     let toastTimer;
     let selectedFile = null;
     let activeRequestController = null;
+    let recognition = null;
+    let recognitionBaseText = '';
+    let recognitionFinalText = '';
+    let cancelRecognition = false;
+    let mediaRecorder = null;
+    let recorderStream = null;
+    let recorderChunks = [];
+    let recorderBytes = 0;
+    let voiceRecording = false;
+    let voiceStarting = false;
+    let voiceTranscribing = false;
+    let voiceTranscriptionController = null;
+    let cancelVoiceTranscription = false;
+    let voiceRecordingTooLarge = false;
+    let cancelVoiceRecording = false;
+    let voiceRecordingTimer = null;
+    let activeSpeech = null;
+    let webSearchEnabled = false;
+    let currentUser = null;
+    let emailAuthConfigured = false;
+    let accountMode = 'login';
+    let passwordResetToken = null;
+    let assistantPreferences = { ...defaultAssistantPreferences };
 
     document.querySelector('#templateGrid').innerHTML = templates.map((template, index) => `
       <button class="template-card" type="button" data-template="${index}">
@@ -1102,10 +1628,11 @@
       </article>
     `).join('');
 
-    try {
-      const savedConversations = JSON.parse(localStorage.getItem(sessionStorageKey) || '[]');
-      if (Array.isArray(savedConversations)) {
-        conversations = savedConversations.filter((conversation) =>
+    function readConversations(storageKey) {
+      try {
+        const savedConversations = JSON.parse(localStorage.getItem(storageKey) || '[]');
+        if (!Array.isArray(savedConversations)) return [];
+        return savedConversations.filter((conversation) =>
           conversation &&
           typeof conversation.id === 'string' &&
           typeof conversation.title === 'string' &&
@@ -1115,17 +1642,600 @@
             (item.role === 'user' || item.role === 'model') &&
             typeof item.text === 'string'
           )
-        ).slice(0, 20);
+        ).map((conversation) => ({
+          ...conversation,
+          pinned: Boolean(conversation.pinned),
+          aiMode: aiModes.has(conversation.aiMode) ? conversation.aiMode : 'general',
+          agentMode: Boolean(conversation.agentMode),
+          updatedAt: Number.isFinite(conversation.updatedAt) ? conversation.updatedAt : 0
+        })).slice(0, 20);
+      } catch {
+        return [];
       }
-    } catch {
-      conversations = [];
     }
+
+    function switchConversationScope(user) {
+      const storageKey = user ? `${sessionStorageKey}-account-${user.id}` : sessionStorageKey;
+      if (storageKey === conversationStorageKey) return;
+      conversationStorageKey = storageKey;
+      conversations = readConversations(conversationStorageKey);
+      activeConversationId = null;
+      history = [];
+      messageAttachments = [];
+      aiMode = 'general';
+      aiModeSelect.value = aiMode;
+      agentModeEnabled = false;
+      agentModeSelect.value = 'chat';
+      agentModeBadge.hidden = true;
+      cancelMessageEditMode();
+      messagesElement.replaceChildren();
+      messagesElement.hidden = true;
+      welcome.hidden = false;
+      quickPrompts.hidden = false;
+      quickLabel.hidden = false;
+      promptInput.value = '';
+      clearAttachment();
+      renderConversations();
+    }
+
+    conversations = readConversations(conversationStorageKey);
 
     function showToast(message) {
       toast.textContent = message;
       toast.classList.add('show');
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => toast.classList.remove('show'), 4800);
+    }
+
+    function openGalleryDatabase() {
+      if (galleryDatabasePromise) return galleryDatabasePromise;
+      galleryDatabasePromise = new Promise((resolve, reject) => {
+        if (!('indexedDB' in window)) {
+          reject(new Error('التخزين المحلي للصور غير مدعوم في هذا المتصفح.'));
+          return;
+        }
+        const request = indexedDB.open('mustafa-ai-gallery', 1);
+        request.onupgradeneeded = () => {
+          if (!request.result.objectStoreNames.contains('images')) {
+            request.result.createObjectStore('images', { keyPath: 'id' });
+          }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(new Error('تعذّر فتح معرض الصور المحلي.'));
+      });
+      return galleryDatabasePromise;
+    }
+
+    async function localGalleryRequest(mode, action) {
+      const database = await openGalleryDatabase();
+      return new Promise((resolve, reject) => {
+        const transaction = database.transaction('images', mode);
+        let result;
+        const request = action(transaction.objectStore('images'));
+        request.onsuccess = () => { result = request.result; };
+        request.onerror = () => reject(new Error('تعذّر الوصول إلى معرض الصور المحلي.'));
+        transaction.oncomplete = () => resolve(result);
+        transaction.onerror = () => reject(new Error('تعذّر حفظ التغييرات في معرض الصور المحلي.'));
+        transaction.onabort = () => reject(new Error('أُلغيت عملية معرض الصور المحلي.'));
+      });
+    }
+
+    async function createGalleryThumbnail(dataUrl) {
+      const blob = await (await fetch(dataUrl)).blob();
+      const bitmap = await createImageBitmap(blob);
+      const scale = Math.min(1, 360 / Math.max(bitmap.width, bitmap.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+      canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+      const context = canvas.getContext('2d');
+      if (!context) {
+        bitmap.close();
+        throw new Error('تعذّر تجهيز الصورة المصغّرة للمعرض.');
+      }
+      context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      bitmap.close();
+      const thumbnail = canvas.toDataURL('image/jpeg', 0.72);
+      if (thumbnail.length > 330 * 1024) {
+        throw new Error('تعذّر ضغط معاينة الصورة إلى الحجم المسموح للمعرض.');
+      }
+      return thumbnail;
+    }
+
+    function formatGalleryDate(timestamp) {
+      const date = new Date(timestamp);
+      return Number.isNaN(date.getTime())
+        ? 'تاريخ غير متاح'
+        : new Intl.DateTimeFormat('ar-IQ', { dateStyle: 'medium', timeStyle: 'short' }).format(date);
+    }
+
+    function renderGallery() {
+      galleryGrid.replaceChildren();
+      if (!galleryImages.length) {
+        const empty = document.createElement('div');
+        empty.className = 'gallery-empty';
+        empty.textContent = currentUser
+          ? 'لا توجد صور محفوظة بعد. عدّل صورة من محرر الصور لتظهر هنا.'
+          : 'لا توجد صور محفوظة بعد. عدّل صورة لتُحفظ في معرض هذا الجهاز.';
+        galleryGrid.append(empty);
+        return;
+      }
+      galleryImages.forEach((image) => {
+        const card = document.createElement('article');
+        card.className = 'gallery-item';
+        const open = document.createElement('button');
+        open.className = 'gallery-open';
+        open.type = 'button';
+        open.setAttribute('aria-label', `عرض الصورة: ${image.prompt || 'صورة معدلة'}`);
+        const thumbnail = document.createElement('img');
+        thumbnail.src = image.thumbnail;
+        thumbnail.alt = image.prompt ? `صورة معدلة: ${image.prompt}` : 'صورة محفوظة في المعرض';
+        thumbnail.loading = 'lazy';
+        open.append(thumbnail);
+        open.addEventListener('click', () => openGalleryImage(image.id));
+        const info = document.createElement('div');
+        info.className = 'gallery-item-info';
+        const prompt = document.createElement('span');
+        prompt.className = 'gallery-item-prompt';
+        prompt.textContent = image.prompt || 'صورة معدلة';
+        const date = document.createElement('time');
+        date.className = 'gallery-item-date';
+        if (Number.isFinite(image.createdAt)) {
+          date.dateTime = new Date(image.createdAt).toISOString();
+        }
+        date.textContent = formatGalleryDate(image.createdAt);
+        info.append(prompt, date);
+        card.append(open, info);
+        galleryGrid.append(card);
+      });
+    }
+
+    async function loadGallery() {
+      try {
+        if (currentUser) {
+          const result = await requestJson('/api/gallery');
+          galleryImages = result.images;
+          galleryDescription.textContent = 'صور هذا الحساب محفوظة بأمان، ولا يمكن لحساب آخر الوصول إليها.';
+        } else {
+          const result = await localGalleryRequest('readonly', (store) => store.getAll());
+          galleryImages = result.sort((first, second) => second.createdAt - first.createdAt);
+          galleryDescription.textContent = 'تبقى صور الزائر على هذا الجهاز فقط ولا تُرفع إلى الخادم.';
+        }
+        renderGallery();
+      } catch (error) {
+        galleryImages = [];
+        renderGallery();
+        const notice = document.createElement('div');
+        notice.className = 'gallery-empty';
+        notice.textContent = error.message;
+        galleryGrid.replaceChildren(notice);
+      }
+    }
+
+    async function saveImageToGallery(dataUrl, prompt, source) {
+      if (typeof dataUrl !== 'string' || !/^data:image\/(?:jpeg|png|webp);base64,/.test(dataUrl)) {
+        throw new Error('نتيجة الصورة غير صالحة للحفظ في المعرض.');
+      }
+      const [header, data] = dataUrl.split(',', 2);
+      const mimeType = header.slice(5, header.indexOf(';'));
+      const base64Padding = data.endsWith('==') ? 2 : data.endsWith('=') ? 1 : 0;
+      if (Math.floor(data.length * 3 / 4) - base64Padding > 8 * 1024 * 1024) {
+        throw new Error('حجم الصورة أكبر من الحد المسموح لحفظها في المعرض (8 ميغابايت).');
+      }
+      const thumbnail = await createGalleryThumbnail(dataUrl);
+      const entry = {
+        id: typeof crypto.randomUUID === 'function'
+          ? crypto.randomUUID()
+          : `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        mimeType,
+        dataUrl,
+        thumbnail,
+        prompt: prompt.trim().slice(0, 2000),
+        source,
+        createdAt: Date.now()
+      };
+      if (currentUser) {
+        await requestJson('/api/gallery', {
+          method: 'POST',
+          body: JSON.stringify({
+            mimeType,
+            data,
+            thumbnail: thumbnail.slice(thumbnail.indexOf(',') + 1),
+            prompt: entry.prompt,
+            source
+          })
+        });
+      } else {
+        const existing = await localGalleryRequest('readonly', (store) => store.getAll());
+        if (existing.length >= 30) {
+          throw new Error('وصل معرض الصور المحلي إلى الحد الأقصى (30 صورة). احذف بعض الصور قبل إضافة صور جديدة.');
+        }
+        const saved = await localGalleryRequest('readwrite', (store) => store.put(entry));
+        if (!saved) throw new Error('تعذّر حفظ الصورة في معرض هذا الجهاز.');
+      }
+      await loadGallery();
+      return true;
+    }
+
+    async function openGalleryImage(imageId) {
+      try {
+        const galleryItem = galleryImages.find((image) => image.id === imageId);
+        if (!galleryItem) throw new Error('لم يتم العثور على الصورة في المعرض.');
+        const fullImage = currentUser
+          ? (await requestJson(`/api/gallery/${encodeURIComponent(imageId)}`)).image
+          : await localGalleryRequest('readonly', (store) => store.get(imageId));
+        if (!fullImage) throw new Error('لم يتم العثور على الصورة في المعرض.');
+        const dataUrl = fullImage.dataUrl || `data:${fullImage.mimeType};base64,${fullImage.data}`;
+        activeGalleryImage = { ...galleryItem, ...fullImage, dataUrl };
+        galleryImageDialogImage.src = dataUrl;
+        galleryImageDialogInfo.textContent = formatGalleryDate(fullImage.createdAt);
+        galleryImageDialogPrompt.textContent = fullImage.prompt || 'صورة محفوظة في المعرض.';
+        galleryDownload.href = dataUrl;
+        galleryDownload.download = `mustafa-ai-${imageId}.${fullImage.mimeType === 'image/jpeg' ? 'jpg' : fullImage.mimeType.split('/')[1]}`;
+        galleryImageDialog.showModal();
+      } catch (error) {
+        showToast(error.message);
+      }
+    }
+
+    async function deleteGalleryImage() {
+      if (!activeGalleryImage) return;
+      try {
+        if (currentUser) {
+          await requestJson(`/api/gallery/${encodeURIComponent(activeGalleryImage.id)}`, { method: 'DELETE' });
+        } else {
+          await localGalleryRequest('readwrite', (store) => store.delete(activeGalleryImage.id));
+        }
+        galleryImageDialog.close();
+        activeGalleryImage = null;
+        await loadGallery();
+        showToast('تم حذف الصورة من المعرض.');
+      } catch (error) {
+        showToast(error.message);
+      }
+    }
+
+    async function openGalleryImageInEditor() {
+      if (!activeGalleryImage) return;
+      try {
+        const blob = await (await fetch(activeGalleryImage.dataUrl)).blob();
+        const extension = activeGalleryImage.mimeType === 'image/jpeg' ? 'jpg' : activeGalleryImage.mimeType.split('/')[1];
+        const file = new File([blob], `gallery-image.${extension}`, { type: activeGalleryImage.mimeType });
+        clearImageEditorImage();
+        imageEditorOriginalFile = file;
+        imageEditorOriginalUrl = URL.createObjectURL(file);
+        imageEditorOriginal.src = imageEditorOriginalUrl;
+        imageEditorFileName.textContent = file.name;
+        imageEditorPreview.hidden = false;
+        imageEditorRemove.hidden = false;
+        imageEditorPrompt.value = '';
+        setImageEditorStatus('تم فتح الصورة من المعرض. اكتب وصف التعديل الجديد.');
+        galleryImageDialog.close();
+        document.querySelector('#image-edit').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        imageEditorPrompt.focus({ preventScroll: true });
+      } catch {
+        showToast('تعذّر فتح الصورة في محرر الصور.');
+      }
+    }
+
+    function normalizeLocalAssistantPreferences(value) {
+      if (!value || typeof value !== 'object' || Array.isArray(value)) {
+        return { ...defaultAssistantPreferences };
+      }
+      const candidate = { ...defaultAssistantPreferences, ...value };
+      const validName = typeof candidate.assistantName === 'string' &&
+        /^[\p{L}\p{N}][\p{L}\p{N} ._'-]{0,39}$/u.test(candidate.assistantName.trim());
+      return {
+        assistantName: validName ? candidate.assistantName.trim() : defaultAssistantPreferences.assistantName,
+        personality: ['friendly', 'formal', 'iraqi', 'technical', 'teacher', 'concise', 'detailed'].includes(candidate.personality)
+          ? candidate.personality : defaultAssistantPreferences.personality,
+        responseLength: ['short', 'medium', 'detailed'].includes(candidate.responseLength)
+          ? candidate.responseLength : defaultAssistantPreferences.responseLength,
+        language: ['auto', 'ar', 'ar-IQ', 'en'].includes(candidate.language)
+          ? candidate.language : defaultAssistantPreferences.language,
+        emojis: typeof candidate.emojis === 'boolean' ? candidate.emojis : defaultAssistantPreferences.emojis,
+        customInstructions: typeof candidate.customInstructions === 'string'
+          ? candidate.customInstructions.slice(0, 600) : defaultAssistantPreferences.customInstructions
+      };
+    }
+
+    function applyAssistantPreferences(value) {
+      assistantPreferences = normalizeLocalAssistantPreferences(value);
+      assistantNameDisplay.textContent = assistantPreferences.assistantName;
+      document.querySelectorAll('.message.assistant .message-avatar').forEach((avatar) => {
+        avatar.textContent = assistantPreferences.assistantName.slice(0, 1);
+      });
+      updateAssistantPreview();
+    }
+
+    function updateAssistantPreview() {
+      if (!assistantPreviewText) return;
+      const name = assistantNameInput.value.trim() || defaultAssistantPreferences.assistantName;
+      const language = assistantLanguageInput.value;
+      const personality = assistantPersonalityInput.value;
+      const short = assistantLengthInput.value === 'short';
+      const detailed = assistantLengthInput.value === 'detailed';
+      let sample;
+      if (language === 'en') {
+        const englishSamples = {
+          friendly: 'Hello! I’m here to help.',
+          formal: 'Hello. I would be pleased to help you.',
+          technical: 'Let’s examine this carefully.',
+          teacher: 'Let’s work through it step by step.',
+          concise: 'How can I help?',
+          detailed: 'I’ll explain this clearly and thoroughly.',
+          iraqi: 'Hello! I’m here to help.'
+        };
+        sample = short ? 'Sure, I can help.' : englishSamples[personality];
+        if (detailed) sample += ' I can explain the steps and provide practical examples.';
+      } else if (language === 'ar-IQ' || (language === 'auto' && personality === 'iraqi')) {
+        sample = short ? 'هلا، أساعدك.' : 'هلا بيك، حاضر أساعدك.';
+        if (detailed) sample += ' أشرحلك الخطوات وأطيك أمثلة عملية.';
+      } else {
+        const arabicSamples = {
+          friendly: 'أهلاً! أنا هنا لمساعدتك.',
+          formal: 'أهلاً بك، يسعدني تقديم المساعدة.',
+          iraqi: 'أهلاً! أنا هنا لمساعدتك.',
+          technical: 'أكيد، خلّينا نحلل الموضوع بدقة.',
+          teacher: 'خلّينا نشرحها خطوة خطوة.',
+          concise: 'تفضل، كيف أساعدك؟',
+          detailed: 'سأشرح لك الموضوع بوضوح وتفصيل.'
+        };
+        sample = short ? 'أكيد، أساعدك.' : arabicSamples[personality];
+        if (detailed) sample += ' أقدر أشرح لك الخطوات وأقدّم أمثلة عملية.';
+      }
+      assistantPreviewName.textContent = name;
+      assistantPreviewText.textContent = `${sample}${assistantEmojiInput.checked ? ' ✨' : ''}`;
+    }
+
+    function populateAssistantPreferencesForm() {
+      assistantNameInput.value = assistantPreferences.assistantName;
+      assistantPersonalityInput.value = assistantPreferences.personality;
+      assistantLengthInput.value = assistantPreferences.responseLength;
+      assistantLanguageInput.value = assistantPreferences.language;
+      assistantEmojiInput.checked = assistantPreferences.emojis;
+      assistantInstructionsInput.value = assistantPreferences.customInstructions;
+      assistantPreferencesNote.textContent = currentUser
+        ? 'تُحفظ هذه الإعدادات في حسابك وتُستخدم في محادثاتك.'
+        : 'تُحفظ هذه الإعدادات ضمن المحادثة الحالية على هذا الجهاز فقط.';
+      assistantPreferencesStatus.textContent = '';
+      updateAssistantPreview();
+    }
+
+    function readAssistantPreferencesForm() {
+      const preferences = {
+        assistantName: assistantNameInput.value,
+        personality: assistantPersonalityInput.value,
+        responseLength: assistantLengthInput.value,
+        language: assistantLanguageInput.value,
+        emojis: assistantEmojiInput.checked,
+        customInstructions: assistantInstructionsInput.value
+      };
+      if (!/^[\p{L}\p{N}][\p{L}\p{N} ._'-]{0,39}$/u.test(preferences.assistantName.trim())) {
+        throw new Error('اسم المساعد يجب أن يكون من 1 إلى 40 حرفاً أو رقماً.');
+      }
+      const instructions = preferences.customInstructions;
+      if (Array.from(instructions).length > 600) {
+        throw new Error('التعليمات الخاصة يجب ألا تتجاوز 600 حرف.');
+      }
+      if (
+        /(?:password|passcode|api[\s_-]?key|secret|access[\s_-]?token|كلمة\s*المرور|كلمة\s*السر|باسورد|مفتاح\s*(?:api|السر))/i.test(instructions) ||
+        /\b(?:sk-[A-Za-z0-9_-]{12,}|AIza[A-Za-z0-9_-]{20,}|hf_[A-Za-z0-9]{16,})\b/.test(instructions) ||
+        /[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}|(?:\+?\d[\s().-]*){8,}/.test(instructions)
+      ) {
+        throw new Error('لا تحفظ كلمات المرور أو مفاتيح API أو البيانات الحساسة ضمن التعليمات.');
+      }
+      return normalizeLocalAssistantPreferences(preferences);
+    }
+
+    async function loadAccountAssistantPreferences() {
+      const data = await requestJson('/api/assistant-preferences');
+      applyAssistantPreferences(data.preferences);
+    }
+
+    function persistAnonymousAssistantPreferences() {
+      if (currentUser || !activeConversationId) return;
+      const conversation = conversations.find((item) => item.id === activeConversationId);
+      if (!conversation) return;
+      conversation.assistantPreferences = { ...assistantPreferences };
+      try {
+        localStorage.setItem(conversationStorageKey, JSON.stringify(conversations));
+      } catch {
+        showToast('تعذّر حفظ تخصيص المساعد ضمن هذه المحادثة على هذا الجهاز.');
+      }
+    }
+
+    function previewAssistantPreferences() {
+      assistantPreviewName.textContent = assistantNameInput.value.trim() || defaultAssistantPreferences.assistantName;
+      updateAssistantPreview();
+    }
+
+    function setAccountMode(mode) {
+      accountMode = mode;
+      const signedIn = mode === 'account';
+      const recovering = mode === 'forgot';
+      const resetting = mode === 'reset';
+      const registering = mode === 'register';
+      accountForm.hidden = signedIn;
+      accountEmailInput.closest('label').hidden = signedIn || resetting;
+      accountEmailInput.required = !signedIn && !resetting;
+      accountLogoutButton.hidden = !signedIn;
+      accountModeToggle.hidden = signedIn || recovering || resetting;
+      accountForgotButton.hidden = signedIn || registering || recovering || resetting;
+      accountPasswordLabel.hidden = recovering || signedIn;
+      accountPasswordInput.required = !recovering && !signedIn;
+      accountPasswordInput.autocomplete = registering || resetting ? 'new-password' : 'current-password';
+      accountSubmit.textContent = registering
+        ? 'إنشاء الحساب'
+        : recovering
+          ? 'إرسال رابط الاستعادة'
+          : resetting
+            ? 'تعيين كلمة مرور جديدة'
+            : 'تسجيل الدخول';
+      accountModeToggle.textContent = registering ? 'لدي حساب — تسجيل الدخول' : 'إنشاء حساب بالبريد';
+      accountDialogTitle.textContent = signedIn ? 'حسابك' : recovering ? 'استعادة كلمة المرور' : resetting ? 'تعيين كلمة مرور' : registering ? 'إنشاء حساب' : 'تسجيل الدخول';
+      accountDialogStatus.textContent = '';
+      if (mode === 'login' || registering) {
+        accountDialogNote.textContent = emailAuthConfigured
+          ? 'الذكريات طويلة المدى تُحفظ في حسابك فقط. استخدم كلمة مرور قوية من 12 حرفاً على الأقل.'
+          : 'الذاكرة المؤقتة تعمل ضمن المحادثة. التسجيل والبريد غير مفعّلين حتى يضبط مسؤول الموقع SMTP ورابط الموقع.';
+      } else if (recovering) {
+        accountDialogNote.textContent = 'أدخل بريد حسابك المؤكد. إذا كان مسجلاً، سنرسل رابطاً صالحاً لمدة 30 دقيقة.';
+      } else if (resetting) {
+        accountDialogNote.textContent = 'اختر كلمة مرور جديدة بطول 12 حرفاً على الأقل.';
+      } else if (signedIn) {
+        accountDialogNote.textContent = currentUser?.email || 'أنت مسجل الدخول.';
+      }
+      accountModeToggle.disabled = !emailAuthConfigured && !registering;
+      accountForgotButton.disabled = !emailAuthConfigured;
+      accountPasswordInput.minLength = 12;
+      accountPasswordInput.maxLength = 128;
+    }
+
+    async function requestJson(url, options = {}) {
+      const response = await fetch(url, {
+        credentials: 'same-origin',
+        ...options,
+        headers: {
+          ...(options.body ? { 'Content-Type': 'application/json' } : {}),
+          ...(options.headers || {})
+        }
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || data.message || 'تعذّر تنفيذ الطلب حالياً.');
+      return data;
+    }
+
+    function updateAccountUi() {
+      const signedIn = Boolean(currentUser);
+      accountButton.textContent = signedIn ? '👤 الحساب' : '👤 تسجيل الدخول';
+      accountButton.title = signedIn ? currentUser.email : 'تسجيل الدخول وإدارة الحساب';
+      memoryButton.hidden = !signedIn;
+    }
+
+    async function refreshAccountState() {
+      try {
+        const [status, account] = await Promise.all([
+          requestJson('/api/auth/status'),
+          fetch('/api/auth/me', { credentials: 'same-origin' }).then((response) =>
+            response.status === 401 ? { authenticated: false } : response.json()
+          )
+        ]);
+        emailAuthConfigured = Boolean(status.emailConfigured);
+        currentUser = account.authenticated ? account.user : null;
+        switchConversationScope(currentUser);
+        updateAccountUi();
+        if (currentUser) {
+          try {
+            await loadAccountAssistantPreferences();
+          } catch (error) {
+            showToast(`تعذّر تحميل تخصيص المساعد من الحساب: ${error.message}`);
+          }
+        } else {
+          applyAssistantPreferences(defaultAssistantPreferences);
+        }
+        await loadGallery();
+      } catch {
+        emailAuthConfigured = false;
+        currentUser = null;
+        switchConversationScope(null);
+        updateAccountUi();
+        applyAssistantPreferences(defaultAssistantPreferences);
+        await loadGallery();
+      }
+    }
+
+    async function loadMemories() {
+      memoryList.replaceChildren();
+      const loading = document.createElement('div');
+      loading.className = 'memory-empty';
+      loading.textContent = 'جارٍ تحميل الذكريات…';
+      memoryList.append(loading);
+      try {
+        const data = await requestJson('/api/memories');
+        memoryList.replaceChildren();
+        if (!data.memories.length) {
+          const empty = document.createElement('div');
+          empty.className = 'memory-empty';
+          empty.textContent = 'لا توجد ذكريات محفوظة. يمكنك قول: «تذكر أني أحب…».';
+          memoryList.append(empty);
+          return;
+        }
+        data.memories.forEach((memory) => {
+          const item = document.createElement('div');
+          item.className = 'memory-item';
+          const text = document.createElement('div');
+          text.className = 'memory-item-text';
+          text.textContent = memory.content;
+          const remove = document.createElement('button');
+          remove.className = 'memory-delete';
+          remove.type = 'button';
+          remove.textContent = 'حذف';
+          remove.setAttribute('aria-label', `حذف الذكرى: ${memory.content}`);
+          remove.addEventListener('click', async () => {
+            try {
+              await requestJson(`/api/memories/${encodeURIComponent(memory.id)}`, { method: 'DELETE' });
+              await loadMemories();
+              showToast('تم حذف الذكرى.');
+            } catch (error) {
+              showToast(error.message);
+            }
+          });
+          item.append(text, remove);
+          memoryList.append(item);
+        });
+      } catch (error) {
+        memoryList.replaceChildren();
+        const message = document.createElement('div');
+        message.className = 'memory-empty';
+        message.textContent = error.message;
+        memoryList.append(message);
+      }
+    }
+
+    function normalizeMemoryMatch(value) {
+      return value.normalize('NFKC').toLowerCase()
+        .replace(/[\u064B-\u065F\u0670]/g, '')
+        .replace(/[أإآ]/g, 'ا').replace(/ى/g, 'ي');
+    }
+
+    function forgetTransientMemory(target) {
+      const stopWords = new Set(['انس', 'انسى', 'احذف', 'من', 'ذاكرتك', 'هذا', 'هذه', 'ذلك', 'المعلومة', 'لي', 'forget', 'my', 'this', 'that', 'it']);
+      const terms = normalizeMemoryMatch(target).split(/[^\p{L}\p{N}]+/u)
+        .filter((word) => word.length > 1 && !stopWords.has(word));
+      let removedLatest = false;
+      history = history.filter((item, index) => {
+        if (item.role !== 'user' || index === history.length - 1) return true;
+        const normalized = normalizeMemoryMatch(item.text);
+        if (terms.length) return !terms.some((term) => normalized.includes(term));
+        if (removedLatest) return true;
+        removedLatest = true;
+        return false;
+      });
+    }
+
+    async function handleAuthLink() {
+      const params = new URLSearchParams(location.search);
+      const verifyToken = params.get('verify');
+      const resetToken = params.get('reset');
+      if (!verifyToken && !resetToken) return;
+      history.replaceState(null, '', `${location.pathname}${location.hash}`);
+      accountDialog.showModal();
+      if (verifyToken) {
+        setAccountMode('login');
+        accountDialogStatus.textContent = 'جارٍ التحقق من البريد…';
+        try {
+          await requestJson('/api/auth/verify', {
+            method: 'POST',
+            body: JSON.stringify({ token: verifyToken })
+          });
+          accountDialogStatus.textContent = 'تم تأكيد البريد. يمكنك الآن تسجيل الدخول.';
+        } catch (error) {
+          accountDialogStatus.textContent = error.message;
+        }
+      } else {
+        passwordResetToken = resetToken;
+        setAccountMode('reset');
+      }
     }
 
     function setImageEditorStatus(message, type = '') {
@@ -1174,38 +2284,145 @@
 
     function renderConversations() {
       conversationList.replaceChildren();
-      conversations.forEach((conversation) => {
+      const query = normalizeMemoryMatch(conversationSearch.value.trim());
+      const matching = conversations
+        .filter((conversation) =>
+          !query ||
+          normalizeMemoryMatch(conversation.title).includes(query) ||
+          conversation.history.some((item) => normalizeMemoryMatch(item.text).includes(query))
+        )
+        .sort((first, second) =>
+          Number(Boolean(second.pinned)) - Number(Boolean(first.pinned)) ||
+          second.updatedAt - first.updatedAt
+        );
+      conversationSearchCount.textContent = query
+        ? `${matching.length} نتيجة`
+        : `${conversations.filter((item) => item.pinned).length} مثبتة · ${conversations.length} محادثة`;
+      if (!matching.length) {
+        const empty = document.createElement('div');
+        empty.className = 'conversation-empty';
+        empty.textContent = query ? 'ما لقينا محادثات تطابق البحث.' : 'ماكو محادثات محفوظة بعد.';
+        conversationList.append(empty);
+        return;
+      }
+      matching.forEach((conversation) => {
         const entry = document.createElement('div');
         entry.className = 'conversation-entry';
         const item = document.createElement('button');
         item.className = `conversation-item${conversation.id === activeConversationId ? ' active' : ''}`;
         item.type = 'button';
-        item.textContent = conversation.title;
+        item.textContent = `${conversation.pinned ? '📌 ' : ''}${conversation.title}`;
         item.title = conversation.title;
-        item.addEventListener('click', () => openConversation(conversation.id));
+        item.addEventListener('click', () => openConversation(conversation.id, query));
+        const pin = document.createElement('button');
+        pin.className = 'conversation-action conversation-pin';
+        pin.type = 'button';
+        pin.textContent = conversation.pinned ? '📌' : '⌖';
+        pin.title = conversation.pinned ? 'إلغاء تثبيت المحادثة' : 'تثبيت المحادثة';
+        pin.setAttribute('aria-label', pin.title);
+        pin.setAttribute('aria-pressed', String(Boolean(conversation.pinned)));
+        pin.addEventListener('click', () => {
+          conversation.pinned = !conversation.pinned;
+          if (!persistConversationList()) conversation.pinned = !conversation.pinned;
+          renderConversations();
+        });
+        const rename = document.createElement('button');
+        rename.className = 'conversation-action';
+        rename.type = 'button';
+        rename.textContent = '✎';
+        rename.title = 'إعادة تسمية المحادثة';
+        rename.setAttribute('aria-label', rename.title);
+        rename.addEventListener('click', () => {
+          pendingConversationRename = conversation.id;
+          conversationRenameInput.value = conversation.title;
+          conversationRenameStatus.textContent = '';
+          conversationRenameDialog.showModal();
+          conversationRenameInput.focus();
+        });
         const remove = document.createElement('button');
         remove.className = 'delete-conversation';
         remove.type = 'button';
         remove.textContent = '×';
         remove.setAttribute('aria-label', `حذف المحادثة: ${conversation.title}`);
         remove.title = 'حذف المحادثة';
-        remove.addEventListener('click', () => deleteConversation(conversation.id));
-        entry.append(item, remove);
+        remove.addEventListener('click', () => requestActionConfirmation(
+          'حذف المحادثة',
+          `هل تريد حذف المحادثة «${conversation.title}»؟ لا يمكن التراجع عن هذا الإجراء.`,
+          'حذف المحادثة',
+          () => deleteConversation(conversation.id)
+        ));
+        entry.append(item, pin, rename, remove);
         conversationList.append(entry);
       });
     }
 
+    function persistConversationList() {
+      try {
+        localStorage.setItem(conversationStorageKey, JSON.stringify(conversations));
+        return true;
+      } catch {
+        showToast('تعذّر حفظ تغييرات المحادثات على هذا الجهاز.');
+        return false;
+      }
+    }
+
+    function requestActionConfirmation(title, message, confirmLabel, action) {
+      actionConfirmationTitle.textContent = title;
+      actionConfirmationMessage.textContent = message;
+      actionConfirmationAccept.textContent = confirmLabel;
+      pendingConfirmedAction = action;
+      actionConfirmationDialog.showModal();
+    }
+
+    function closeActionConfirmation() {
+      pendingConfirmedAction = null;
+      actionConfirmationDialog.close();
+    }
+
+    async function confirmPendingAction() {
+      const action = pendingConfirmedAction;
+      closeActionConfirmation();
+      if (action) await action();
+    }
+
+    function openRenameConversation() {
+      if (!pendingConversationRename) return;
+      const conversation = conversations.find((item) => item.id === pendingConversationRename);
+      const title = conversationRenameInput.value.trim();
+      if (!conversation || !title || title.length > 80) {
+        conversationRenameStatus.textContent = 'اسم المحادثة يجب أن يكون من 1 إلى 80 حرفاً.';
+        return;
+      }
+      const previousTitle = conversation.title;
+      conversation.title = title;
+      if (!persistConversationList()) {
+        conversation.title = previousTitle;
+        renderConversations();
+        return;
+      }
+      renderConversations();
+      pendingConversationRename = null;
+      conversationRenameDialog.close();
+      showToast('تمت إعادة تسمية المحادثة.');
+    }
+
     function deleteConversation(id) {
       if (busy) return;
+      const conversation = conversations.find((item) => item.id === id);
+      if (!conversation) return;
       conversations = conversations.filter((conversation) => conversation.id !== id);
-      let saved = true;
-      try {
-        localStorage.setItem(sessionStorageKey, JSON.stringify(conversations));
-      } catch {
-        saved = false;
-      }
+      conversationAttachmentCache.delete(id);
+      const saved = persistConversationList();
       if (activeConversationId === id) {
         activeConversationId = null;
+        messageAttachments = [];
+        aiMode = 'general';
+        aiModeSelect.value = aiMode;
+        agentModeEnabled = false;
+        agentModeSelect.value = 'chat';
+        agentModeBadge.hidden = true;
+        cancelMessageEditMode();
+        if (!currentUser) applyAssistantPreferences(defaultAssistantPreferences);
         history = [];
         messagesElement.replaceChildren();
         messagesElement.hidden = true;
@@ -1225,22 +2442,28 @@
         id: activeConversationId,
         title: firstUserMessage.slice(0, 44),
         history: [],
+        pinned: false,
         updatedAt: Date.now()
       };
       conversation.history = history.slice(-20);
+      conversation.aiMode = aiMode;
+      conversation.agentMode = agentModeEnabled;
       conversation.updatedAt = Date.now();
+      if (currentUser) delete conversation.assistantPreferences;
+      else conversation.assistantPreferences = { ...assistantPreferences };
       if (!existing) conversations.unshift(conversation);
-      conversations.sort((first, second) => second.updatedAt - first.updatedAt);
+      conversations.sort((first, second) =>
+        Number(Boolean(second.pinned)) - Number(Boolean(first.pinned)) ||
+        second.updatedAt - first.updatedAt
+      );
       conversations = conversations.slice(0, 20);
-      try {
-        localStorage.setItem(sessionStorageKey, JSON.stringify(conversations));
-      } catch {
-        showToast('تعذّر حفظ سجل المحادثات على هذا الجهاز.');
-      }
+      persistConversationList();
+      conversationAttachmentCache.set(activeConversationId, messageAttachments.slice(-20));
       renderConversations();
     }
 
     function limitHistoryForRequest(items) {
+      items = items.slice(-19);
       const context = [];
       let characterCount = 0;
       for (let index = items.length - 1; index >= 0; index -= 1) {
@@ -1260,20 +2483,49 @@
       return context;
     }
 
-    function openConversation(id) {
+    function openConversation(id, searchTerm = '') {
       if (busy) return;
       const conversation = conversations.find((item) => item.id === id);
       if (!conversation) return;
       activeConversationId = id;
+      aiMode = aiModes.has(conversation.aiMode) ? conversation.aiMode : 'general';
+      aiModeSelect.value = aiMode;
+      agentModeEnabled = Boolean(conversation.agentMode);
+      agentModeSelect.value = agentModeEnabled ? 'agent' : 'chat';
+      agentModeBadge.hidden = !agentModeEnabled;
+      if (!currentUser) {
+        applyAssistantPreferences(conversation.assistantPreferences);
+      }
       history = conversation.history.map((item) => ({ ...item }));
+      messageAttachments = conversationAttachmentCache.get(id) ?? Array(history.length).fill(null);
+      if (messageAttachments.length < history.length) {
+        messageAttachments.push(...Array(history.length - messageAttachments.length).fill(null));
+      }
       welcome.hidden = true;
       messagesElement.hidden = false;
       quickPrompts.hidden = true;
       quickLabel.hidden = true;
       messagesElement.replaceChildren();
-      history.forEach((item) => addMessage(item.role, item.text));
+      history.forEach((item, index) => {
+        const message = addMessage(item.role, item.text, false, index);
+        const attachment = messageAttachments[index];
+        if (item.role === 'user') {
+          if (attachment?.isDocument && attachment.file) addDocumentToMessage(message, attachment.file);
+          else if (attachment?.url) addImageToMessage(message, attachment.url, 'المرفق الأصلي');
+          else if (item.attachmentKind) addUnavailableAttachment(message, item);
+        }
+      });
       renderConversations();
-      chatScroll.scrollTop = chatScroll.scrollHeight;
+      const matchingIndex = searchTerm
+        ? history.findIndex((item) => normalizeMemoryMatch(item.text).includes(searchTerm))
+        : -1;
+      if (matchingIndex >= 0) {
+        const message = messagesElement.children[matchingIndex];
+        message?.classList.add('conversation-search-match');
+        message?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      } else {
+        chatScroll.scrollTop = chatScroll.scrollHeight;
+      }
       conversationSidebar.classList.remove('open');
       historyToggle.setAttribute('aria-expanded', 'false');
     }
@@ -1459,9 +2711,10 @@
       container.replaceChildren(content);
     }
 
-    function addMessage(role, text, isTyping = false) {
+    function addMessage(role, text, isTyping = false, historyIndex = null) {
       const row = document.createElement('div');
       row.className = `message ${role === 'user' ? 'user' : 'assistant'}`;
+      if (Number.isInteger(historyIndex)) row.dataset.historyIndex = String(historyIndex);
       const avatar = document.createElement('div');
       avatar.className = 'message-avatar';
       avatar.textContent = role === 'user' ? 'أنت' : 'م';
@@ -1473,15 +2726,450 @@
       content.className = 'message-content';
       content.append(bubble);
       row.append(avatar, content);
-      if (role === 'model' && !isTyping) addResponseActions(row, text);
+      if (role === 'user' && Number.isInteger(historyIndex)) addUserMessageActions(row, historyIndex);
+      if (role === 'model' && !isTyping) {
+        addResponseActions(row, text, findPreviousUserMessage(historyIndex));
+      }
       messagesElement.append(row);
       chatScroll.scrollTop = chatScroll.scrollHeight;
       return row;
     }
 
-    function addResponseActions(row, text) {
+    function findPreviousUserMessage(messageIndex) {
+      if (!Number.isInteger(messageIndex)) return null;
+      for (let index = Math.min(messageIndex, history.length - 1); index >= 0; index -= 1) {
+        if (history[index]?.role === 'user') return index;
+      }
+      return null;
+    }
+
+    function editablePrompt(message) {
+      if (typeof message?.prompt === 'string') return message.prompt;
+      return message?.text?.replace(/\n\[الملف المرفق: [^\]]+\]$/, '') ?? '';
+    }
+
+    function cancelMessageEditMode() {
+      editingMessageIndex = null;
+      editMessageNotice.hidden = true;
+    }
+
+    function editUserMessage(messageIndex) {
+      if (busy || history[messageIndex]?.role !== 'user') return;
+      const message = history[messageIndex];
+      if ((message.attachmentKind || /\n\[الملف المرفق: [^\]]+\]$/.test(message.text)) &&
+        !messageAttachments[messageIndex]) {
+        showToast('المرفق لم يعد متاحاً في هذه الجلسة؛ يمكنك تعديل النص وإرساله من دونه أو إرفاق الملف مجدداً.');
+      }
+      editingMessageIndex = messageIndex;
+      promptInput.value = editablePrompt(message);
+      editMessageNotice.hidden = false;
+      resizeInput();
+      promptInput.focus({ preventScroll: true });
+    }
+
+    function addUserMessageActions(row, messageIndex) {
+      const actions = document.createElement('div');
+      actions.className = 'user-message-actions';
+      const edit = document.createElement('button');
+      edit.className = 'message-edit-button';
+      edit.type = 'button';
+      edit.textContent = '✏️ تعديل';
+      edit.setAttribute('aria-label', 'تعديل رسالة المستخدم');
+      edit.addEventListener('click', () => editUserMessage(messageIndex));
+      actions.append(edit);
+      row.querySelector('.message-content').append(actions);
+    }
+
+    function setRecordingState(isRecording) {
+      voiceRecording = isRecording;
+      voiceInputButton.classList.toggle('recording', isRecording);
+      voiceInputButton.setAttribute('aria-pressed', String(isRecording));
+      voiceInputButton.setAttribute('aria-label', isRecording ? 'إنهاء الإملاء الصوتي' : 'إملاء صوتي');
+      voiceInputButton.title = isRecording ? 'إنهاء الإملاء الصوتي' : 'إملاء صوتي';
+      voiceInputButton.textContent = isRecording ? '⏹' : '🎤';
+      voiceCancelButton.hidden = !isRecording;
+      voiceStatus.hidden = !isRecording;
+      sendButton.disabled = (isRecording || voiceTranscribing) && !busy;
+    }
+
+    function startSpeechRecognition({ fallback = false } = {}) {
+      if (!SpeechRecognitionAPI) {
+        showToast('تعذر تحويل الصوت إلى نص، حاول مرة أخرى.');
+        return false;
+      }
+      const currentRecognition = new SpeechRecognitionAPI();
+      recognition = currentRecognition;
+      if (!fallback) recognitionBaseText = promptInput.value.trim();
+      recognitionFinalText = '';
+      cancelRecognition = false;
+      currentRecognition.lang = 'ar-IQ';
+      currentRecognition.continuous = false;
+      currentRecognition.interimResults = true;
+      currentRecognition.maxAlternatives = 1;
+      currentRecognition.onstart = () => {
+        setRecordingState(true);
+        voiceStatus.textContent = fallback
+          ? '🎙️ لم ينجح التحويل بالخادم. أعد الكلام لاستخدام الإملاء في المتصفح.'
+          : '🎙️ جاري الاستماع... اضغط ⏹ عند الانتهاء';
+        promptInput.focus({ preventScroll: true });
+      };
+      currentRecognition.onresult = (event) => {
+        let interimText = '';
+        for (let index = event.resultIndex; index < event.results.length; index += 1) {
+          const transcript = event.results[index][0]?.transcript?.trim();
+          if (!transcript) continue;
+          if (event.results[index].isFinal) {
+            recognitionFinalText = [recognitionFinalText, transcript].filter(Boolean).join(' ');
+          } else {
+            interimText = [interimText, transcript].filter(Boolean).join(' ');
+          }
+        }
+        if (!cancelRecognition) {
+          promptInput.value = [recognitionBaseText, recognitionFinalText, interimText]
+            .filter(Boolean)
+            .join(' ');
+          resizeInput();
+        }
+      };
+      currentRecognition.onerror = (event) => {
+        if (cancelRecognition || event.error === 'aborted') return;
+        if (fallback) return;
+        const messages = {
+          'not-allowed': 'لم يتم منح إذن الميكروفون. اسمح للمتصفح باستخدام الميكروفون ثم حاول مرة أخرى.',
+          'service-not-allowed': 'خدمة الإملاء الصوتي غير متاحة لهذا الموقع أو المتصفح.',
+          'audio-capture': 'لم يتم العثور على ميكروفون متاح. تحقق من توصيله وأذوناته.',
+          'no-speech': 'لم أسمع كلاماً. حاول التحدث بوضوح بالقرب من الميكروفون.',
+          network: 'تعذّر الاتصال بخدمة الإملاء الصوتي في المتصفح. حاول مرة أخرى.'
+        };
+        showToast(fallback
+          ? 'تعذر تحويل الصوت إلى نص، حاول مرة أخرى.'
+          : messages[event.error] || 'تعذّر بدء الإملاء الصوتي. تحقق من إذن الميكروفون وحاول مرة أخرى.');
+      };
+      currentRecognition.onend = () => {
+        if (recognition !== currentRecognition) return;
+        recognition = null;
+        if (cancelRecognition) {
+          promptInput.value = recognitionBaseText;
+          resizeInput();
+        }
+        setRecordingState(false);
+        if (!cancelRecognition && recognitionFinalText) {
+          promptInput.focus({ preventScroll: true });
+        } else if (fallback && !cancelRecognition) {
+          showToast('تعذر تحويل الصوت إلى نص، حاول مرة أخرى.');
+        }
+      };
+
+      try {
+        currentRecognition.start();
+        return true;
+      } catch {
+        recognition = null;
+        setRecordingState(false);
+        if (fallback) showToast('تعذر تحويل الصوت إلى نص، حاول مرة أخرى.');
+        else showToast('تعذّر بدء الميكروفون. تحقق من إذن الموقع ومن أن الصفحة تعمل عبر HTTPS.');
+        return false;
+      }
+    }
+
+    async function transcribeRecording(blob) {
+      if (voiceRecordingTooLarge || blob.size > 8 * 1024 * 1024) {
+        showToast('حجم التسجيل أكبر من الحد المسموح. سجّل مدة أقصر وحاول مرة أخرى.');
+        return;
+      }
+      if (!blob.size) {
+        showToast('لم أسمع كلاماً. حاول التحدث بوضوح بالقرب من الميكروفون.');
+        return;
+      }
+      voiceTranscribing = true;
+      voiceStatus.hidden = false;
+      voiceStatus.textContent = '⏳ جاري تحويل الصوت إلى نص...';
+      voiceCancelButton.hidden = false;
+      voiceCancelButton.textContent = 'إلغاء التحويل';
+      sendButton.disabled = true;
+      voiceTranscriptionController = new AbortController();
+      cancelVoiceTranscription = false;
+      let useSpeechFallback = false;
+      try {
+        const audioDataUrl = await readFileAsDataUrl(blob);
+        const result = await requestJson('/api/transcribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            mimeType: blob.type || 'audio/webm',
+            audioBase64: audioDataUrl.slice(audioDataUrl.indexOf(',') + 1)
+          }),
+          signal: voiceTranscriptionController.signal
+        });
+        if (voiceTranscriptionController.signal.aborted) return;
+        promptInput.value = [recognitionBaseText, result.text].filter(Boolean).join(' ');
+        resizeInput();
+        promptInput.focus({ preventScroll: true });
+      } catch {
+        if (cancelVoiceTranscription || voiceTranscriptionController?.signal.aborted) return;
+        if (!SpeechRecognitionAPI) {
+          showToast('تعذر تحويل الصوت إلى نص، حاول مرة أخرى.');
+          return;
+        }
+        voiceStatus.textContent = '🎙️ فشل التحويل. تحدث مرة أخرى لاستخدام الإملاء في المتصفح.';
+        voiceCancelButton.hidden = true;
+        showToast('تعذّر تحويل التسجيل بالخادم. أعد الكلام لاستخدام الإملاء الصوتي في المتصفح.');
+        useSpeechFallback = true;
+      } finally {
+        if (voiceTranscriptionController && !voiceTranscriptionController.signal.aborted) {
+          voiceTranscribing = false;
+          voiceTranscriptionController = null;
+          voiceStatus.hidden = useSpeechFallback;
+          voiceCancelButton.hidden = useSpeechFallback;
+          voiceCancelButton.textContent = 'إلغاء التسجيل';
+          sendButton.disabled = !busy && Boolean(recognition || voiceRecording);
+        }
+      }
+      if (useSpeechFallback) startSpeechRecognition({ fallback: true });
+    }
+
+    async function startVoiceInput() {
+      if (recognition) {
+        finishVoiceInput();
+        return;
+      }
+      if (voiceRecording || voiceStarting || voiceTranscribing) return;
+      recognitionBaseText = promptInput.value.trim();
+      if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
+        startSpeechRecognition();
+        return;
+      }
+      voiceStarting = true;
+      try {
+        recorderStream = await navigator.mediaDevices.getUserMedia({
+          audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+        });
+        const mimeType = [
+          'audio/webm;codecs=opus',
+          'audio/webm',
+          'audio/mp4',
+          'audio/ogg;codecs=opus',
+          'audio/wav'
+        ].find((type) => MediaRecorder.isTypeSupported?.(type));
+        mediaRecorder = mimeType
+          ? new MediaRecorder(recorderStream, { mimeType })
+          : new MediaRecorder(recorderStream);
+        recorderChunks = [];
+        recorderBytes = 0;
+        voiceRecordingTooLarge = false;
+        cancelVoiceRecording = false;
+        const currentRecorder = mediaRecorder;
+        currentRecorder.addEventListener('dataavailable', (event) => {
+          if (!event.data?.size) return;
+          recorderBytes += event.data.size;
+          if (recorderBytes > 8 * 1024 * 1024) {
+            voiceRecordingTooLarge = true;
+            if (currentRecorder.state !== 'inactive') currentRecorder.stop();
+            return;
+          }
+          recorderChunks.push(event.data);
+        });
+        currentRecorder.addEventListener('stop', () => {
+          clearTimeout(voiceRecordingTimer);
+          recorderStream?.getTracks().forEach((track) => track.stop());
+          recorderStream = null;
+          mediaRecorder = null;
+          if (cancelVoiceRecording) {
+            cancelVoiceRecording = false;
+            recorderChunks = [];
+            return;
+          }
+          const wasTooLarge = voiceRecordingTooLarge;
+          setRecordingState(false);
+          if (wasTooLarge) {
+            showToast('حجم التسجيل أكبر من الحد المسموح. سجّل مدة أقصر وحاول مرة أخرى.');
+            recorderChunks = [];
+            return;
+          }
+          const recording = new Blob(recorderChunks, { type: currentRecorder.mimeType || 'audio/webm' });
+          recorderChunks = [];
+          void transcribeRecording(recording);
+        }, { once: true });
+        currentRecorder.start(1000);
+        voiceInputButton.dataset.recorder = 'true';
+        setRecordingState(true);
+        voiceStatus.textContent = '🎙️ جاري الاستماع... اضغط ⏹ عند الانتهاء';
+        promptInput.focus({ preventScroll: true });
+        voiceRecordingTimer = setTimeout(() => {
+          if (mediaRecorder?.state === 'recording') {
+            showToast('وصل التسجيل إلى الحد الأقصى (دقيقتان)، جارٍ تحويله.');
+            mediaRecorder.stop();
+          }
+        }, 120000);
+      } catch {
+        recorderStream?.getTracks().forEach((track) => track.stop());
+        recorderStream = null;
+        mediaRecorder = null;
+        if (SpeechRecognitionAPI) {
+          showToast('تعذّر بدء التسجيل المباشر. أستخدم الإملاء الصوتي في المتصفح.');
+          startSpeechRecognition();
+        } else {
+          showToast('تعذّر بدء الميكروفون. تحقق من الإذن ومن أن الصفحة تعمل عبر HTTPS.');
+        }
+      } finally {
+        voiceStarting = false;
+      }
+    }
+
+    function cancelVoiceInput() {
+      if (voiceTranscriptionController) {
+        cancelVoiceTranscription = true;
+        voiceTranscriptionController.abort();
+        voiceTranscriptionController = null;
+        voiceTranscribing = false;
+      }
+      if (mediaRecorder) {
+        const currentRecorder = mediaRecorder;
+        cancelVoiceRecording = true;
+        mediaRecorder = null;
+        clearTimeout(voiceRecordingTimer);
+        if (currentRecorder.state !== 'inactive') currentRecorder.stop();
+        else {
+          recorderStream?.getTracks().forEach((track) => track.stop());
+          recorderStream = null;
+          recorderChunks = [];
+        }
+        setRecordingState(false);
+        promptInput.focus({ preventScroll: true });
+        return;
+      }
+      if (!recognition) {
+        voiceStatus.hidden = true;
+        voiceCancelButton.hidden = true;
+        sendButton.disabled = busy;
+        return;
+      }
+      cancelRecognition = true;
+      const currentRecognition = recognition;
+      recognition = null;
+      try {
+        currentRecognition.abort();
+      } catch {
+        currentRecognition.stop();
+      }
+      promptInput.value = recognitionBaseText;
+      resizeInput();
+      setRecordingState(false);
+      promptInput.focus({ preventScroll: true });
+    }
+
+    function finishVoiceInput() {
+      if (mediaRecorder) {
+        if (mediaRecorder.state === 'recording') mediaRecorder.stop();
+        return;
+      }
+      if (!recognition) return;
+      try {
+        recognition.stop();
+      } catch {
+        showToast('تعذّر إنهاء الإملاء الصوتي. حاول مرة أخرى.');
+      }
+    }
+
+    function stopSpeech() {
+      if (!activeSpeech) return;
+      const previousSpeech = activeSpeech;
+      activeSpeech = null;
+      previousSpeech.button.textContent = '🔊 قراءة الرد';
+      previousSpeech.button.setAttribute('aria-pressed', 'false');
+      previousSpeech.stopButton.hidden = true;
+      window.speechSynthesis.cancel();
+    }
+
+    function readableResponse(text) {
+      return text
+        .replace(/```[^\n]*\n?([\s\S]*?)```/g, '$1')
+        .replace(/!\[([^\]]*)\]\([^)]+\)/g, '$1')
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+        .replace(/^\s{0,3}#{1,6}\s+/gm, '')
+        .replace(/^\s*[-*+]\s+/gm, '')
+        .replace(/^\s*\d+[.)]\s+/gm, '')
+        .replace(/[*_~`|]/g, '')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+    }
+
+    function speakResponse(text, button, stopButton) {
+      if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance !== 'function') {
+        showToast('قراءة الرد صوتياً غير مدعومة في هذا المتصفح أو الجهاز.');
+        return;
+      }
+      if (activeSpeech?.button === button) {
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+          button.textContent = '⏸ إيقاف مؤقت';
+          button.setAttribute('aria-label', 'إيقاف القراءة مؤقتاً');
+        } else {
+          window.speechSynthesis.pause();
+          button.textContent = '▶ استئناف';
+          button.setAttribute('aria-label', 'استئناف القراءة');
+        }
+        return;
+      }
+
+      stopSpeech();
+      const utterance = new SpeechSynthesisUtterance(readableResponse(text));
+      utterance.lang = 'ar';
+      utterance.rate = 0.95;
+      const voices = window.speechSynthesis.getVoices();
+      const arabicVoice = voices.find((voice) => voice.lang.toLowerCase() === 'ar-iq') ||
+        voices.find((voice) => voice.lang.toLowerCase().startsWith('ar-')) ||
+        voices.find((voice) => voice.lang.toLowerCase() === 'ar');
+      if (arabicVoice) {
+        utterance.voice = arabicVoice;
+        utterance.lang = arabicVoice.lang;
+      }
+
+      const playback = { utterance, button, stopButton };
+      activeSpeech = playback;
+      button.textContent = '⏸ إيقاف مؤقت';
+      button.setAttribute('aria-label', 'إيقاف القراءة مؤقتاً');
+      button.setAttribute('aria-pressed', 'true');
+      stopButton.hidden = false;
+      const finishPlayback = () => {
+        if (activeSpeech !== playback) return;
+        activeSpeech = null;
+        button.textContent = '🔊 قراءة الرد';
+        button.setAttribute('aria-label', 'قراءة الرد');
+        button.setAttribute('aria-pressed', 'false');
+        stopButton.hidden = true;
+      };
+      utterance.onend = finishPlayback;
+      utterance.onerror = finishPlayback;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function addResponseActions(row, text, userIndex = null) {
       const actions = document.createElement('div');
       actions.className = 'message-actions';
+      if (Number.isInteger(userIndex)) {
+        const retry = document.createElement('button');
+        retry.className = 'message-retry-button';
+        retry.type = 'button';
+        retry.textContent = '🔄 إعادة التوليد';
+        retry.setAttribute('aria-label', 'إعادة توليد الرد');
+        retry.addEventListener('click', () => retryMessageResponse(userIndex));
+        actions.append(retry);
+      }
+      const speak = document.createElement('button');
+      speak.className = 'voice-response-button';
+      speak.type = 'button';
+      speak.textContent = '🔊 قراءة الرد';
+      speak.setAttribute('aria-label', 'قراءة الرد');
+      speak.setAttribute('aria-pressed', 'false');
+      const stop = document.createElement('button');
+      stop.className = 'voice-response-button';
+      stop.type = 'button';
+      stop.textContent = '⏹ إيقاف';
+      stop.setAttribute('aria-label', 'إيقاف القراءة');
+      stop.hidden = true;
+      speak.addEventListener('click', () => speakResponse(text, speak, stop));
+      stop.addEventListener('click', stopSpeech);
       const copy = document.createElement('button');
       copy.className = 'copy-response';
       copy.type = 'button';
@@ -1495,8 +3183,53 @@
           showToast('تعذّر نسخ الرد من المتصفح.');
         }
       });
-      actions.append(copy);
+      actions.append(speak, stop, copy);
       row.querySelector('.message-content').append(actions);
+    }
+
+    function addWebSources(row, sources) {
+      if (!Array.isArray(sources) || sources.length === 0) return;
+      const list = document.createElement('div');
+      list.className = 'web-sources';
+      const heading = document.createElement('div');
+      heading.className = 'web-sources-title';
+      heading.textContent = 'المصادر المستخدمة';
+      list.append(heading);
+
+      sources.forEach((source) => {
+        if (
+          !source ||
+          typeof source.title !== 'string' ||
+          typeof source.url !== 'string' ||
+          typeof source.snippet !== 'string' ||
+          typeof source.source !== 'string'
+        ) return;
+        let parsedUrl;
+        try {
+          parsedUrl = new URL(source.url);
+        } catch {
+          return;
+        }
+        if (!['http:', 'https:'].includes(parsedUrl.protocol)) return;
+
+        const item = document.createElement('div');
+        item.className = 'web-source';
+        const link = document.createElement('a');
+        link.href = parsedUrl.href;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = source.title;
+        const sourceName = document.createElement('span');
+        sourceName.className = 'web-source-name';
+        sourceName.textContent = source.source;
+        const snippet = document.createElement('span');
+        snippet.className = 'web-source-snippet';
+        snippet.textContent = source.snippet;
+        item.append(link, sourceName, snippet);
+        list.append(item);
+      });
+
+      if (list.childElementCount > 1) row.querySelector('.message-content').append(list);
     }
 
     function resizeInput() {
@@ -1519,16 +3252,30 @@
     }
 
     function showAttachment(file) {
-      if (!file || (!file.type.startsWith('image/') && !file.type.startsWith('video/'))) {
-        showToast('اختار صورة أو فيديو بصيغة مدعومة.');
+      if (!file) return;
+      const extension = file.name.split('.').pop()?.toLowerCase();
+      const documentTypes = {
+        pdf: ['application/pdf'],
+        docx: ['application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+        xlsx: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
+        txt: ['text/plain', 'application/octet-stream', '']
+      };
+      const isImage = file.type.startsWith('image/');
+      const isVideo = file.type.startsWith('video/');
+      const isDocument = Boolean(documentTypes[extension]?.includes(file.type));
+      if (!isImage && !isVideo && !isDocument) {
+        showToast('نوع الملف غير مدعوم. ارفع PDF أو DOCX أو XLSX أو TXT أو صورة.');
         return;
       }
-      const isImage = file.type.startsWith('image/');
       if (isImage && !['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
         showToast('يدعم تحرير الصور حالياً صيغ PNG وJPEG وWebP.');
         return;
       }
-      if (file.size > 25 * 1024 * 1024) {
+      if (isDocument && file.size > 8 * 1024 * 1024) {
+        showToast('حجم الملف يجب ألا يتجاوز 8 ميغابايت.');
+        return;
+      }
+      if ((isImage || isVideo) && file.size > 25 * 1024 * 1024) {
         showToast(isImage
           ? 'حجم الصورة أكبر من 25 ميغابايت. اختار صورة أصغر.'
           : 'حجم الفيديو أكبر من 25 ميغابايت. اختار فيديو أصغر.');
@@ -1537,10 +3284,16 @@
 
       clearAttachment();
       const url = URL.createObjectURL(file);
-      selectedFile = { file, url };
-      const preview = document.createElement(file.type.startsWith('image/') ? 'img' : 'video');
-      preview.src = url;
-      preview.alt = file.type.startsWith('image/') ? 'معاينة الصورة المختارة' : '';
+      selectedFile = { file, url, isDocument };
+      const preview = document.createElement(isDocument ? 'div' : isImage ? 'img' : 'video');
+      if (isDocument) {
+        preview.className = 'attachment-file-icon';
+        preview.textContent = extension.toUpperCase();
+        preview.setAttribute('aria-hidden', 'true');
+      } else {
+        preview.src = url;
+        preview.alt = isImage ? 'معاينة الصورة المختارة' : '';
+      }
       if (preview instanceof HTMLVideoElement) {
         preview.muted = true;
         preview.playsInline = true;
@@ -1558,9 +3311,28 @@
       const notice = document.createElement('div');
       notice.className = 'attachment-notice';
       notice.textContent = isImage
-        ? 'جاهزة للإرسال إلى نموذج تعديل الصور.'
-        : 'يمكن معاينة الفيديو، لكن تحرير الفيديو غير مدعوم حالياً.';
+        ? 'ستُرسل إلى مسار الصور الحالي.'
+        : isDocument
+          ? 'سيُحلّل محتوى الملف داخل المحادثة.'
+          : 'يمكن معاينة الفيديو، لكن إرسال الفيديو غير مدعوم حالياً.';
       info.append(name, size, notice);
+      if (isDocument) {
+        const examples = document.createElement('div');
+        examples.className = 'attachment-examples';
+        ['لخص هذا الملف', 'اشرحلي محتواه', 'استخرج أهم المعلومات', 'استخرج الجداول', 'شنو أهم النقاط؟']
+          .forEach((example) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.textContent = example;
+            button.addEventListener('click', () => {
+              promptInput.value = example;
+              resizeInput();
+              promptInput.focus();
+            });
+            examples.append(button);
+          });
+        info.append(examples);
+      }
 
       const remove = document.createElement('button');
       remove.className = 'remove-attachment';
@@ -1571,6 +3343,23 @@
 
       attachmentPreview.append(preview, info, remove);
       attachmentPreview.hidden = false;
+    }
+
+    function addDocumentToMessage(row, file) {
+      const attachment = document.createElement('div');
+      attachment.className = 'message-file-attachment';
+      attachment.textContent = `📄 ${file.name} · ${formatFileSize(file.size)}`;
+      row.querySelector('.message-bubble').append(attachment);
+    }
+
+    function addUnavailableAttachment(row, message) {
+      const attachment = document.createElement('div');
+      attachment.className = 'message-file-attachment';
+      const label = message.attachmentKind === 'image'
+        ? 'صورة مرفقة'
+        : message.attachmentName || 'ملف مرفق';
+      attachment.textContent = `📎 ${label} · أعد إرفاقه لاستخدامه مجدداً`;
+      row.querySelector('.message-bubble').append(attachment);
     }
 
     function addImageToMessage(row, src, alt) {
@@ -1659,6 +3448,14 @@
     function startConversation() {
       if (busy) return;
       activeConversationId = null;
+      aiMode = 'general';
+      aiModeSelect.value = aiMode;
+      agentModeEnabled = false;
+      agentModeSelect.value = 'chat';
+      agentModeBadge.hidden = true;
+      messageAttachments = [];
+      cancelMessageEditMode();
+      if (!currentUser) applyAssistantPreferences(defaultAssistantPreferences);
       history = [];
       messagesElement.replaceChildren();
       messagesElement.hidden = true;
@@ -1699,12 +3496,244 @@
 
     document.querySelector('#attachButton').addEventListener('click', () => fileInput.click());
     fileInput.addEventListener('change', () => showAttachment(fileInput.files?.[0]));
+    accountButton.addEventListener('click', () => {
+      setAccountMode(currentUser ? 'account' : 'login');
+      accountDialog.showModal();
+    });
+    document.querySelector('#accountDialogClose').addEventListener('click', () => accountDialog.close());
+    document.querySelector('#memoryDialogClose').addEventListener('click', () => memoryDialog.close());
+    document.querySelector('#galleryImageDialogClose').addEventListener('click', () => galleryImageDialog.close());
+    galleryDelete.addEventListener('click', () => {
+      if (!activeGalleryImage) return;
+      requestActionConfirmation(
+        'حذف الصورة',
+        'هل تريد حذف هذه الصورة من معرضك؟ لا يمكن التراجع عن هذا الإجراء.',
+        'حذف الصورة',
+        deleteGalleryImage
+      );
+    });
+    actionConfirmationAccept.addEventListener('click', confirmPendingAction);
+    document.querySelector('#actionConfirmationCancel').addEventListener('click', closeActionConfirmation);
+    document.querySelector('#actionConfirmationClose').addEventListener('click', closeActionConfirmation);
+    document.querySelector('#conversationRenameClose').addEventListener('click', () => {
+      pendingConversationRename = null;
+      conversationRenameDialog.close();
+    });
+    document.querySelector('#conversationRenameCancel').addEventListener('click', () => {
+      pendingConversationRename = null;
+      conversationRenameDialog.close();
+    });
+    conversationRenameForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      openRenameConversation();
+    });
+    galleryEdit.addEventListener('click', openGalleryImageInEditor);
+    conversationSearch.addEventListener('input', renderConversations);
+    document.querySelector('#assistantPreferencesClose').addEventListener('click', () => assistantPreferencesDialog.close());
+    assistantPreferencesButton.addEventListener('click', async () => {
+      populateAssistantPreferencesForm();
+      assistantPreferencesDialog.showModal();
+      if (currentUser) {
+        try {
+          await loadAccountAssistantPreferences();
+          populateAssistantPreferencesForm();
+        } catch (error) {
+          assistantPreferencesStatus.textContent = `تعذّر تحميل الإعدادات: ${error.message}`;
+        }
+      }
+    });
+    [assistantNameInput, assistantPersonalityInput, assistantLengthInput, assistantLanguageInput,
+      assistantEmojiInput, assistantInstructionsInput].forEach((input) => {
+      input.addEventListener('input', previewAssistantPreferences);
+      input.addEventListener('change', previewAssistantPreferences);
+    });
+    assistantPreferencesForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      assistantPreferencesSave.disabled = true;
+      assistantPreferencesReset.disabled = true;
+      assistantPreferencesStatus.textContent = '';
+      try {
+        const preferences = readAssistantPreferencesForm();
+        if (currentUser) {
+          const result = await requestJson('/api/assistant-preferences', {
+            method: 'PUT',
+            body: JSON.stringify({ preferences })
+          });
+          applyAssistantPreferences(result.preferences);
+          showToast('تم حفظ تخصيص المساعد في حسابك.');
+        } else {
+          applyAssistantPreferences(preferences);
+          persistAnonymousAssistantPreferences();
+          showToast('تم حفظ التخصيص لهذه المحادثة.');
+        }
+        assistantPreferencesDialog.close();
+      } catch (error) {
+        assistantPreferencesStatus.textContent = error.message;
+      } finally {
+        assistantPreferencesSave.disabled = false;
+        assistantPreferencesReset.disabled = false;
+      }
+    });
+    assistantPreferencesReset.addEventListener('click', async () => {
+      assistantPreferencesSave.disabled = true;
+      assistantPreferencesReset.disabled = true;
+      assistantPreferencesStatus.textContent = '';
+      try {
+        if (currentUser) {
+          const result = await requestJson('/api/assistant-preferences', {
+            method: 'PUT',
+            body: JSON.stringify({ preferences: { ...defaultAssistantPreferences } })
+          });
+          applyAssistantPreferences(result.preferences);
+        } else {
+          applyAssistantPreferences(defaultAssistantPreferences);
+          persistAnonymousAssistantPreferences();
+        }
+        populateAssistantPreferencesForm();
+        showToast('أُعيدت إعدادات المساعد إلى الوضع الافتراضي.');
+      } catch (error) {
+        assistantPreferencesStatus.textContent = error.message;
+      } finally {
+        assistantPreferencesSave.disabled = false;
+        assistantPreferencesReset.disabled = false;
+      }
+    });
+    accountModeToggle.addEventListener('click', () => {
+      setAccountMode(accountMode === 'register' ? 'login' : 'register');
+    });
+    accountForgotButton.addEventListener('click', () => setAccountMode('forgot'));
+    accountForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (busy && accountMode === 'login') {
+        accountDialogStatus.textContent = 'انتظر انتهاء الرد الحالي قبل تبديل الحساب.';
+        return;
+      }
+      accountSubmit.disabled = true;
+      accountDialogStatus.textContent = '';
+      const email = accountEmailInput.value.trim();
+      const password = accountPasswordInput.value;
+      try {
+        if (accountMode === 'login') {
+          const result = await requestJson('/api/auth/login', {
+            method: 'POST',
+            body: JSON.stringify({ email, password })
+          });
+          currentUser = result.user;
+          switchConversationScope(currentUser);
+          updateAccountUi();
+          await loadAccountAssistantPreferences();
+          await loadGallery();
+          accountDialog.close();
+          accountForm.reset();
+          showToast('تم تسجيل الدخول. يمكنك الآن إدارة ذاكرتك.');
+        } else if (accountMode === 'register') {
+          const result = await requestJson('/api/auth/register', {
+            method: 'POST',
+            body: JSON.stringify({ email, password })
+          });
+          accountDialogStatus.textContent = result.message;
+        } else if (accountMode === 'forgot') {
+          const result = await requestJson('/api/auth/password-reset/request', {
+            method: 'POST',
+            body: JSON.stringify({ email })
+          });
+          accountDialogStatus.textContent = result.message;
+        } else if (accountMode === 'reset') {
+          await requestJson('/api/auth/password-reset/complete', {
+            method: 'POST',
+            body: JSON.stringify({ token: passwordResetToken, password })
+          });
+          passwordResetToken = null;
+          setAccountMode('login');
+          accountDialogStatus.textContent = 'تم تغيير كلمة المرور. سجّل الدخول بكلمة المرور الجديدة.';
+        }
+      } catch (error) {
+        accountDialogStatus.textContent = error.message;
+      } finally {
+        accountSubmit.disabled = false;
+      }
+    });
+    accountLogoutButton.addEventListener('click', async () => {
+      if (busy) {
+        accountDialogStatus.textContent = 'انتظر انتهاء الرد الحالي قبل تسجيل الخروج.';
+        return;
+      }
+      try {
+        await requestJson('/api/auth/logout', { method: 'POST' });
+        currentUser = null;
+        switchConversationScope(null);
+        applyAssistantPreferences(defaultAssistantPreferences);
+        updateAccountUi();
+        await loadGallery();
+        accountForm.reset();
+        accountDialog.close();
+        showToast('تم تسجيل الخروج. بقيت المحادثة الحالية متاحة على هذا الجهاز.');
+      } catch (error) {
+        accountDialogStatus.textContent = error.message;
+      }
+    });
+    memoryButton.addEventListener('click', async () => {
+      if (!currentUser) return;
+      memoryDialog.showModal();
+      await loadMemories();
+    });
+    memoryClearButton.addEventListener('click', async () => {
+      if (!currentUser || !window.confirm('هل أنت متأكد من حذف جميع الذكريات المحفوظة في حسابك؟ لا يمكن التراجع عن هذا الإجراء.')) return;
+      try {
+        await requestJson('/api/memories', { method: 'DELETE' });
+        await loadMemories();
+        showToast('تم حذف جميع الذكريات.');
+      } catch (error) {
+        showToast(error.message);
+      }
+    });
+    webSearchToggle.addEventListener('click', () => {
+      webSearchEnabled = !webSearchEnabled;
+      webSearchToggle.setAttribute('aria-pressed', String(webSearchEnabled));
+      webSearchToggle.setAttribute(
+        'aria-label',
+        webSearchEnabled ? 'إيقاف البحث على الإنترنت' : 'تفعيل البحث على الإنترنت'
+      );
+      webSearchToggle.title = webSearchEnabled
+        ? 'طلب البحث مفعّل — يعتمد التنفيذ على إعداد الخادم'
+        : 'البحث غير مفعّل';
+      if (webSearchEnabled) {
+        showToast('تم تفعيل طلب البحث. سيُستخدم فقط إذا كان مفعّلاً على الخادم، وإلا سيكمل المساعد دون بحث أو تكلفة.');
+      }
+    });
+    voiceInputButton.addEventListener('click', () => {
+      if (recognition || voiceRecording) finishVoiceInput();
+      else startVoiceInput();
+    });
+    voiceCancelButton.addEventListener('click', cancelVoiceInput);
+    window.addEventListener('pagehide', () => {
+      if (recognition) {
+        cancelRecognition = true;
+        recognition.abort();
+        recognition = null;
+      }
+      cancelVoiceTranscription = true;
+      voiceTranscriptionController?.abort();
+      clearTimeout(voiceRecordingTimer);
+      cancelVoiceRecording = true;
+      if (mediaRecorder?.state !== 'inactive') mediaRecorder?.stop();
+      recorderStream?.getTracks().forEach((track) => track.stop());
+      recorderStream = null;
+      if (activeSpeech && 'speechSynthesis' in window) stopSpeech();
+    });
     document.querySelector('#newChatButton').addEventListener('click', startConversation);
     historyToggle.addEventListener('click', () => {
       const isOpen = conversationSidebar.classList.toggle('open');
       historyToggle.setAttribute('aria-expanded', String(isOpen));
     });
-    stopButton.addEventListener('click', () => activeRequestController?.abort());
+    sendButton.addEventListener('click', (event) => {
+      if (!busy) return;
+      event.preventDefault();
+      activeRequestController?.abort(new DOMException('تم إيقاف التوليد.', 'AbortError'));
+    });
+    stopButton.addEventListener('click', () => {
+      activeRequestController?.abort(new DOMException('تم إيقاف التوليد.', 'AbortError'));
+    });
     promptInput.addEventListener('input', resizeInput);
     promptInput.addEventListener('keydown', (event) => {
       if (event.key === 'Enter' && !event.shiftKey) {
@@ -1808,6 +3837,9 @@
         imageEditorHistory = imageEditorHistory.slice(-5);
         imageEditorPrompt.value = '';
         setImageEditorStatus('اكتمل تعديل الصورة. يمكنك كتابة تعليمات جديدة لمواصلة التعديل على النتيجة.', 'success');
+        saveImageToGallery(data.image, prompt, 'editor-edit')
+          .then(() => showToast('تم حفظ الصورة المعدلة في معرض الصور.'))
+          .catch((error) => showToast(`اكتمل التعديل، لكن تعذّر حفظ الصورة في المعرض: ${error.message}`));
       } catch (error) {
         const message = error instanceof Error ? error.message : 'تعذّر تعديل الصورة حالياً.';
         setImageEditorStatus(message, 'error');
@@ -1844,51 +3876,298 @@
       if (event.dataTransfer?.types.includes('Files')) event.preventDefault();
     });
 
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const text = promptInput.value.trim();
+    function waitBeforeRetry(attempt, signal) {
+      return new Promise((resolve, reject) => {
+        let timer;
+        const cleanup = () => signal?.removeEventListener('abort', abort);
+        const abort = () => {
+          clearTimeout(timer);
+          cleanup();
+          reject(signal.reason ?? new DOMException('Aborted', 'AbortError'));
+        };
+        if (signal?.aborted) {
+          abort();
+          return;
+        }
+        timer = setTimeout(() => {
+          cleanup();
+          resolve();
+        }, 350 * attempt);
+        signal?.addEventListener('abort', abort, { once: true });
+      });
+    }
+
+    async function fetchWithTransientRetries(endpoint, options, allowRetry) {
+      for (let attempt = 0; ; attempt += 1) {
+        let response;
+        try {
+          response = await fetch(endpoint, options);
+        } catch (error) {
+          if (options.signal.aborted || !allowRetry || attempt >= 2 || !(error instanceof TypeError)) throw error;
+          await waitBeforeRetry(attempt + 1, options.signal);
+          continue;
+        }
+        const transient = [408, 425, 429].includes(response.status) || response.status >= 500;
+        if (!allowRetry || !transient || attempt >= 2) return response;
+        await response.body?.cancel().catch(() => {});
+        await waitBeforeRetry(attempt + 1, options.signal);
+      }
+    }
+
+    function setGeneratingState(isGenerating, isAgent) {
+      sendButton.classList.toggle('is-stopping', isGenerating);
+      sendButton.textContent = isGenerating ? '■' : '↑';
+      sendButton.disabled = !isGenerating && Boolean(recognition || voiceRecording || voiceTranscribing);
+      sendButton.setAttribute('aria-label', isGenerating
+        ? (isAgent ? 'إيقاف المهمة' : 'إيقاف التوليد')
+        : 'إرسال الرسالة');
+      sendButton.title = isGenerating
+        ? (isAgent ? 'إيقاف المهمة' : 'إيقاف التوليد')
+        : 'إرسال الرسالة';
+      stopButton.hidden = true;
+    }
+
+    async function readStreamingResponse(response, loading, signal) {
+      const reader = response.body?.getReader();
+      if (!reader) throw new Error('المتصفح لا يدعم قراءة الرد التدريجي.');
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let finalResult = null;
+      let generatedText = '';
+      let streamTextNode = null;
+      const bubble = loading.querySelector('.message-bubble');
+      try {
+        while (true) {
+          const { value, done } = await reader.read();
+          buffer += decoder.decode(value ?? new Uint8Array(), { stream: !done });
+          const lines = buffer.split('\n');
+          buffer = lines.pop() ?? '';
+          for (const line of lines) {
+            if (!line.trim()) continue;
+            let event;
+            try {
+              event = JSON.parse(line);
+            } catch {
+              throw new Error('وصل تحديث غير صالح أثناء التوليد. حاول مرة أخرى.');
+            }
+            if (event.type === 'status' && typeof event.status === 'string') {
+              streamTextNode = null;
+              bubble.textContent = event.status;
+            } else if (event.type === 'delta' && typeof event.text === 'string') {
+              if (!streamTextNode) {
+                bubble.replaceChildren();
+                streamTextNode = document.createTextNode('');
+                bubble.append(streamTextNode);
+              }
+              generatedText += event.text;
+              streamTextNode.appendData(event.text);
+              chatScroll.scrollTop = chatScroll.scrollHeight;
+            } else if (event.type === 'reset') {
+              generatedText = '';
+              streamTextNode = null;
+              bubble.replaceChildren();
+            } else if (event.type === 'error') {
+              const error = new Error(event.error || 'تعذّر إكمال الطلب.');
+              error.transient = false;
+              throw error;
+            } else if (event.type === 'result') {
+              finalResult = event;
+            }
+          }
+          if (done) break;
+        }
+        if (buffer.trim()) {
+          let event;
+          try {
+            event = JSON.parse(buffer);
+          } catch {
+            throw new Error('وصل تحديث غير صالح أثناء التوليد. حاول مرة أخرى.');
+          }
+          if (event.type === 'error') {
+            const error = new Error(event.error || 'تعذّر إكمال الطلب.');
+            error.transient = false;
+            throw error;
+          }
+          if (event.type === 'delta' && typeof event.text === 'string') {
+            if (!streamTextNode) {
+              bubble.replaceChildren();
+              streamTextNode = document.createTextNode('');
+              bubble.append(streamTextNode);
+            }
+            generatedText += event.text;
+            streamTextNode.appendData(event.text);
+          }
+          if (event.type === 'reset') {
+            generatedText = '';
+            streamTextNode = null;
+            bubble.replaceChildren();
+          }
+          if (event.type === 'result') finalResult = event;
+        }
+        if (!finalResult) {
+          const error = new Error('انقطع الاتصال قبل اكتمال الرد.');
+          error.transient = true;
+          throw error;
+        }
+        return { ...finalResult, reply: finalResult.reply || generatedText };
+      } catch (error) {
+        error.partialText = generatedText;
+        if (!signal.aborted && (error instanceof TypeError || error instanceof DOMException)) {
+          error.transient = true;
+        }
+        throw error;
+      } finally {
+        await reader.cancel().catch(() => {});
+        reader.releaseLock();
+      }
+    }
+
+    async function submitChat(event, action = {}) {
+      event?.preventDefault();
+      if (recognition || voiceRecording || voiceTranscribing) {
+        showToast('أنه الإملاء الصوتي أولاً، ثم أرسل النص بعد مراجعته.');
+        finishVoiceInput();
+        return;
+      }
       if (busy) return;
-      const imageFile = selectedFile?.file.type.startsWith('image/') ? selectedFile.file : null;
-      if (selectedFile && !imageFile) {
+
+      const retryIndex = Number.isInteger(action.retryIndex) ? action.retryIndex : null;
+      const messageIndex = retryIndex ?? editingMessageIndex;
+      const isRetry = retryIndex !== null;
+      if (messageIndex !== null && history[messageIndex]?.role !== 'user') return;
+      const text = isRetry ? editablePrompt(history[messageIndex]) : promptInput.value.trim();
+      const useWebSearch = isRetry
+        ? Boolean(history[messageIndex].webSearch)
+        : webSearchEnabled;
+      const useAgentMode = isRetry
+        ? Boolean(history[messageIndex].agentMode)
+        : agentModeEnabled;
+      const attachment = isRetry
+        ? messageAttachments[messageIndex] ?? null
+        : selectedFile ?? (messageIndex !== null ? messageAttachments[messageIndex] ?? null : null);
+      if (isRetry && history[messageIndex].attachmentKind && !attachment) {
+        showToast('المرفق الأصلي لم يعد متاحاً في هذه الجلسة. أرفقه مجدداً ثم أرسل الرسالة المعدلة.');
+        return;
+      }
+      const imageFile = attachment?.file?.type.startsWith('image/') ? attachment.file : null;
+      const documentFile = attachment?.isDocument ? attachment.file : null;
+      if (attachment && !imageFile && !documentFile) {
         showToast('تحرير الفيديو غير مدعوم حالياً. أزل الفيديو لإرسال رسالة نصية أو اختار صورة.');
         return;
       }
       if (!text) {
         if (imageFile) showToast('اكتب وصف التعديل المطلوب للصورة أولاً.');
+        else if (documentFile) showToast('اكتب سؤالك عن الملف قبل الإرسال.');
         promptInput.focus();
         return;
       }
 
-      welcome.hidden = true;
-      messagesElement.hidden = false;
-      quickPrompts.hidden = true;
-      quickLabel.hidden = true;
-      const userMessage = addMessage('user', text);
-      if (imageFile) addImageToMessage(userMessage, selectedFile.url, 'الصورة الأصلية المطلوب تعديلها');
-      history.push({ role: 'user', text });
-      if (history.length > 20) history = history.slice(-20);
+      const previousHistory = history.map((item) => ({ ...item }));
+      const previousAttachments = messageAttachments.slice();
+      const previousDraft = promptInput.value;
+      const previousRows = [...messagesElement.children];
+      const removedRows = [];
+      if (messageIndex !== null) {
+        const firstRemovedIndex = isRetry ? messageIndex + 1 : messageIndex;
+        for (const row of previousRows) {
+          if (Number(row.dataset.historyIndex) >= firstRemovedIndex) {
+            removedRows.push(row);
+            row.remove();
+          }
+        }
+      }
+
+      history = messageIndex === null ? history.slice() : history.slice(0, messageIndex);
+      messageAttachments = messageIndex === null
+        ? messageAttachments.slice()
+        : messageAttachments.slice(0, messageIndex);
+      const historyText = documentFile ? `${text}\n[الملف المرفق: ${documentFile.name}]` : text;
+      const userIndex = history.length;
+      history.push({
+        role: 'user',
+        text: historyText,
+        prompt: text,
+        attachmentKind: imageFile ? 'image' : documentFile ? 'document' : null,
+        attachmentName: documentFile?.name ?? null,
+        webSearch: useWebSearch,
+        agentMode: useAgentMode
+      });
+      messageAttachments.push(attachment);
       if (!activeConversationId) {
         activeConversationId = typeof crypto.randomUUID === 'function'
           ? crypto.randomUUID()
           : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
       }
-      promptInput.value = '';
+      welcome.hidden = true;
+      messagesElement.hidden = false;
+      quickPrompts.hidden = true;
+      quickLabel.hidden = true;
+
+      let userMessage = isRetry
+        ? previousRows.find((row) => Number(row.dataset.historyIndex) === messageIndex)
+        : null;
+      if (!userMessage) {
+        userMessage = addMessage('user', text, false, userIndex);
+        if (imageFile) addImageToMessage(userMessage, attachment.url, 'الصورة الأصلية المطلوب تعديلها');
+        if (documentFile) addDocumentToMessage(userMessage, documentFile);
+      }
+
+      promptInput.value = isRetry ? previousDraft : '';
       resizeInput();
       busy = true;
-      sendButton.disabled = true;
-      stopButton.hidden = false;
+      setGeneratingState(true, useAgentMode);
+      stopButton.textContent = useAgentMode ? 'إيقاف المهمة' : 'إيقاف التوليد';
       activeRequestController = new AbortController();
-      const loading = addMessage('model', 'دا أفكر بجوابك...', true);
+      const loading = addMessage('model', useAgentMode ? '🤔 أفهم طلبك...' : 'دا أفكر بجوابك...', true, history.length);
+      const requestAiMode = aiMode;
 
       try {
         let requestBody;
         let endpoint;
-        let originalImageDataUrl;
 
-        if (imageFile) {
+        if (useAgentMode) {
+          endpoint = '/api/agent';
+          requestBody = {
+            message: text,
+            history: limitHistoryForRequest(history.slice(0, -1)),
+            category,
+            aiMode: requestAiMode,
+            webSearchEnabled: useWebSearch
+          };
+          if (!currentUser) requestBody.assistantPreferences = { ...assistantPreferences };
+          if (imageFile) {
+            const preparedImage = await prepareImage(imageFile);
+            const imageDataUrl = attachment.dataUrl ?? await readFileAsDataUrl(preparedImage);
+            userMessage.querySelector('.message-image').src = imageDataUrl;
+            messageAttachments[userIndex] = {
+              file: preparedImage,
+              url: imageDataUrl,
+              dataUrl: imageDataUrl,
+              isDocument: false
+            };
+            requestBody.image = {
+              mimeType: preparedImage.type,
+              imageBase64: imageDataUrl.slice(imageDataUrl.indexOf(',') + 1)
+            };
+          }
+          if (documentFile) {
+            const documentDataUrl = await readFileAsDataUrl(documentFile);
+            requestBody.file = {
+              name: documentFile.name,
+              mimeType: documentFile.type,
+              data: documentDataUrl.slice(documentDataUrl.indexOf(',') + 1)
+            };
+          }
+        } else if (imageFile) {
           const preparedImage = await prepareImage(imageFile);
-          originalImageDataUrl = await readFileAsDataUrl(preparedImage);
+          const originalImageDataUrl = attachment.dataUrl ?? await readFileAsDataUrl(preparedImage);
           userMessage.querySelector('.message-image').src = originalImageDataUrl;
+          messageAttachments[userIndex] = {
+            file: preparedImage,
+            url: originalImageDataUrl,
+            dataUrl: originalImageDataUrl,
+            isDocument: false
+          };
           endpoint = '/api/image-edit';
           requestBody = {
             prompt: text,
@@ -1896,21 +4175,42 @@
             imageBase64: originalImageDataUrl.slice(originalImageDataUrl.indexOf(',') + 1)
           };
         } else {
+          const conversationHistory = limitHistoryForRequest(history.slice(0, -1));
           endpoint = '/api/chat';
           requestBody = {
             message: text,
-            history: limitHistoryForRequest(history.slice(0, -1)),
-            category
+            history: conversationHistory,
+            category,
+            aiMode: requestAiMode,
+            stream: true,
+            webSearchEnabled: useWebSearch
           };
+          if (!currentUser) requestBody.assistantPreferences = { ...assistantPreferences };
+          if (documentFile) {
+            const documentDataUrl = await readFileAsDataUrl(documentFile);
+            requestBody.file = {
+              name: documentFile.name,
+              mimeType: documentFile.type,
+              data: documentDataUrl.slice(documentDataUrl.indexOf(',') + 1)
+            };
+          }
         }
 
-        const response = await fetch(endpoint, {
+        const response = await fetchWithTransientRetries(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(requestBody),
           signal: activeRequestController.signal
-        });
-        const data = await response.json().catch(() => ({}));
+        }, endpoint === '/api/chat');
+        let data = {};
+        if (
+          response.ok &&
+          response.headers.get('content-type')?.includes('application/x-ndjson')
+        ) {
+          data = await readStreamingResponse(response, loading, activeRequestController.signal);
+        } else {
+          data = await response.json().catch(() => ({}));
+        }
         if (!response.ok) throw new Error(data.error || 'تعذّر إرسال الطلب إلى المساعد.');
         if (typeof data.reply !== 'string' || !data.reply.trim() || (imageFile && !data.image)) {
           throw new Error('وصل رد غير صالح من السيرفر. حاول مرة ثانية.');
@@ -1919,27 +4219,124 @@
         const bubble = loading.querySelector('.message-bubble');
         bubble.classList.remove('typing');
         renderMarkdown(bubble, data.reply);
-        addResponseActions(loading, data.reply);
-        if (imageFile) {
+        addResponseActions(loading, data.reply, userIndex);
+        if (data.memoryAction === 'forget' && typeof data.forgetTarget === 'string') {
+          forgetTransientMemory(data.forgetTarget);
+        }
+        if (Array.isArray(data.sources)) addWebSources(loading, data.sources);
+        if (data.searchNotice) showToast(data.searchNotice);
+        if (imageFile && !useAgentMode) {
           addEditedImage(loading, data.image);
-          clearAttachment();
+          const imageDataUrl = `data:${data.image.mimeType};base64,${data.image.data}`;
+          saveImageToGallery(imageDataUrl, text, 'chat-edit')
+            .then(() => showToast('تم حفظ الصورة المعدلة في معرض الصور.'))
+            .catch((error) => showToast(`اكتمل التعديل، لكن تعذّر حفظ الصورة في المعرض: ${error.message}`));
+        }
+        if (useAgentMode && data.image) {
+          addEditedImage(loading, data.image);
+          const imageDataUrl = `data:${data.image.mimeType};base64,${data.image.data}`;
+          saveImageToGallery(imageDataUrl, text, 'agent-image-edit')
+            .then(() => showToast('تم حفظ الصورة المعدلة في معرض الصور.'))
+            .catch((error) => showToast(`اكتمل التعديل، لكن تعذّر حفظ الصورة في المعرض: ${error.message}`));
+        }
+        if ((imageFile || documentFile) && selectedFile === attachment) clearAttachment();
+        if (documentFile) {
+          messageAttachments[userIndex] = attachment;
+          if (selectedFile === attachment) clearAttachment();
         }
         history.push({ role: 'model', text: data.reply });
+        while (history.length > 20) {
+          history.splice(0, 2);
+          messageAttachments.splice(0, 2);
+          messagesElement.firstElementChild?.remove();
+          messagesElement.firstElementChild?.remove();
+        }
+        [...messagesElement.children].forEach((row, index) => {
+          row.dataset.historyIndex = String(index);
+        });
+        cancelMessageEditMode();
         persistConversation();
       } catch (error) {
-        loading.remove();
-        history.pop();
-        showToast(error.name === 'AbortError'
-          ? 'تم إيقاف التوليد.'
-          : error.message || 'صار خطأ بالاتصال. تأكد من اتصالك وحاول مرة ثانية.');
+        const wasAborted = activeRequestController?.signal.aborted || error.name === 'AbortError';
+        const agentDisconnected = useAgentMode && endpoint === '/api/agent' && error.transient;
+        const preserveInterruptedTask = wasAborted || agentDisconnected;
+        if (preserveInterruptedTask) {
+          const partialText = typeof error.partialText === 'string' ? error.partialText.trim() : '';
+          if (partialText) {
+            const partialBubble = loading.querySelector('.message-bubble');
+            partialBubble.classList.remove('typing');
+            renderMarkdown(partialBubble, partialText);
+            history.push({ role: 'model', text: partialText });
+            addResponseActions(loading, partialText, userIndex);
+          } else {
+            loading.remove();
+          }
+          [...messagesElement.children].forEach((row, index) => {
+            row.dataset.historyIndex = String(index);
+          });
+          cancelMessageEditMode();
+          persistConversation();
+        } else {
+          loading.remove();
+          history = previousHistory;
+          messageAttachments = previousAttachments;
+        }
+        if (!preserveInterruptedTask && messageIndex !== null) {
+          const firstRemovedIndex = isRetry ? messageIndex + 1 : messageIndex;
+          for (const row of [...messagesElement.children]) {
+            if (Number(row.dataset.historyIndex) >= firstRemovedIndex) row.remove();
+          }
+          removedRows.forEach((row) => messagesElement.append(row));
+        } else if (!preserveInterruptedTask) {
+          userMessage.remove();
+        }
+        if (isRetry) promptInput.value = previousDraft;
+        if (!isRetry && !preserveInterruptedTask) promptInput.value = text;
+        if (!preserveInterruptedTask && messageIndex !== null && !isRetry) {
+          editingMessageIndex = messageIndex;
+          editMessageNotice.hidden = false;
+          resizeInput();
+        }
+        if (agentDisconnected) {
+          showToast('انقطع الاتصال وتوقفت المهمة. لم تتم إعادة تنفيذ الأدوات تلقائياً.');
+        } else if (wasAborted) {
+          showToast(useAgentMode ? 'تم إيقاف المهمة. لم تتم إعادة تنفيذ الأدوات تلقائياً.' : 'تم إيقاف التوليد.');
+        } else {
+          showToast(error.message || 'صار خطأ بالاتصال. تأكد من اتصالك وحاول مرة ثانية.');
+        }
       } finally {
         busy = false;
-        sendButton.disabled = false;
+        setGeneratingState(false, useAgentMode);
         stopButton.hidden = true;
+        stopButton.textContent = 'إيقاف التوليد';
         activeRequestController = null;
         promptInput.focus({ preventScroll: true });
         chatScroll.scrollTop = chatScroll.scrollHeight;
       }
+    }
+
+    function retryMessageResponse(userIndex) {
+      if (busy || history[userIndex]?.role !== 'user') return;
+      submitChat(null, { retryIndex: userIndex });
+    }
+
+    form.addEventListener('submit', submitChat);
+    cancelMessageEdit.addEventListener('click', () => {
+      cancelMessageEditMode();
+      promptInput.value = '';
+      resizeInput();
+    });
+
+    aiModeSelect.addEventListener('change', () => {
+      aiMode = aiModes.has(aiModeSelect.value) ? aiModeSelect.value : 'general';
+      aiModeSelect.value = aiMode;
+      if (activeConversationId) persistConversation();
+    });
+    agentModeSelect.addEventListener('change', () => {
+      agentModeEnabled = agentModeSelect.value === 'agent';
+      agentModeSelect.value = agentModeEnabled ? 'agent' : 'chat';
+      agentModeBadge.hidden = !agentModeEnabled;
+      if (activeConversationId) persistConversation();
     });
 
     const themeToggle = document.querySelector('#themeToggle');
@@ -1983,6 +4380,8 @@
     });
 
     renderConversations();
+    refreshAccountState();
+    handleAuthLink();
 
     fetch('/api/health')
       .then(async (response) => {

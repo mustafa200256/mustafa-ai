@@ -1,0 +1,16 @@
+{
+	"appId": "com.mustafahussein.ai",
+	"appName": "مصطفى حسين AI",
+	"webDir": "public",
+	"plugins": {
+		"Keyboard": {
+			"resize": "body",
+			"style": "DARK"
+		},
+		"StatusBar": {
+			"overlaysWebView": false,
+			"backgroundColor": "#111318",
+			"style": "DARK"
+		}
+	}
+}
