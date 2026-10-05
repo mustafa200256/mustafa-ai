@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { editImage, ImageServiceError } from './services/imageService.mjs';
 
 const app = express();
 const port = Number(process.env.PORT) || 3000;
@@ -157,128 +158,21 @@ app.get('/api/health', (_request, response) => {
 
 app.post('/api/image-edit', express.json({ limit: '12mb' }), async (request, response) => {
   const { prompt, imageBase64, mimeType } = request.body ?? {};
-  const supportedImageTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
-  const maxImageBytes = 8 * 1024 * 1024;
-
-  if (typeof prompt !== 'string' || prompt.trim().length === 0 || prompt.length > 4000) {
-    return response.status(400).json({
-      error: 'اكتب وصفاً للتعديل المطلوب، وبحد أقصى 4000 حرف.'
-    });
-  }
-
-  if (
-    typeof imageBase64 !== 'string' ||
-    !supportedImageTypes.has(mimeType) ||
-    imageBase64.length === 0 ||
-    imageBase64.length > Math.ceil(maxImageBytes * 4 / 3) + 8 ||
-    !/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(imageBase64)
-  ) {
-    return response.status(400).json({
-      error: 'أرسل صورة PNG أو JPEG أو WebP صالحة.'
-    });
-  }
-
-  const imageBuffer = Buffer.from(imageBase64, 'base64');
-  if (imageBuffer.length === 0 || imageBuffer.length > maxImageBytes) {
-    return response.status(413).json({
-      error: 'حجم الصورة يجب ألا يتجاوز 8 ميغابايت.'
-    });
-  }
-
-  const apiKey = process.env.GEMINI_API_KEY?.trim();
-  if (!apiKey) {
-    return response.status(503).json({
-      error: 'خدمة تعديل الصور غير مهيّأة. أضف GEMINI_API_KEY إلى ملف .env.'
-    });
-  }
-
   try {
-    const apiResponse = await fetch(
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-goog-api-key': apiKey
-        },
-        signal: AbortSignal.timeout(120000),
-        body: JSON.stringify({
-          contents: [{
-            role: 'user',
-            parts: [
-              {
-                text: [
-                  'Edit the provided image according to the user request and return the finished edited image.',
-                  'Preserve the original person identity, facial features, body, pose, composition, and background unless the user explicitly asks to change them.',
-                  `User request: ${prompt.trim()}`
-                ].join(' ')
-              },
-              {
-                inline_data: {
-                  mime_type: mimeType,
-                  data: imageBase64
-                }
-              }
-            ]
-          }],
-          generationConfig: {
-            responseModalities: ['TEXT', 'IMAGE']
-          }
-        })
-      }
-    );
-
-    const data = await apiResponse.json();
-    if (!apiResponse.ok) {
-      console.error(
-        'Gemini image model returned HTTP',
-        apiResponse.status,
-        data.error?.message ?? 'No error details returned.'
-      );
-
-      if (apiResponse.status === 429) {
-        return response.status(503).json({
-          error: 'نموذج تعديل الصور متاح، لكن حصة الاستخدام غير متوفرة حالياً. تحقّق من حدود الاستخدام والفوترة في مشروع Gemini.'
-        });
-      }
-
-      return response.status(502).json({
-        error: 'تعذّر تعديل الصورة عبر Gemini. حاول مرة ثانية أو تحقّق من إعدادات النموذج.'
-      });
-    }
-
-    const parts = data.candidates?.[0]?.content?.parts ?? [];
-    const imagePart = parts.find((part) => part.inlineData?.data || part.inline_data?.data);
-    const imageData = imagePart?.inlineData?.data ?? imagePart?.inline_data?.data;
-    const outputMimeType = imagePart?.inlineData?.mimeType
-      ?? imagePart?.inline_data?.mime_type;
-    const reply = parts
-      .map((part) => part.text)
-      .filter((text) => typeof text === 'string')
-      .join('\n')
-      .trim();
-
-    if (
-      typeof imageData !== 'string' ||
-      !['image/png', 'image/jpeg', 'image/webp'].includes(outputMimeType)
-    ) {
-      console.error('Gemini image response did not contain a supported generated image.');
-      return response.status(502).json({
-        error: 'لم يُرجع نموذج الصور صورة معدّلة. جرّب صياغة طلبك مرة ثانية.'
-      });
-    }
-
-    return response.json({
-      reply: reply || 'تم تجهيز الصورة المعدّلة.',
-      image: {
-        mimeType: outputMimeType,
-        data: imageData
-      }
+    const result = await editImage({
+      apiKey: process.env.GEMINI_API_KEY?.trim(),
+      prompt,
+      imageBase64,
+      mimeType
     });
+    return response.json(result);
   } catch (error) {
-    console.error('Gemini image-edit request failed:', error);
+    if (error instanceof ImageServiceError) {
+      return response.status(error.status).json({ error: error.message });
+    }
+    console.error('Image-edit service failed unexpectedly.');
     return response.status(502).json({
-      error: 'تعذّر الاتصال بنموذج تعديل الصور. تحقّق من الاتصال وحاول مرة ثانية.'
+      error: 'تعذّر تعديل الصورة حالياً. حاول مرة ثانية.'
     });
   }
 });

@@ -180,7 +180,7 @@
     .status { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font-size: 11px; white-space: nowrap; }
     .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #b7a9a8; }
     .status-dot.ready { background: var(--green); box-shadow: 0 0 0 4px color-mix(in srgb, var(--green) 14%, transparent); }
-    .chat-scroll { max-height: 350px; min-height: 185px; overflow-y: auto; padding: 0 2px; scroll-behavior: smooth; }
+    .chat-scroll { max-height: 350px; min-height: 185px; overflow-y: auto; overscroll-behavior: contain; padding: 0 2px; scroll-behavior: smooth; }
     .welcome {
       display: flex;
       min-height: 185px;
@@ -230,7 +230,7 @@
       transition: color .18s, border-color .18s, background .18s;
     }
     .quick-prompt:hover { border-color: var(--wine); background: var(--wine-soft); color: var(--wine); }
-    .composer-shell { border: 1px solid var(--line); border-radius: 17px; background: var(--surface); transition: border-color .2s, box-shadow .2s; }
+    .composer-shell { position: sticky; z-index: 4; bottom: max(8px, env(safe-area-inset-bottom)); border: 1px solid var(--line); border-radius: 17px; background: var(--surface); transition: border-color .2s, box-shadow .2s; }
     .composer-shell:focus-within { border-color: color-mix(in srgb, var(--wine) 55%, var(--line)); box-shadow: 0 0 0 3px color-mix(in srgb, var(--wine) 10%, transparent); }
     .composer { display: flex; align-items: flex-end; gap: 9px; padding: 10px 10px 8px; }
     .composer textarea {
@@ -288,6 +288,67 @@
     .remove-attachment { width: 32px; height: 32px; border: 0; border-radius: 9px; background: transparent; color: var(--muted); font-size: 20px; }
     .remove-attachment:hover { background: var(--wine-soft); color: var(--wine); }
     .composer-hint { margin: 9px 0 0; color: var(--muted); text-align: center; font-size: 10px; }
+    .chat-head-actions { display: flex; align-items: center; gap: 7px; }
+    .new-chat-button, .stop-button {
+      min-height: 36px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 11px;
+      font-weight: 750;
+    }
+    .new-chat-button:hover { border-color: var(--wine); color: var(--wine); }
+    .stop-button { border-color: color-mix(in srgb, #bd4141 35%, var(--line)); color: #bd4141; }
+    .chat-workspace { display: grid; grid-template-columns: 174px minmax(0, 1fr); gap: 14px; min-width: 0; }
+    .chat-main { min-width: 0; }
+    .conversation-sidebar { min-width: 0; padding: 10px 0; border-inline-end: 1px solid var(--line); }
+    .conversation-sidebar h3 { margin: 0 0 9px; color: var(--muted); font-size: 11px; }
+    .conversation-list { display: grid; gap: 5px; max-height: 380px; overflow-y: auto; }
+    .conversation-item {
+      display: block;
+      width: 100%;
+      overflow: hidden;
+      padding: 8px 9px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--muted);
+      text-align: right;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 11px;
+    }
+    .conversation-item:hover, .conversation-item.active { border-color: var(--line); background: var(--surface-soft); color: var(--ink); }
+    .message-bubble.markdown { white-space: normal; }
+    .markdown-content > :last-child { margin-bottom: 0; }
+    .markdown-content p { margin: 0 0 9px; }
+    .markdown-content h1, .markdown-content h2, .markdown-content h3 { margin: 12px 0 6px; font-size: 1.05em; }
+    .markdown-content ul, .markdown-content ol { margin: 4px 0 10px; padding-inline-start: 24px; }
+    .markdown-content code { padding: 2px 5px; border-radius: 5px; background: color-mix(in srgb, var(--ink) 9%, var(--surface)); font-family: Consolas, "Courier New", monospace; font-size: .92em; direction: ltr; unicode-bidi: plaintext; }
+    .code-block { position: relative; margin: 10px 0; overflow: hidden; border: 1px solid var(--line); border-radius: 11px; background: #171516; direction: ltr; }
+    .code-block pre { max-width: 100%; margin: 0; overflow: auto; padding: 35px 13px 13px; color: #f3eeee; text-align: left; }
+    .code-block code { padding: 0; background: transparent; color: inherit; white-space: pre; font-size: 12px; }
+    .copy-code {
+      position: absolute;
+      top: 6px;
+      right: 7px;
+      padding: 4px 8px;
+      border: 1px solid #ffffff30;
+      border-radius: 7px;
+      background: #ffffff12;
+      color: #fff;
+      font-size: 10px;
+    }
+    .markdown-link { color: var(--wine); text-decoration: underline; overflow-wrap: anywhere; }
+    .message-image { width: auto; height: auto; }
+    .message-image, .image-result img { max-width: 100%; }
+    .attachment-preview { min-width: 0; }
+    .attachment-preview img { object-fit: contain; }
+    .composer-tools > div { display: flex; flex-wrap: wrap; gap: 7px; }
+    .composer textarea { overflow-wrap: anywhere; }
+    .chat-card, .chat-main, .message-bubble { min-width: 0; }
 
     .section { padding: 55px 0; }
     .section-head { display: flex; align-items: end; justify-content: space-between; gap: 22px; margin-bottom: 23px; }
@@ -388,7 +449,7 @@
       .header-inner { width: min(100% - 32px, 760px); min-height: 66px; }
       .main-nav { gap: 0; }
       .main-nav a { padding: 8px; font-size: 12px; }
-      .hero { grid-template-columns: minmax(0, .82fr) minmax(360px, 1.18fr); gap: 25px; padding-top: 55px; }
+      .hero { grid-template-columns: 1fr; gap: 25px; padding-top: 55px; }
       .hero h1 { font-size: clamp(34px, 5vw, 48px); }
       .page { width: min(100% - 32px, 760px); }
       .template-grid, .tools-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -425,10 +486,24 @@
       .hero-copy > p { margin-inline: auto; font-size: 15px; }
       .hero-points { justify-content: center; margin-top: 15px; }
       .chat-card { padding: 13px; border-radius: 20px; }
+      .chat-card-head { flex-wrap: wrap; }
+      .chat-head-actions { width: 100%; justify-content: space-between; }
+      .chat-workspace { grid-template-columns: minmax(0, 1fr); }
+      .conversation-sidebar { display: none; padding: 9px; border: 1px solid var(--line); border-radius: 13px; }
+      .conversation-sidebar.open { display: block; }
+      .conversation-list { max-height: 190px; }
+      .chat-head-actions { gap: 4px; }
+      .new-chat-button { min-height: 33px; padding: 5px 7px; font-size: 10px; }
       .chat-scroll { min-height: 162px; max-height: 320px; }
       .welcome { min-height: 162px; }
       .welcome h2 { font-size: 17px; }
       .composer textarea { min-height: 46px; font-size: 15px; }
+      .composer { gap: 5px; padding: 8px 7px 7px; }
+      .send-button { flex-basis: 40px; width: 40px; height: 40px; }
+      .composer-tools { align-items: flex-start; flex-direction: column; gap: 6px; }
+      .composer-note { align-self: flex-end; }
+      .message-bubble { max-width: calc(100% - 38px); }
+      .status { font-size: 10px; }
       .section { padding: 38px 0; }
       .section-head { align-items: flex-start; flex-direction: column; gap: 4px; margin-bottom: 18px; }
       .section-head h2 { font-size: 27px; }
@@ -444,6 +519,14 @@
       .about-card h2 { font-size: 17px; }
       .about-card p { font-size: 12px; }
       .footer-inner { min-height: 72px; flex-direction: column; justify-content: center; gap: 2px; padding: 12px 0; text-align: center; }
+    }
+    @media (max-width: 360px) {
+      #statusText { display: none; }
+      .header-inner { gap: 5px; }
+      .brand { gap: 7px; }
+      .brand-mark { width: 36px; height: 36px; }
+      .brand-name { font-size: 13px; }
+      .brand-caption { display: none; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
@@ -496,9 +579,19 @@
               <small>اسألني أي شي، ونبدأ سوا</small>
             </span>
           </div>
-          <span class="status"><span class="status-dot" id="statusDot"></span><span id="statusText">جاري التحقق</span></span>
+          <div class="chat-head-actions">
+            <button class="new-chat-button" id="historyToggle" type="button" aria-expanded="false">المحادثات</button>
+            <button class="new-chat-button" id="newChatButton" type="button">＋ محادثة جديدة</button>
+            <span class="status"><span class="status-dot" id="statusDot"></span><span id="statusText">جاري التحقق</span></span>
+          </div>
         </div>
 
+        <div class="chat-workspace">
+          <aside class="conversation-sidebar" id="conversationSidebar" aria-label="سجل المحادثات">
+            <h3>محادثاتك على هذا الجهاز</h3>
+            <div class="conversation-list" id="conversationList"></div>
+          </aside>
+          <div class="chat-main">
         <div class="chat-scroll" id="chatScroll" aria-live="polite" aria-relevant="additions text">
           <div class="welcome" id="welcome">
             <span class="welcome-icon" aria-hidden="true">✧</span>
@@ -513,6 +606,9 @@
           <button class="quick-prompt" type="button" data-prompt="اقترح لي فكرة مشروع ويب بسيطة ومفيدة">فكرة مشروع</button>
           <button class="quick-prompt" type="button" data-prompt="اشرح لي الذكاء الاصطناعي بطريقة بسيطة">شرح مبسّط</button>
           <button class="quick-prompt" type="button" data-prompt="ساعدني أكتب خطة لتعلّم البرمجة">تعلّم البرمجة</button>
+          <button class="quick-prompt" type="button" data-prompt="اكتب لي برنامجًا بسيطًا واشرح طريقة عمله">اكتب لي برنامجًا</button>
+          <button class="quick-prompt" type="button" data-prompt="اشرح لي هذا الموضوع خطوة بخطوة: ">اشرح لي</button>
+          <button class="quick-prompt" type="button" data-prompt="حل هذه المسألة مع شرح الخطوات: ">حل مسألة</button>
         </div>
 
         <form class="composer-shell" id="chatForm">
@@ -525,14 +621,17 @@
           <div class="composer-tools">
             <div>
               <button class="attach-button" id="attachButton" type="button" aria-label="إضافة صورة أو فيديو">
-                <span aria-hidden="true">＋</span> إضافة صورة أو فيديو
+                <span aria-hidden="true">📎</span> إرفاق صورة
               </button>
               <input class="sr-only" id="fileInput" type="file" accept="image/*,video/*" tabindex="-1">
+              <button class="stop-button" id="stopButton" type="button" hidden>إيقاف التوليد</button>
             </div>
             <span class="composer-note">Enter للإرسال · Shift + Enter لسطر جديد</span>
           </div>
         </form>
         <p class="composer-hint">قد يخطئ المساعد أحياناً، فتحقّق من المعلومات المهمة.</p>
+          </div>
+        </div>
       </section>
     </section>
 
@@ -603,6 +702,11 @@
     const fileInput = document.querySelector('#fileInput');
     const attachmentPreview = document.querySelector('#attachmentPreview');
     const chatCard = document.querySelector('.chat-card');
+    const stopButton = document.querySelector('#stopButton');
+    const conversationList = document.querySelector('#conversationList');
+    const conversationSidebar = document.querySelector('#conversationSidebar');
+    const historyToggle = document.querySelector('#historyToggle');
+    const sessionStorageKey = 'mustafa-ai-conversations';
     const categories = new Set(['general', 'games', 'web', 'media', 'templates']);
     const categoryNames = {
       general: 'محادثة عامة',
@@ -623,7 +727,8 @@
       { icon: '✨', title: 'تحسين النصوص', description: 'صحّح النص وطوّر أسلوبه مع الحفاظ على فكرته.', prompt: 'راجع النص التالي، وصحّح الأخطاء وحسّن الوضوح والأسلوب من دون تغيير المعنى أو المعلومات: [ألصق النص هنا]' }
     ];
     const tools = [
-      { icon: '🖼️', title: 'تحليل صورة', description: 'فهم محتوى الصورة والإجابة عن الأسئلة حولها.' },
+      { icon: '🖼️', title: 'تعديل الصور', description: 'ارفع صورة واطلب تعديلها عبر نموذج Gemini للصور.', active: true },
+      { icon: '🔎', title: 'تحليل صورة', description: 'الإجابة عن الأسئلة حول محتوى الصور.' },
       { icon: '🔎', title: 'قراءة النص من صورة', description: 'استخراج النصوص والمعلومات من الصور.' },
       { icon: '📄', title: 'تلخيص ملف', description: 'تلخيص الملفات الطويلة إلى نقاط واضحة.' },
       { icon: '📚', title: 'تحليل مستند', description: 'استخراج الأفكار والبيانات من المستندات.' },
@@ -631,10 +736,13 @@
       { icon: '⌘', title: 'مساعدة بالبرمجة', description: 'شرح الأكواد، حل المشاكل، وبناء أفكار جديدة.' }
     ];
     let history = [];
+    let conversations = [];
+    let activeConversationId = null;
     let category = 'general';
     let busy = false;
     let toastTimer;
     let selectedFile = null;
+    let activeRequestController = null;
 
     document.querySelector('#templateGrid').innerHTML = templates.map((template, index) => `
       <button class="template-card" type="button" data-template="${index}">
@@ -653,10 +761,29 @@
         <span>
           <strong>${tool.title}</strong>
           <p>${tool.description}</p>
-          <span class="coming-soon">قريباً</span>
+          <span class="coming-soon">${tool.active ? 'متاح الآن' : 'قريباً'}</span>
         </span>
       </article>
     `).join('');
+
+    try {
+      const savedConversations = JSON.parse(localStorage.getItem(sessionStorageKey) || '[]');
+      if (Array.isArray(savedConversations)) {
+        conversations = savedConversations.filter((conversation) =>
+          conversation &&
+          typeof conversation.id === 'string' &&
+          typeof conversation.title === 'string' &&
+          Array.isArray(conversation.history) &&
+          conversation.history.every((item) =>
+            item &&
+            (item.role === 'user' || item.role === 'model') &&
+            typeof item.text === 'string'
+          )
+        ).slice(0, 20);
+      }
+    } catch {
+      conversations = [];
+    }
 
     function showToast(message) {
       toast.textContent = message;
@@ -668,7 +795,188 @@
     function selectCategory(value) {
       if (!categories.has(value)) return;
       category = value;
-      promptInput.focus();
+      promptInput.focus({ preventScroll: true });
+    }
+
+    function renderConversations() {
+      conversationList.replaceChildren();
+      conversations.forEach((conversation) => {
+        const item = document.createElement('button');
+        item.className = `conversation-item${conversation.id === activeConversationId ? ' active' : ''}`;
+        item.type = 'button';
+        item.textContent = conversation.title;
+        item.title = conversation.title;
+        item.addEventListener('click', () => openConversation(conversation.id));
+        conversationList.append(item);
+      });
+    }
+
+    function persistConversation() {
+      if (!history.length || !activeConversationId) return;
+      const existing = conversations.find((item) => item.id === activeConversationId);
+      const firstUserMessage = history.find((item) => item.role === 'user')?.text ?? 'محادثة جديدة';
+      const conversation = existing ?? {
+        id: activeConversationId,
+        title: firstUserMessage.slice(0, 44),
+        history: [],
+        updatedAt: Date.now()
+      };
+      conversation.history = history.slice(-20);
+      conversation.updatedAt = Date.now();
+      if (!existing) conversations.unshift(conversation);
+      conversations.sort((first, second) => second.updatedAt - first.updatedAt);
+      conversations = conversations.slice(0, 20);
+      try {
+        localStorage.setItem(sessionStorageKey, JSON.stringify(conversations));
+      } catch {
+        showToast('تعذّر حفظ سجل المحادثات على هذا الجهاز.');
+      }
+      renderConversations();
+    }
+
+    function openConversation(id) {
+      if (busy) return;
+      const conversation = conversations.find((item) => item.id === id);
+      if (!conversation) return;
+      activeConversationId = id;
+      history = conversation.history.map((item) => ({ ...item }));
+      welcome.hidden = true;
+      messagesElement.hidden = false;
+      messagesElement.replaceChildren();
+      history.forEach((item) => addMessage(item.role, item.text));
+      renderConversations();
+      chatScroll.scrollTop = chatScroll.scrollHeight;
+      conversationSidebar.classList.remove('open');
+      historyToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    function appendInlineMarkdown(parent, text) {
+      const tokenPattern = /(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^)]+\))/g;
+      let cursor = 0;
+      for (const match of text.matchAll(tokenPattern)) {
+        const index = match.index ?? 0;
+        parent.append(document.createTextNode(text.slice(cursor, index)));
+        const token = match[0];
+        let element;
+        if (token.startsWith('`')) {
+          element = document.createElement('code');
+          element.textContent = token.slice(1, -1);
+        } else if (token.startsWith('**')) {
+          element = document.createElement('strong');
+          element.textContent = token.slice(2, -2);
+        } else if (token.startsWith('*')) {
+          element = document.createElement('em');
+          element.textContent = token.slice(1, -1);
+        } else {
+          const linkParts = token.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+          const url = linkParts?.[2];
+          let isSafeUrl = false;
+          try {
+            isSafeUrl = Boolean(url && ['http:', 'https:'].includes(new URL(url, location.href).protocol));
+          } catch {
+            isSafeUrl = false;
+          }
+          if (isSafeUrl) {
+            element = document.createElement('a');
+            element.className = 'markdown-link';
+            element.href = url;
+            element.target = '_blank';
+            element.rel = 'noopener noreferrer';
+            element.textContent = linkParts[1];
+          } else {
+            parent.append(document.createTextNode(token));
+            cursor = index + token.length;
+            continue;
+          }
+        }
+        parent.append(element);
+        cursor = index + token.length;
+      }
+      parent.append(document.createTextNode(text.slice(cursor)));
+    }
+
+    function renderMarkdown(container, text) {
+      container.classList.add('markdown');
+      const content = document.createElement('div');
+      content.className = 'markdown-content';
+      const lines = text.split(/\r?\n/);
+      let index = 0;
+      while (index < lines.length) {
+        if (/^\s*```/.test(lines[index])) {
+          const language = lines[index].trim().slice(3);
+          const codeLines = [];
+          index += 1;
+          while (index < lines.length && !/^\s*```/.test(lines[index])) {
+            codeLines.push(lines[index]);
+            index += 1;
+          }
+          index += 1;
+          const block = document.createElement('div');
+          block.className = 'code-block';
+          if (language) block.dataset.language = language;
+          const copy = document.createElement('button');
+          copy.className = 'copy-code';
+          copy.type = 'button';
+          copy.textContent = 'نسخ الكود';
+          copy.addEventListener('click', async () => {
+            try {
+              await navigator.clipboard.writeText(codeLines.join('\n'));
+              copy.textContent = 'تم النسخ';
+              setTimeout(() => { copy.textContent = 'نسخ الكود'; }, 1600);
+            } catch {
+              showToast('تعذّر نسخ الكود من المتصفح.');
+            }
+          });
+          const pre = document.createElement('pre');
+          const code = document.createElement('code');
+          code.textContent = codeLines.join('\n');
+          pre.append(code);
+          block.append(copy, pre);
+          content.append(block);
+          continue;
+        }
+
+        const heading = lines[index].match(/^(#{1,3})\s+(.+)$/);
+        if (heading) {
+          const element = document.createElement(`h${heading[1].length}`);
+          appendInlineMarkdown(element, heading[2]);
+          content.append(element);
+          index += 1;
+          continue;
+        }
+
+        if (/^\s*[-*]\s+/.test(lines[index])) {
+          const list = document.createElement('ul');
+          while (index < lines.length && /^\s*[-*]\s+/.test(lines[index])) {
+            const item = document.createElement('li');
+            appendInlineMarkdown(item, lines[index].replace(/^\s*[-*]\s+/, ''));
+            list.append(item);
+            index += 1;
+          }
+          content.append(list);
+          continue;
+        }
+
+        const paragraphLines = [];
+        while (index < lines.length && lines[index].trim() &&
+          !/^\s*```/.test(lines[index]) &&
+          !/^#{1,3}\s+/.test(lines[index]) &&
+          !/^\s*[-*]\s+/.test(lines[index])) {
+          paragraphLines.push(lines[index]);
+          index += 1;
+        }
+        if (paragraphLines.length) {
+          const paragraph = document.createElement('p');
+          paragraphLines.forEach((line, lineIndex) => {
+            if (lineIndex) paragraph.append(document.createElement('br'));
+            appendInlineMarkdown(paragraph, line);
+          });
+          content.append(paragraph);
+        } else {
+          index += 1;
+        }
+      }
+      container.replaceChildren(content);
     }
 
     function addMessage(role, text, isTyping = false) {
@@ -679,7 +987,8 @@
       avatar.textContent = role === 'user' ? 'أنت' : 'م';
       const bubble = document.createElement('div');
       bubble.className = `message-bubble${isTyping ? ' typing' : ''}`;
-      bubble.textContent = text;
+      if (role === 'model' && !isTyping) renderMarkdown(bubble, text);
+      else bubble.textContent = text;
       row.append(avatar, bubble);
       messagesElement.append(row);
       chatScroll.scrollTop = chatScroll.scrollHeight;
@@ -715,9 +1024,9 @@
         showToast('يدعم تحرير الصور حالياً صيغ PNG وJPEG وWebP.');
         return;
       }
-      if (file.size > (isImage ? 8 : 25) * 1024 * 1024) {
+      if (file.size > 25 * 1024 * 1024) {
         showToast(isImage
-          ? 'حجم الصورة أكبر من 8 ميغابايت. اختار صورة أصغر.'
+          ? 'حجم الصورة أكبر من 25 ميغابايت. اختار صورة أصغر.'
           : 'حجم الفيديو أكبر من 25 ميغابايت. اختار فيديو أصغر.');
         return;
       }
@@ -802,14 +1111,59 @@
       });
     }
 
+    async function prepareImage(file) {
+      if (typeof createImageBitmap !== 'function') return file;
+
+      const bitmap = await createImageBitmap(file);
+      const maxDimension = 2048;
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      if (!context) {
+        bitmap.close();
+        return file;
+      }
+      let scale = Math.min(1, maxDimension / Math.max(bitmap.width, bitmap.height));
+      if (file.size <= 1.5 * 1024 * 1024 && scale === 1) {
+        bitmap.close();
+        return file;
+      }
+
+      const outputType = file.type === 'image/jpeg' || file.type === 'image/webp'
+        ? file.type
+        : 'image/png';
+      let quality = 0.86;
+      let blob;
+      for (let attempt = 0; attempt < 5; attempt += 1) {
+        canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+        canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+        context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+        blob = await new Promise((resolve) => canvas.toBlob(resolve, outputType, quality));
+        if (!blob || blob.size <= 7 * 1024 * 1024) break;
+        if (outputType === 'image/png') scale *= 0.8;
+        else quality -= 0.12;
+      }
+      bitmap.close();
+      if (!blob || blob.size > 7 * 1024 * 1024) {
+        throw new Error('تعذّر ضغط الصورة إلى الحجم المسموح. اختار صورة أصغر.');
+      }
+      if (blob.size >= file.size && scale === 1 && file.size <= 8 * 1024 * 1024) return file;
+      const resultType = blob.type || outputType;
+      const extension = resultType === 'image/jpeg' ? 'jpg' : resultType.split('/')[1];
+      return new File([blob], `image.${extension}`, { type: resultType, lastModified: Date.now() });
+    }
+
     function startConversation() {
       if (busy) return;
+      activeConversationId = null;
       history = [];
       messagesElement.replaceChildren();
       messagesElement.hidden = true;
       welcome.hidden = false;
       promptInput.value = '';
       clearAttachment();
+      renderConversations();
+      conversationSidebar.classList.remove('open');
+      historyToggle.setAttribute('aria-expanded', 'false');
       resizeInput();
       promptInput.focus();
     }
@@ -839,6 +1193,12 @@
 
     document.querySelector('#attachButton').addEventListener('click', () => fileInput.click());
     fileInput.addEventListener('change', () => showAttachment(fileInput.files?.[0]));
+    document.querySelector('#newChatButton').addEventListener('click', startConversation);
+    historyToggle.addEventListener('click', () => {
+      const isOpen = conversationSidebar.classList.toggle('open');
+      historyToggle.setAttribute('aria-expanded', String(isOpen));
+    });
+    stopButton.addEventListener('click', () => activeRequestController?.abort());
     promptInput.addEventListener('input', resizeInput);
     promptInput.addEventListener('keydown', (event) => {
       if (event.key === 'Enter' && !event.shiftKey) {
@@ -891,10 +1251,17 @@
       if (imageFile) addImageToMessage(userMessage, selectedFile.url, 'الصورة الأصلية المطلوب تعديلها');
       history.push({ role: 'user', text });
       if (history.length > 20) history = history.slice(-20);
+      if (!activeConversationId) {
+        activeConversationId = typeof crypto.randomUUID === 'function'
+          ? crypto.randomUUID()
+          : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      }
       promptInput.value = '';
       resizeInput();
       busy = true;
       sendButton.disabled = true;
+      stopButton.hidden = false;
+      activeRequestController = new AbortController();
       const loading = addMessage('model', 'دا أفكر بجوابك...', true);
 
       try {
@@ -903,12 +1270,13 @@
         let originalImageDataUrl;
 
         if (imageFile) {
-          originalImageDataUrl = await readFileAsDataUrl(imageFile);
+          const preparedImage = await prepareImage(imageFile);
+          originalImageDataUrl = await readFileAsDataUrl(preparedImage);
           userMessage.querySelector('.message-image').src = originalImageDataUrl;
           endpoint = '/api/image-edit';
           requestBody = {
             prompt: text,
-            mimeType: imageFile.type,
+            mimeType: preparedImage.type,
             imageBase64: originalImageDataUrl.slice(originalImageDataUrl.indexOf(',') + 1)
           };
         } else {
@@ -923,7 +1291,8 @@
         const response = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(requestBody)
+          body: JSON.stringify(requestBody),
+          signal: activeRequestController.signal
         });
         const data = await response.json().catch(() => ({}));
         if (!response.ok) throw new Error(data.error || 'تعذّر إرسال الطلب إلى المساعد.');
@@ -933,20 +1302,25 @@
 
         const bubble = loading.querySelector('.message-bubble');
         bubble.classList.remove('typing');
-        bubble.textContent = data.reply;
+        renderMarkdown(bubble, data.reply);
         if (imageFile) {
           addEditedImage(loading, data.image);
           clearAttachment();
         }
         history.push({ role: 'model', text: data.reply });
+        persistConversation();
       } catch (error) {
         loading.remove();
         history.pop();
-        showToast(error.message || 'صار خطأ بالاتصال. تأكد من اتصالك وحاول مرة ثانية.');
+        showToast(error.name === 'AbortError'
+          ? 'تم إيقاف التوليد.'
+          : error.message || 'صار خطأ بالاتصال. تأكد من اتصالك وحاول مرة ثانية.');
       } finally {
         busy = false;
         sendButton.disabled = false;
-        promptInput.focus();
+        stopButton.hidden = true;
+        activeRequestController = null;
+        promptInput.focus({ preventScroll: true });
         chatScroll.scrollTop = chatScroll.scrollHeight;
       }
     });
@@ -990,6 +1364,8 @@
         mobileMenu.setAttribute('aria-expanded', 'false');
       });
     });
+
+    renderConversations();
 
     fetch('/api/health')
       .then(async (response) => {
